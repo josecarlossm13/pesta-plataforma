@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Subject areas" %}{% endblock %}
+
+{% block content %}
+    <h2>{% trans "Subject areas" %}</h2>
+
+    <ul>
+        {% for area in areas %}
+            <li>
+                <a href="{% url 'area_detail' area.id %}?language={{ request.GET.language|default:'en' }}">{{ area.id }} : {{ area.name }}</a>
+
+                {% comment %}<a href="{% url 'area_detail' area.id %}?language={{ request.GET.language|default:request.LANGUAGE_CODE }}">{{ area.id }} : {{ area.name }}
+                </a>{% endcomment %}
+            </li>
+
+        {% endfor %}
+    </ul>
+{% endblock %}

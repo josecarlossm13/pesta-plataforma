@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% comment %}{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Term List" %}{% endblock %}
+
+{% block content %}
+<h1>{% trans "Term List" %}</h1>
+
+<form method="get" action="{% url 'term_list' %}">
+    <input type="text" name="query" placeholder="{% trans 'Search term' %}" value="{{ query|default_if_none:'' }}">
+
+    <select name="language">
+        <option value="all" {% if content_language == 'all' %}selected{% endif %}>{% trans "All languages" %}</option>
+        {% for lang_code, lang_name in LANGUAGES %}
+            <option value="{{ lang_code }}" {% if content_language == lang_code %}selected{% endif %}>
+                {{ lang_name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    {% if subarea_ref %}
+        <input type="hidden" name="subarea" value="{{ subarea_ref }}">
+    {% endif %}
+
+    <button type="submit">{% trans "Search" %}</button>
+</form>
+
+{% if subarea %}
+    <p><strong>{% trans "Filtering by subarea:" %}</strong> {{ subarea.name }}</p>
+{% endif %}
+
+<ul>
+    {% for term in terms %}
+        <li>
+            <a href="{% url 'term_detail' term.ref %}?language={{ content_language }}{% if query %}&query={{ query }}{% endif %}{% if subarea_ref %}&subarea={{ subarea_ref }}{% endif %}">
+                {{ term.subarea.area.id }}-{{ term.subarea.subarea_id_0x }}-{{ term.id }} :
+                {{ term.name|default:term.name_en }}
+            </a>
+        </li>
+    {% empty %}
+        <li>{% trans "No terms found." %}</li>
+    {% endfor %}
+</ul>
+{% endblock %}{% endcomment %}
+
+
+
+
+
+{% load static i18n %}
+
+{% block title %}{% trans "Terms" %}{% endblock %}
+
+{% block content %}
+
+    {% if subarea_ref %}
+{#        {% if subarea %}#}
+{#            <p><strong>{% trans "Filtering by Subarea" %}:</strong> {{ subarea_ref }} : {{ subarea.name }}</p>#}
+            <p><strong>{% trans "Filtering by Subarea" %}:</strong> {{subarea.area.id}}-{{ subarea.subarea_id_0x }} : {{ subarea.name }}</p>
+         {% comment %}{% else %}
+            <p><strong>{% trans "Filtering by Subarea" %}:</strong> {{ subarea_ref }} : {% trans "Subarea not found" %}</p>
+        {% endif %}{% endcomment %}
+    {% endif %}
+
+    <h2>{% trans "Terms" %}</h2>
+
+    <!-- Lista de termos -->
+    <ul>
+        {% for term in terms %}
+            <li>
+                <a href="{% url 'term_detail' term.ref %}?language={{ content_language }}&query={{ request.GET.query }}&subarea={{ subarea_ref }}">{{ term.ref }} : {{ term.name|default:term.name_en }}
+                </a>
+                <a href="{% url 'term_detail' term.ref %}?language={{ content_language }}&query={{ request.GET.query }}&subarea={{ subarea_ref }}">{{ subarea.area.id }}-{{ subarea.subarea_id_0x }}-{{ term.id }} : {{ term.name|default:term.name_en }}
+                </a>
+                <a href="{% url 'term_detail' term.ref %}?language={{ content_language }}&query={{ request.GET.query }}&subarea={{ term.subarea.ref }}">{{ term.subarea.area.id }}-{{ term.subarea.id|stringformat:"02d" }}-{{ term.id }} : {{ term.name|default:term.name_en }}
+                </a>
+                <a href="{% url 'term_detail' term.ref %}?language={{ content_language }}">
+                {{ term.subarea.area.id }}-{{ term.subarea.subarea_id_0x }}-{{ term.id }} :
+                {{ term.name|default:term.name_en }}
+                </a>
+
+                <a href="{% url 'term_detail' term.ref %}?language={{ content_language }}{% if query %}&query={{ query }}{% endif %}{% if subarea_ref %}&subarea={{ subarea_ref }}{% endif %}">
+                {{ term.subarea.area.id }}-{{ term.subarea.subarea_id_0x }}-{{ term.id }} :
+                {{ term.name|default:term.name_en }}
+                </a>
+
+            </li>
+        {% empty %}
+            <li>{% trans "No terms found." %}</li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+

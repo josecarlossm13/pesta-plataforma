@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% comment %}
+Herda de configurações de base.html
+{% endcomment %}
+
+{% load static i18n %}
+{% block title %}{% trans "Home" %}{% endblock %}
+
+{% block content %}
+    <h1>{% trans "IEV - International Electrotechnical Vocabulary" %}</h1>
+
+    {% if user.is_authenticated %}
+        <p>Hello {{ user.username }}!</p>
+
+        <p><a href="{% url 'password_change' %}">Password Change</a></p>
+
+        <form action="{% url 'logout' %}" method="post">
+        {% csrf_token %}
+        <p><button type="submit">Log Out</button></p>
+        </form>
+
+    {% else %}
+
+    <p>You are not logged in</p>
+    <a href="{% url 'login' %}">Log In</a>
+    {% endif %}
+
+    {% comment %}<nav>
+        <ul>
+            <li><a href="{% url 'register' %}">{% trans "Register" %}</a></li>
+            <li><a href="{% url 'login' %}">{% trans "Login" %}</a></li>
+        </ul>
+    </nav>{% endcomment %}
+
+    <section>
+        <p>{% trans "IEV project supporting international terminology dissemination." %}</p>
+    </section>
+{% endblock %}
