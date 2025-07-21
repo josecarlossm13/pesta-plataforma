@@ -25,7 +25,7 @@ Blocos {% block %} para cada página inserir conteúdo
 <header>
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">PESTA</a>
+            <a class="navbar-brand" href="#">Electrotechnical vocabulary</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -34,8 +34,8 @@ Blocos {% block %} para cada página inserir conteúdo
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">{% trans "Home" %}</a></li>
-{#                    <li class="nav-item"><a class="nav-link" href="{% url 'area_list' %}">{% trans "Areas" %}</a></li>#}
-{#                    <li class="nav-item"><a class="nav-link" href="{% url 'subareas_list' %}">{% trans "Subareas" %}</a></li>#}
+                    <li class="nav-item"><a class="nav-link" href="{% url 'area_list' %}">{% trans "Areas" %}</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{% url 'subareas_list' %}">{% trans "Subareas" %}</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'term-list' %}">{% trans "Terms" %}</a></li>
                 </ul>
                 <form class="d-flex me-4" action="{% url 'set_language' %}" method="post">
@@ -56,6 +56,17 @@ Blocos {% block %} para cada página inserir conteúdo
                     <input name="q" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">{% trans "Search" %}</button>
                 </form>
+                {% if user.is_authenticated %}
+                    <div class="d-flex align-items-center ms-3">
+                        <a class="btn btn-outline-primary" href="{% url 'account' %}">
+                            {{ user.username }}
+                        </a>
+                    </div>
+                {% else %}
+                    <div class="d-flex align-items-center ms-3">
+                        <a class="btn btn-outline-secondary" href="{% url 'account' %}">{% trans "Account" %}</a>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </nav>
@@ -69,6 +80,9 @@ Blocos {% block %} para cada página inserir conteúdo
 </main>
 
 <footer>
+
+    <p></p>
+    <p>{% trans "IEV project supporting international terminology dissemination." %}</p>
     <p>{% trans "Created by José Carlos Magalhães, ISEP student" %}</p>
     <p>&copy; 2025 – {% trans "All rights reserved" %}</p>
 </footer>

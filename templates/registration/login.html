@@ -7,9 +7,10 @@
     <!-- templates/registration/login.html -->
 <h2>Log In</h2>
     <form method="post">
-      {% csrf_token %}
-      {{ form }}
-      <p><button type="submit">Log In</button></p>
+        {% csrf_token %}
+        {{ form }}
+        <input type="hidden" name="next" value="{{ next }}">
+        <p><button type="submit">Log In</button></p>
     </form>
 {% endblock %}
 

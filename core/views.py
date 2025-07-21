@@ -29,7 +29,9 @@ class AreaListView(LoginRequiredMixin, ListView):
     context_object_name = 'areas'
     ordering = ['id']
 
-# view para listar todas as subareas
+    login_url = "/accounts/login/"
+
+    # view para listar todas as subareas
 # def subareas_list(request):
 #     subareas = SubArea.objects.all().order_by('ref')    # vai buscar todas as subareas e ordena pela ref (ex: 301-01)
 #     return render(request, 'subareas_list.html', {'subareas': subareas})
@@ -38,6 +40,8 @@ class SubAreaListView(LoginRequiredMixin, ListView):
     model = SubArea
     template_name = 'subareas_list.html'
     context_object_name = 'subareas'
+
+    login_url = "/accounts/login/"
 
     def get_queryset(self):
         return SubArea.objects.select_related('area').order_by('ref')
@@ -171,9 +175,11 @@ def term_detail(request, ref):
 #         'query': query,
 #     })
 
-class TermListView(ListView):
+class TermListView(LoginRequiredMixin, ListView):
     model = Term
     context_object_name = 'terms'
+
+    login_url = "/accounts/login/"
 
     def get_queryset(self):
         q = self.request.GET.get("q")

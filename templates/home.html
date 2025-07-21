@@ -13,17 +13,14 @@ Herda de configurações de base.html
     {% if user.is_authenticated %}
         <p>Hello {{ user.username }}!</p>
 
-        <p><a href="{% url 'password_change' %}">Password Change</a></p>
-
-        <form action="{% url 'logout' %}" method="post">
-        {% csrf_token %}
-        <p><button type="submit">Log Out</button></p>
-        </form>
 
     {% else %}
 
-    <p>You are not logged in</p>
-    <a href="{% url 'login' %}">Log In</a>
+        <p>Hello! You are not logged in.</p>
+        <p>To use the website, you need to be registered.</p>
+        <p>If you don’t have an account, please sign up on the account page.</p>
+
+
     {% endif %}
 
     {% comment %}<nav>
@@ -34,6 +31,6 @@ Herda de configurações de base.html
     </nav>{% endcomment %}
 
     <section>
-        <p>{% trans "IEV project supporting international terminology dissemination." %}</p>
+        <p></p>
     </section>
 {% endblock %}

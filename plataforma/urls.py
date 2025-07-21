@@ -21,20 +21,16 @@ from django.conf import settings            # Importa as configurações do Djan
 from django.conf.urls.static import static
 #from ..core import views
 from django.views.generic.base import TemplateView
+from django.contrib.auth import views as auth_views
+
 urlpatterns = [
     path('admin/', admin.site.urls),                        # Define a URL para aceder à interface de administração do Django.
-    path('accounts/', include('accounts.urls')),
-
-    path('core/', include('core.urls')),
-
-    path("i18n/", include("django.conf.urls.i18n")),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/login/', auth_views.LoginView.as_view(), name='login'),
+    path('accounts/', include('accounts.urls')),
+    path('core/', include('core.urls')),
+    path("i18n/", include("django.conf.urls.i18n")),
     path('', TemplateView.as_view(template_name="home.html"), name='home'),
-    # path('areas/', area_list, name='area_list'),             # URL para a lista das áreas
-    # path('areas/<str:area_id>/', area_detail, name='area_detail'),  # URL para detalhes da área
-    # path('subareas/', subareas_list, name='subareas_list'),
-    # path('terms/', views.term_list, name='term_list'),
-    # path('terms/<str:ref>/', TermDetailView.as_view(), name='term_detail'),
     path('ckeditor/', include('ckeditor_uploader.urls')),   # Inclui as URLs do CKEditor para permitir uploads e outras funcionalidades.
 ]
 
