@@ -35,8 +35,10 @@
     </a>{% endcomment %}
 
 
-{#    <h1>IEV ref : {{ term.ref }} : {{ term_name }}</h1>#}
+    <h2>IEV ref : {{ term.ref }} : {{ term_name }}</h2>
+{% comment %}
     <h2>IEV ref : {{ subarea.area.id }}-{{ subarea.subarea_id_0x }}-{{ term.id }} : {{ term_name }}</h2>
+{% endcomment %}
 
     <p><strong>{% trans "Description" %}:</strong> {{ term_description }}</p>
     <p><strong>{% trans "Source" %}:</strong> {{ term.source }}</p>

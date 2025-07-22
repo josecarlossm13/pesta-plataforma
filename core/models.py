@@ -4,6 +4,7 @@ from django.db import models                            # Importa o módulo mode
 from django.utils.translation import gettext as _       # Importa a função gettext do Django, renomeando-a como '_', para facilitar a tradução de strings. Documentação Django: Specify a translation string by using the function gettext(). It’s convention to import this as a shorter alias, _, to save typing.
 import reversion
 
+
 # Modelo para a área de conhecimento
 @reversion.register()
 class Area(models.Model):                               # Classe Area herda de models.Model, representando um modelo de dados no Django.
@@ -14,6 +15,7 @@ class Area(models.Model):                               # Classe Area herda de m
         verbose_name = _('Area')                        # verbose_name é uma string que fornece um nome legível para o modelo, por ex. no painel de administração do django
     def __str__(self):                                  # Metodo que define a representação em string do modelo.
         return f"{self.id} {self.name}"                 # Retorna uma string formatada com o 'id' e o 'name' da área.
+
 
 # Modelo para a subárea de conhecimento
 @reversion.register()
@@ -27,18 +29,16 @@ class SubArea(models.Model):
         verbose_name = _('Subarea')                     # verbose_name é uma string que fornece um nome legível para o modelo, por ex. no painel de administração do django
 
     def save(self, *args, **kwargs):
+        # Formata o ID com 2 dígitos, apenas se for numérico
+        if self.id and self.id.isdigit():
+            self.id = f"{int(self.id):02d}"
+
         self.ref = f'{self.area.id}-{self.id}'
         super().save(*args, **kwargs)
 
-    @property
-    def subarea_id_0x(self):
-        try:
-            return f"{int(self.id):02d}"
-        except (ValueError, TypeError):
-            return self.id
-
     def __str__(self):                                   # Metodo que define a representação em string do modelo.
         return f"{self.ref} {self.name}"                 # Retorna uma string formatada com o 'id' da área, o 'id' da subárea (com pelo menos dois dígitos inteiros) e o 'name' da subárea.
+
 
 # Modelo para os termos/vocábulos
 @reversion.register()

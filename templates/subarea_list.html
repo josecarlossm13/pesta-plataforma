@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Subareas" %}{% endblock %}
+
+{% block content %}
+    {% if area %}
+        <h2>{% trans "Area" %}: {{ area.id }} : {{ area.name }}</h2>
+
+        <h3>{% trans "Subareas" %}</h3>
+        <ul>
+            {% for subarea in subareas %}
+                <li>
+
+                    <a href="{% url 'term-list-by-subarea' subarea.ref %}">{{ subarea.ref }} : {{ subarea.name|default:subarea.name_en }}
+                    </a>
+
+                </li>
+            {% empty %}
+                <li>{% trans "No subareas found." %}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+
+    <h2>{% trans "Subareas" %}</h2>
+
+    {% if subareas %}
+        <ul>
+            {% for subarea in subareas %}
+                <li>
+
+                    <a href="{% url 'term-list-by-subarea' subarea.ref %}">{{ subarea.ref }} : {{ subarea.name|default:subarea.name_en }}
+                    </a>
+
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+
+        <p>{% trans "No subareas found." %}</p>
+    {% endif %}
+    {% endif %}
+
+{% endblock %}

@@ -9,10 +9,9 @@
     <ul>
         {% for area in areas %}
             <li>
-                <a href="{% url 'area_detail' area.id %}?language={{ request.GET.language|default:'en' }}">{{ area.id }} : {{ area.name }}</a>
 
-                {% comment %}<a href="{% url 'area_detail' area.id %}?language={{ request.GET.language|default:request.LANGUAGE_CODE }}">{{ area.id }} : {{ area.name }}
-                </a>{% endcomment %}
+                <a href="{% url 'subarea-list-by-area' area.id %}">{{ area.id }} : {{ area.name }}</a>
+
             </li>
 
         {% endfor %}
