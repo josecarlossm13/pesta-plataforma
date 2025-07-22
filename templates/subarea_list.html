@@ -5,7 +5,8 @@
 
 {% block content %}
     {% if area %}
-        <h2>{% trans "Area" %}: {{ area.id }} : {{ area.name }}</h2>
+        <p><strong>{% trans "Filtering by" %}:</strong></p>
+        <p><strong>{% trans "Area " %}</strong> {{ area.id }} : {{ area.name }}</p>
 
         <h3>{% trans "Subareas" %}</h3>
         <ul>

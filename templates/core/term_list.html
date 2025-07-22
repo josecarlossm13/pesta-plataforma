@@ -10,8 +10,8 @@
             <p><strong>{% trans "Filtering by Subarea" %}:</strong> {{ subarea_ref }} : {{ subarea.name|default:subarea.name_en }}</p>
 {% endcomment %}
             <p><strong>{% trans "Filtering by" %}:</strong></p>
-            <p><strong>{% trans "Area" %}:</strong> {{ subarea.area.id }} - {{ subarea.area.name }}</p>
-            <p><strong>{% trans "Subarea" %}:</strong> {{ subarea.ref }} - {{ subarea.name }}</p>
+            <p><strong>{% trans "Area " %}</strong> {{ subarea.area.id }} : {{ subarea.area.name }}</p>
+            <p><strong>{% trans "Subarea " %}</strong> {{ subarea.ref }} : {{ subarea.name }}</p>
 
         {% endif %}
 

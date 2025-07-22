@@ -1,14 +1,5 @@
-{% comment %}
-base.html contém:
-Cabeçalho com navegação
-Formulário de seleção de idioma da interface
-Footer comum (rodapé)
-Blocos {% block %} para cada página inserir conteúdo
-{% endcomment %}
-
 {% load static i18n %}
 <!DOCTYPE html>
-{#<html lang="{{ request.LANGUAGE_CODE|default:'en' }}">#}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,10 +24,31 @@ Blocos {% block %} para cada página inserir conteúdo
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
+                           aria-current="page" href="{% url 'home' %}">{% trans "Home" %}</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'area-list' %}active{% endif %}"
+                           href="{% url 'area-list' %}">{% trans "Areas" %}</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'subarea-list' %}active{% endif %}"
+                           href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'term-list' %}active{% endif %}"
+                           href="{% url 'term-list' %}">{% trans "Terms" %}</a>
+                    </li>
+{% comment %}
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">{% trans "Home" %}</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'area-list' %}">{% trans "Areas" %}</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'term-list' %}">{% trans "Terms" %}</a></li>
+{% endcomment %}
                 </ul>
                 <form class="d-flex me-4" action="{% url 'set_language' %}" method="post">
                     {% csrf_token %}
