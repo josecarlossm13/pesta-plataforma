@@ -1,6 +1,6 @@
 # accounts/urls.py
 from django.urls import path
-from .views import TermListView, TermDetailView, AreaListView, SubAreaListView
+from .views import TermListView, TermDetailView, AreaListView, SubAreaListView, home
 from . import views
 
 

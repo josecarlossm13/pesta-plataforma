@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView                           # Importa a visualização de login do Django.
 from django.urls import reverse_lazy
 from django.utils.translation import get_language               # Para obter idioma da interface
-from core.models import Term, Area, SubArea                                                  # Importa o modelo Term,  que contém os dados dos termos.
+from core.models import Term, Area, SubArea, News                                # Importa o modelo Term,  que contém os dados dos termos.
 from core.forms import UserRegistrationForm #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
 from django.db.models import Q
 from django.contrib.auth.forms import UserCreationForm              # Importa o formulário de criação de utilizador padrão do Django.
@@ -14,6 +14,7 @@ from django.utils import translation
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 
 class AreaListView(LoginRequiredMixin, ListView):
@@ -125,3 +126,15 @@ class TermDetailView(LoginRequiredMixin, DetailView):
         context['subarea_ref'] = subarea_ref
 
         return context
+
+#  para mostrar mensagens de avisos/notícias na homepage
+def home(request):
+    agora = timezone.now()
+    news = News.objects.filter(
+        ativo=True
+    ).filter(
+        models.Q(inicio__lte=agora) | models.Q(inicio__isnull=True),
+        models.Q(fim__gte=agora) | models.Q(fim__isnull=True)
+    ).order_by('-criado_em').first()
+
+    return render(request, 'home.html', {'news': news})

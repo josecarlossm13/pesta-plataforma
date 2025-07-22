@@ -22,6 +22,7 @@ from django.conf.urls.static import static
 #from ..core import views
 from django.views.generic.base import TemplateView
 from django.contrib.auth import views as auth_views
+from core.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),                        # Define a URL para aceder à interface de administração do Django.
@@ -30,7 +31,10 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('core/', include('core.urls')),
     path("i18n/", include("django.conf.urls.i18n")),
-    path('', TemplateView.as_view(template_name="home.html"), name='home'),
+
+   # path('', TemplateView.as_view(template_name="home.html"), name='home'),
+    path('', home, name='home'),
+
     path('ckeditor/', include('ckeditor_uploader.urls')),   # Inclui as URLs do CKEditor para permitir uploads e outras funcionalidades.
 ]
 

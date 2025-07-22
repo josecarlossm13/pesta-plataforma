@@ -13,15 +13,22 @@ Herda de configurações de base.html
     {% if user.is_authenticated %}
         <p>Hello {{ user.username }}!</p>
 
+        {% if news %}
+          <div class="alert alert-info" role="alert">
+            <h5><strong>{{ news.titulo }}</strong></h5>
+            <div>{{ news.mensagem|safe }}</div>
+          </div>
+        {% endif %}
+
 
     {% else %}
 
         <p>Hello! You are not logged in.</p>
         <p>To use the website, you need to be registered.</p>
         <p>If you don’t have an account, please sign up on the account page.</p>
-
-
     {% endif %}
+
+
 
     <section>
         <p></p>

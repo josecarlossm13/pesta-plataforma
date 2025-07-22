@@ -4,7 +4,7 @@ from import_export.admin import ImportExportModelAdmin, ExportActionMixin
 from import_export.widgets import ForeignKeyWidget
 from modeltranslation.admin import TranslationAdmin         # Importa o TranslationAdmin, uma classe fornecida pelo pacote django-modeltranslation para facilitar a tradução de campos de modelos do Django na interface de administração
 from reversion.admin import VersionAdmin
-from .models import Area, SubArea, Term                     # Importa os modelos Area, SubArea, e Term de models.py
+from .models import Area, SubArea, Term, News                     # Importa os modelos Area, SubArea, e Term de models.py
 
 #####tentativa####  (tem que ficar antes do AreaAdmin)                  #Define as colunas de importação/exportação para o modelo Area
 class AreaResource(resources.ModelResource):
@@ -151,4 +151,9 @@ class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportAc
     resource_classes = [TermResource]
 
 
+@admin.register(News)
+class NewsAdmin(admin.ModelAdmin):
+    list_display = ('titulo', 'ativo', 'inicio', 'fim', 'criado_em')
+    list_filter = ('ativo',)
+    ordering = ('-criado_em',)
 

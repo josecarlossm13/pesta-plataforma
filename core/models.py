@@ -3,6 +3,7 @@ from ckeditor.fields import RichTextField               # Importa o campo RichTe
 from django.db import models                            # Importa o módulo models do Django, que contém classes para definir modelos de dados.
 from django.utils.translation import gettext as _       # Importa a função gettext do Django, renomeando-a como '_', para facilitar a tradução de strings. Documentação Django: Specify a translation string by using the function gettext(). It’s convention to import this as a shorter alias, _, to save typing.
 import reversion
+from django.utils import timezone
 
 
 # Modelo para a área de conhecimento
@@ -64,3 +65,24 @@ class Term(models.Model):                               # Classe Term herda de m
 
     def __str__(self):                                  # Metodo que define a representação em string do modelo.
         return f"{self.ref} {self.name}"                # Retorna uma string formatada com a referência IEV e o nome do termo.
+
+
+# para mostrar mensagens de avisos/notícias na homepage
+class News(models.Model):
+    titulo = models.CharField("Título", max_length=200, default="Sem título")
+    mensagem = RichTextField("Mensagem")
+    ativo = models.BooleanField("Ativa", default=False)
+    inicio = models.DateTimeField("Exibir a partir de", null=True, blank=True)
+    fim = models.DateTimeField("Ocultar após", null=True, blank=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def esta_valida(self):
+        agora = timezone.now()
+        if self.inicio and self.inicio > agora:
+            return False
+        if self.fim and self.fim < agora:
+            return False
+        return True
+
+    def __str__(self):
+        return f"{self.titulo} ({'Ativa' if self.ativo else 'Inativa'})"

@@ -8,3 +8,5 @@ __pycache__/
 # Ignora arquivos do ambiente virtual
 venv/
 env/
+
+templates/rascunho.html
