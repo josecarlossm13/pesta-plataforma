@@ -4,6 +4,54 @@
 {% block title %}{% trans "Subject areas" %}{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{% trans "Subject areas" %}</h2>
+
+    {% if areas %}
+        <table
+            class="table table-striped"
+            data-toggle="table"
+            data-search="true"
+            data-pagination="true"
+            data-page-size="10"
+        >
+            <thead>
+                <tr>
+                    <th>{% trans "Area ID" %}</th>
+                    <th>{% trans "Area" %}</th>
+                    <th>{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for area in areas %}
+                    <tr>
+                        <td>{{ area.id }}</td>
+                        <td>{{ area.name }}</td>
+                        <td>
+                            <a href="{% url 'subarea-list-by-area' area.id %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-diagram-3"></i> {% trans "View Subareas" %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning">
+            {% trans "No areas found." %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+{# sem bootstrap #}
+{% comment %}{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Subject areas" %}{% endblock %}
+
+{% block content %}
     <h2>{% trans "Subject areas" %}</h2>
 
     <ul>
@@ -16,4 +64,4 @@
 
         {% endfor %}
     </ul>
-{% endblock %}
+{% endblock %}{% endcomment %}

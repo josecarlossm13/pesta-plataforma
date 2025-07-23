@@ -4,6 +4,66 @@
 {% block title %}{% trans "Subareas" %}{% endblock %}
 
 {% block content %}
+<div class="container mt-4">
+
+    {% if area %}
+        <p class="mb-2 text-muted">
+            <strong>{% trans "Filtering by" %}:</strong><br>
+            <strong>{% trans "Area" %}</strong> {{ area.id }} : {{ area.name }}
+        </p>
+
+{% comment %}        <p><strong>{% trans "Filtering by" %}:</strong></p>
+        <p><strong>{% trans "Area" %}</strong> {{ area.id }} : {{ area.name }}</p>{% endcomment %}
+    {% endif %}
+
+    <h2 class="my-4">{% trans "Subareas" %}</h2>
+
+    {% if subareas %}
+        <table
+            class="table table-striped"
+            data-toggle="table"
+            data-search="true"
+            data-pagination="true"
+            data-page-size="10"
+        >
+            <thead>
+                <tr>
+                    <th>{% trans "Subarea ID" %}</th>
+                    <th>{% trans "Subarea" %}</th>
+                    <th>{% trans "Actions" %}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subarea in subareas %}
+                    <tr>
+                        <td>{{ subarea.ref }}</td>
+                        <td>{{ subarea.name|default:subarea.name_en }}</td>
+                        <td>
+                            <a href="{% url 'term-list-by-subarea' subarea.ref %}" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-search"></i> {% trans "View Terms" %}
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="alert alert-warning">
+            {% trans "No subareas found." %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+
+{# sem bootstrap #}
+{% comment %}{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Subareas" %}{% endblock %}
+
+{% block content %}
     {% if area %}
         <p><strong>{% trans "Filtering by" %}:</strong></p>
         <p><strong>{% trans "Area " %}</strong> {{ area.id }} : {{ area.name }}</p>
@@ -42,4 +102,4 @@
     {% endif %}
     {% endif %}
 
-{% endblock %}
+{% endblock %}{% endcomment %}

@@ -4,42 +4,75 @@
 {% block title %}{{ term_name }}{% endblock %}
 
 {% block content %}
-    <!-- Link de retorno com o idioma de conteúdo e query preservados -->
-    {% comment %}<a href="{% url 'term_list' %}?language={{ content_language }}&query={{ request.GET.query }}">{% trans "Back to Terms" %}
-    </a>{% endcomment %}
-    {% comment %}<a href="{% url 'term_list' %}?language={{ content_language }}&query={{ request.GET.query }}{% if request.GET.subarea %}&subarea={{ request.GET.subarea }}{% endif %}">
-    {% trans "Back to Terms" %}
-    este é anterior funcional####################acima
-    </a>{% endcomment %}
+<div class="container mt-4">
 
-    {% comment %}<a href="{% url 'term_list' %}?language={{ content_language }}&query={{ request.GET.query }}{% if request.GET.subarea and request.GET.subarea != 'None' %}&subarea={{ request.GET.subarea }}{% endif %}">
-    {% trans "Back to Terms" %}
-    </a>{% endcomment %}
-    {% comment %}<a href="{% url 'term_list' %}?language={{ content_language }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if request.GET.subarea %}&subarea={{ request.GET.subarea }}{% endif %}">
-    {% trans "Back to Terms" %}
-    </a>{% endcomment %}
-    {% comment %}<a href="{% url 'term_list' %}?language={{ content_language }}{% if request.GET.query %}&query={{ request.GET.query }}{% endif %}{% if subarea_ref %}&subarea={{ subarea_ref }}{% endif %}">
-    {% trans "Back to Terms" %}
-    </a>{% endcomment %}
-
-    {% comment %}<a href="{% url 'term_list' %}?language={{ content_language }}{% if query %}&query={{ query }}{% endif %}{% if subarea_ref %}&subarea={{ subarea_ref }}{% endif %}">
-    {% trans "Back to Terms" %}
-    </a>{% endcomment %}
-
-    <a href="{% url 'term-list' %}?language={{ content_language }}{% if query %}&query={{ query }}{% endif %}{% if subarea_ref %}&subarea={{ subarea_ref }}{% endif %}">
-    {% trans "Back to Terms" %}
+    <a href="{% url 'term-list-by-subarea' subarea.ref %}" class="btn btn-outline-secondary mb-3">
+        <i class="bi bi-arrow-left"></i> {% trans "Back to filtered Terms" %}
     </a>
 
+    <div class="card shadow-sm">
+        <div class="card-body">
 
-   {% comment %} <a href="{% url 'term_list' %}?language={{ content_language }}&{% if request.GET.query %}query={{ request.GET.query }}&{% endif %}{% if request.GET.subarea %}subarea={{ request.GET.subarea }}{% endif %}">{% trans "Go back to terms" %}
-    </a>{% endcomment %}
+            <p class="mb-2 text-muted">
+                <strong>{% trans "Area" %}</strong> {{ subarea.area.id }} : {{ subarea.area.name }}<br>
+                <strong>{% trans "Subarea" %}</strong> {{ subarea.ref }} : {{ subarea.name }}<br>
+                <strong>{% trans "IEV ref" %}</strong> {{ term.ref }}
+            </p>
+
+            <p><strong>{% trans "Term" %}:</strong> {{ term.name }}</p>
+            <p><strong>{% trans "Description" %}:</strong> {{ term_description }}</p>
+
+            {% if term.source %}
+                <p><strong>{% trans "Source" %}:</strong> {{ term.source }}</p>
+            {% endif %}
+
+            {% if term.image %}
+                <div class="my-4">
+                    <img src="{{ term.image.url }}" alt="{{ term_name }}" class="img-fluid rounded border">
+                </div>
+            {% endif %}
+
+            {% if term_extra %}
+                <div class="mt-4">
+                    <button class="btn btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#termExtraContent" aria-expanded="false" aria-controls="termExtraContent">
+                        <i class="bi bi-plus-square"></i> {% trans "Show Additional Content" %}
+                    </button>
+
+                    <div class="collapse mt-3" id="termExtraContent">
+                        <div class="card card-body">
+                            {{ term_extra|safe }}
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
 
 
-    <h2>IEV ref : {{ term.ref }} : {{ term_name }}</h2>
-{% comment %}
-    <h2>IEV ref : {{ subarea.area.id }}-{{ subarea.subarea_id_0x }}-{{ term.id }} : {{ term_name }}</h2>
-{% endcomment %}
 
+
+{# sem bootstrap #}
+{% comment %}{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{{ term_name }}{% endblock %}
+
+{% block content %}
+
+    <a href="{% url 'term-list-by-subarea' subarea.ref %}">{% trans "Back to filtered Terms" %}
+    </a>
+
+    <p>
+        <strong>{% trans "Area" %}</strong> {{ subarea.area.id }} : {{ subarea.area.name }}<br>
+        <strong>{% trans "Subarea" %}</strong> {{ subarea.ref }} : {{ subarea.name }}<br>
+        <strong>{% trans "IEV ref" %}</strong> {{ term.ref }}
+    </p>
+
+    <p><strong>{% trans "Term" %}:</strong> {{ term.name }}</p>
     <p><strong>{% trans "Description" %}:</strong> {{ term_description }}</p>
     <p><strong>{% trans "Source" %}:</strong> {{ term.source }}</p>
 
@@ -53,4 +86,4 @@
     {% endif %}
 
     </a>
-{% endblock %}
+{% endblock %}{% endcomment %}
