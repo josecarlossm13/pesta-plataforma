@@ -47,8 +47,6 @@ def get_back_url(request, fallback_url):
         return stack[-1]  # página anterior real
     return fallback_url
 
-
-
 class AreaListView(LoginRequiredMixin, ListView):
     model = Area
     template_name = 'area_list.html'
@@ -66,7 +64,6 @@ class AreaListView(LoginRequiredMixin, ListView):
         context['back_url'] = get_back_url(self.request, fallback_url=reverse('home'))
 
         return context
-
 
 
 # View para listar subareas. [pode receber uma (area_id)]
@@ -190,19 +187,33 @@ class TermDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # Montar fallback_url preservando filtros
         # Usar a função para obter o back_url (botão "voltar")
         subarea_ref = self.request.GET.get('ref')
+        query = self.request.GET.get('q')
+        area_id = self.request.GET.get('area')
+
         if subarea_ref:
             fallback = reverse('term-list-by-subarea', kwargs={'ref': subarea_ref})
         else:
             fallback = reverse('term-list')
 
+        query_params = []
+        if query:
+            query_params.append(f'q={query}')
+        if area_id:
+            query_params.append(f'area={area_id}')
+
+        if query_params:
+            fallback += '?' + '&'.join(query_params)
+
+        # Definir back_url usando a stack de navegação, ou fallback com filtros
         context['back_url'] = get_back_url(self.request, fallback_url=fallback)
 
+        # Conteúdo traduzido, etc.
         # Define o idioma do conteúdo a partir da query string ou da interface
         content_language = self.request.GET.get('language') or get_language()
         query = self.request.GET.get('q', '')
-
 
         term = context['term']
         # Campos traduzidos dinamicamente
@@ -218,6 +229,8 @@ class TermDetailView(LoginRequiredMixin, DetailView):
         context['subarea'] = term.subarea
         # Adiciona filtros ao contexto para manter os valores no link de retorno
         context['query'] = query
+        context['selected_area_id'] = area_id
+        context['subarea_ref'] = subarea_ref
 
         return context
 

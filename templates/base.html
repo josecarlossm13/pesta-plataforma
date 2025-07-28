@@ -73,7 +73,7 @@
 {#                </form>#}
 
                 <form class="d-flex" method="GET" action="{% url 'term-list' %}">
-                    <input name="q" class="form-control me-2" type="search" placeholder="{% trans 'Search term' %}" aria-label="Search">
+                    <input name="q" class="form-control me-2" type="search" placeholder="{% trans 'Search term' %}" aria-label="Search" value="{{ search_query|default:'' }}">
 
                     <select name="area" class="form-select me-2">
                         <option value="">{% trans "All Areas" %}</option>

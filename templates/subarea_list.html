@@ -36,9 +36,15 @@
                         <td>{{ subarea.ref }}</td>
                         <td>{{ subarea.name|default:subarea.name_en }}</td>
                         <td>
-                            <a href="{% url 'term-list-by-subarea' ref=subarea.ref %}" class="btn btn-sm btn-outline-primary">
-                                <i class="bi bi-search"></i> {% trans "View Terms" %}
+{#                            <a href="{% url 'term-list-by-subarea' ref=subarea.ref %}" class="btn btn-sm btn-outline-primary">#}
+{#                                <i class="bi bi-search"></i> {% trans "View Terms" %}#}
+{#                            </a>#}
+
+                            <a href="{% url 'term-list-by-subarea' subarea.ref %}?q={{ query }}&area={{ selected_area_id }}" class="btn btn-sm btn-outline-primary">
+                              <i class="bi bi-search"></i> {% trans "View Terms" %}
                             </a>
+
+
                         </td>
                     </tr>
                 {% endfor %}
