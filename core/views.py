@@ -15,6 +15,38 @@ from django.db import models
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from django.urls import reverse                                     # usado para gerar URLs com base no nome dos caminhos
+
+# funções para gerar uma stack para usar no botão "voltar"
+def update_navigation_stack(request):
+    stack = request.session.get('navigation_stack', [])
+    current_url = request.get_full_path()
+
+    # Se a pilha estiver vazia ou o topo for diferente da URL atual, adiciona
+    if not stack or stack[-1] != current_url:
+        # Se o URL atual existir na stack (loop), remove-o antes de re-adicionar
+        if current_url in stack:
+            stack.remove(current_url)
+        stack.append(current_url)
+
+    # Mantém apenas os últimos 10 itens
+    request.session['navigation_stack'] = stack[-10:]
+
+def get_back_url(request, fallback_url):
+    stack = request.session.get('navigation_stack', [])
+
+    # Remover a página atual do topo
+    current_url = request.get_full_path()
+    if stack and stack[-1] == current_url:
+        stack.pop()
+
+    # Atualizar a stack no request.session
+    request.session['navigation_stack'] = stack
+
+    if stack:
+        return stack[-1]  # página anterior real
+    return fallback_url
+
 
 
 class AreaListView(LoginRequiredMixin, ListView):
@@ -22,8 +54,19 @@ class AreaListView(LoginRequiredMixin, ListView):
     template_name = 'area_list.html'
     context_object_name = 'areas'
     ordering = ['id']
-
     login_url = "/accounts/account/"
+
+    def get(self, request, *args, **kwargs):
+        update_navigation_stack(request)
+        return super().get(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        context['back_url'] = get_back_url(self.request, fallback_url=reverse('home'))
+
+        return context
+
 
 
 # View para listar subareas. [pode receber uma (area_id)]
@@ -32,6 +75,15 @@ class SubAreaListView(LoginRequiredMixin, ListView):
     template_name = 'subarea_list.html'
     context_object_name = 'subareas'
     login_url = "/accounts/account/"
+
+    # # para o botão voltar. armazenar manualmente o caminho anterior desejado em request.session, uma vez que o HTTP_REFERER usava apenas o histórico e não resultava sempre
+    # def get(self, request, *args, **kwargs):
+    #     request.session['previous_url'] = request.get_full_path()
+    #     return super().get(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        update_navigation_stack(request)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         area_id = self.kwargs.get('area_id')
@@ -45,6 +97,10 @@ class SubAreaListView(LoginRequiredMixin, ListView):
         area_id = self.kwargs.get('area_id')
         if area_id:
             context['area'] = Area.objects.filter(id=area_id).first()
+
+        # Botão voltar
+        context['back_url'] = get_back_url(self.request, fallback_url=reverse('area-list'))
+
         return context
 
 
@@ -59,6 +115,15 @@ class TermListView(LoginRequiredMixin, ListView):
     model = Term
     context_object_name = 'terms'
     login_url = "/accounts/account/"
+
+    # # para o botão voltar. armazenar manualmente o caminho anterior desejado em request.session, uma vez que o HTTP_REFERER usava apenas o histórico e não resultava sempre
+    # def get(self, request, *args, **kwargs):
+    #     request.session['previous_url'] = request.get_full_path()
+    #     return super().get(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        update_navigation_stack(request)
+        return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         q = self.request.GET.get("q")
@@ -85,8 +150,25 @@ class TermListView(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         subarea_ref = self.kwargs.get('ref')
         if subarea_ref:
-            context['subarea_ref'] = subarea_ref
             context['subarea'] = SubArea.objects.filter(ref=subarea_ref).first()
+            context['subarea_ref'] = subarea_ref
+        else:
+            # Se não há subarea, evita usar esses campos no template
+            context['subarea_ref'] = None
+            context['subarea'] = None
+
+        # # Adiciona botão de voltar com fallback (técnica http_referer)
+        # referer = self.request.META.get('HTTP_REFERER')
+        # if referer and self.request.get_host() in referer:
+        #     context['back_url'] = referer
+        # elif subarea_ref:
+        #     context['back_url'] = reverse('subarea-list')
+        # else:
+        #     context['back_url'] = reverse('area-list')  # fallback mais genérico
+
+        # Botão voltar
+        context['back_url'] = get_back_url(self.request, fallback_url=reverse('subarea-list'))
+
         return context
 
 
@@ -95,6 +177,10 @@ class TermDetailView(LoginRequiredMixin, DetailView):
     context_object_name = 'term'
     login_url = "/accounts/account/"
 
+    def get(self, request, *args, **kwargs):
+        update_navigation_stack(request)
+        return super().get(request, *args, **kwargs)
+
     def get_object(self, queryset=None):
         ref = self.kwargs.get('ref')
         return get_object_or_404(Term, ref=ref)
@@ -102,13 +188,28 @@ class TermDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
+        # # botão para voltar atrás com fallback caso seja acedido diretamente pelo link (técnica http_referer)
+        # referer = self.request.META.get('HTTP_REFERER')
+        # if referer and self.request.get_host() in referer:
+        #     context['back_url'] = referer
+        # else:
+        #     context['back_url'] = reverse('term-list')  # fallback seguro
+
+        # # Fallback robusto para back_url
+        # back_url = self.request.session.get('previous_url')
+        # if back_url and self.request.get_host() in back_url:
+        #     context['back_url'] = back_url
+        # else:
+        #     context['back_url'] = reverse('term-list')  # Ou algum outro valor seguro
+
+        # Usar a função para obter o back_url (botão "voltar")
+        context['back_url'] = get_back_url(self.request, fallback_url=reverse('term-list'))
+
         # Define o idioma do conteúdo a partir da query string ou da interface
         content_language = self.request.GET.get('language') or get_language()
         query = self.request.GET.get('query', '')
-        subarea_ref = self.request.GET.get('subarea', '')
 
         term = context['term']
-
         # Campos traduzidos dinamicamente
         name_field = f'name_{content_language}'
         description_field = f'description_{content_language}'
@@ -120,21 +221,20 @@ class TermDetailView(LoginRequiredMixin, DetailView):
         context['term_extra'] = getattr(term, extra_field, term.extra)
         context['content_language'] = content_language
         context['subarea'] = term.subarea
-
         # Adiciona filtros ao contexto para manter os valores no link de retorno
         context['query'] = query
-        context['subarea_ref'] = subarea_ref
 
         return context
 
 #  para mostrar mensagens de avisos/notícias na homepage
 def home(request):
-    agora = timezone.now()
+    now = timezone.now()
     news = News.objects.filter(
-        ativo=True
+        active=True
     ).filter(
-        models.Q(inicio__lte=agora) | models.Q(inicio__isnull=True),
-        models.Q(fim__gte=agora) | models.Q(fim__isnull=True)
-    ).order_by('-criado_em').first()
+        models.Q(start_date__lte=now) | models.Q(start_date__isnull=True),
+        models.Q(end_date__gte=now) | models.Q(end_date__isnull=True)
+    ).order_by('-created_at').first()
 
     return render(request, 'home.html', {'news': news})
+

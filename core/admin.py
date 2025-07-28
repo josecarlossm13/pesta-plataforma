@@ -143,17 +143,28 @@ class TermResource(resources.ModelResource):
                         ]
         #export_order = ('id', 'price', 'author', 'name')
 
-@admin.register(Term)                                                       # Regista o modelo Term na interface de administração do Django, permitindo a sua gestão através do painel de administração.
-class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportActionMixin) :         # Classe TermAdmin herda de TranslationAdmin, permitindo que a interface de administração suporte a tradução dos campos do modelo Term.
-    list_display = ['ref','id', 'name', 'subarea__area', 'subarea']         # Define os campos do modelo que serão exibidos na lista de objetos na interface de administração.
-    list_filter = ['subarea__area', 'subarea']                              # Adiciona filtros na interface de administração, permitindo filtrar os objetos com base na 'subarea' e na 'area' associada à 'subarea'.
+# @admin.register(Term)                                                       # Regista o modelo Term na interface de administração do Django, permitindo a sua gestão através do painel de administração.
+# class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportActionMixin) :         # Classe TermAdmin herda de TranslationAdmin, permitindo que a interface de administração suporte a tradução dos campos do modelo Term.
+#     list_display = ['ref','id', 'name', 'subarea__area', 'subarea']         # Define os campos do modelo que serão exibidos na lista de objetos na interface de administração.
+#     list_filter = ['subarea__area', 'subarea']                              # Adiciona filtros na interface de administração, permitindo filtrar os objetos com base na 'subarea' e na 'area' associada à 'subarea'.
+#     search_fields = ['name']
+#     resource_classes = [TermResource]
+
+@admin.register(Term)                                                         # Regista o modelo Term na interface de administração do Django, permitindo a sua gestão através do painel de administração.
+class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportActionMixin):         # Classe TermAdmin herda de TranslationAdmin, permitindo que a interface de administração suporte a tradução dos campos do modelo Term.
+    list_display = ['ref', 'id', 'name', 'area', 'subarea']                   # Define os campos do modelo que serão exibidos na lista de objetos na interface de administração.
+    list_filter = ['subarea__area', 'subarea']                                # Adiciona filtros na interface de administração, permitindo filtrar os objetos com base na 'subarea' e na 'area' associada à 'subarea'.
     search_fields = ['name']
     resource_classes = [TermResource]
+
+    def area(self, obj):
+        return obj.subarea.area  # ou obj.subarea.area.name para aparecer só o nome da Area sem o ID
+    area.short_description = 'Area'
+    area.admin_order_field = 'subarea__area'
 
 
 @admin.register(News)
 class NewsAdmin(admin.ModelAdmin):
-    list_display = ('titulo', 'ativo', 'inicio', 'fim', 'criado_em')
-    list_filter = ('ativo',)
-    ordering = ('-criado_em',)
-
+    list_display = ('title', 'active', 'start_date', 'end_date', 'created_at')
+    list_filter = ('active',)
+    ordering = ('-created_at',)

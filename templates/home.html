@@ -4,15 +4,15 @@
 {% block title %}{% trans "Home" %}{% endblock %}
 
 {% block content %}
-  <h1 class="mb-4">{% trans "IEV - International Electrotechnical Vocabulary" %}</h1>
+  <h1 class="mb-4">{% trans "IEVP - International Electrotechnical Vocabulary Platform" %}</h1>
 
   {% if user.is_authenticated %}
     <p class="lead">{% trans "Hello" %} {{ user.username }}!</p>
 
     {% if news %}
       <div class="alert alert-info" role="alert">       {# estilos de avisos: alert-info, alert-success, alert-warning, alert-danger #}
-        <h5><i class="bi bi-info-circle-fill me-2"></i><strong>{{ news.titulo }}</strong></h5>
-        <div>{{ news.mensagem|safe }}</div>
+        <h5><i class="bi bi-info-circle-fill me-2"></i><strong>{{ news.title }}</strong></h5>
+        <div>{{ news.message|safe }}</div>
       </div>
     {% endif %}
 
@@ -26,39 +26,3 @@
     {# Aqui posso colocar conteúdo extra do home #}
   </section>
 {% endblock %}
-
-
-{# sem bootstrap #}
-{% comment %}
-{% extends "base.html" %}
-
-{% load static i18n %}
-{% block title %}{% trans "Home" %}{% endblock %}
-
-{% block content %}
-    <h1>{% trans "IEV - International Electrotechnical Vocabulary" %}</h1>
-
-    {% if user.is_authenticated %}
-        <p>Hello {{ user.username }}!</p>
-
-        {% if news %}
-          <div class="alert alert-info" role="alert">
-            <h5><strong>{{ news.titulo }}</strong></h5>
-            <div>{{ news.mensagem|safe }}</div>
-          </div>
-        {% endif %}
-
-
-    {% else %}
-
-        <p>Hello! You are not logged in.</p>
-        <p>To use the website, you need to be registered.</p>
-        <p>If you don’t have an account, please sign up on the account page.</p>
-    {% endif %}
-
-
-
-    <section>
-        <p></p>
-    </section>
-{% endblock %}{% endcomment %}

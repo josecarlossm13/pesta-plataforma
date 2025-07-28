@@ -68,21 +68,26 @@ class Term(models.Model):                               # Classe Term herda de m
 
 
 # para mostrar mensagens de avisos/notícias na homepage
-class News(models.Model):
-    titulo = models.CharField("Título", max_length=200, default="Sem título")
-    mensagem = RichTextField("Mensagem")
-    ativo = models.BooleanField("Ativa", default=False)
-    inicio = models.DateTimeField("Exibir a partir de", null=True, blank=True)
-    fim = models.DateTimeField("Ocultar após", null=True, blank=True)
-    criado_em = models.DateTimeField(auto_now_add=True)
 
-    def esta_valida(self):
-        agora = timezone.now()
-        if self.inicio and self.inicio > agora:
+class News(models.Model):
+    title = models.CharField(_("Title"), max_length=200, default=_("Untitled"))
+    message = RichTextField(_("Message"))
+    active = models.BooleanField(_("Active"), default=False)
+    start_date = models.DateTimeField(_("Show from"), null=True, blank=True)
+    end_date = models.DateTimeField(_("Hide after"), null=True, blank=True)
+    created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
+
+    class Meta:
+        verbose_name = _("News")
+        verbose_name_plural = _("News")
+
+    def is_valid_now(self):
+        now = timezone.now()
+        if self.start_date and self.start_date > now:
             return False
-        if self.fim and self.fim < agora:
+        if self.end_date and self.end_date < now:
             return False
         return True
 
     def __str__(self):
-        return f"{self.titulo} ({'Ativa' if self.ativo else 'Inativa'})"
+        return f"{self.title} ({'Active' if self.active else 'Inactive'})"

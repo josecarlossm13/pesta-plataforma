@@ -6,20 +6,23 @@
 {% block content %}
 <div class="container mt-4">
 
-    <a href="{% url 'term-list-by-subarea' subarea.ref %}" class="btn btn-outline-secondary mb-3">
-        <i class="bi bi-arrow-left"></i> {% trans "Back to filtered Terms" %}
-    </a>
+    {# Botão "Voltar" usando get_back_url da view, através duma stack de urls  #}
+    {% if back_url %}
+        <a href="{{ back_url }}" class="btn btn-outline-secondary mt-3">
+            <i class="bi bi-arrow-left"></i> {% trans "Back" %}
+        </a>
+    {% endif %}
 
-    <div class="card shadow-sm">
+    <div class="card shadow-sm mt-4">
         <div class="card-body">
 
             <p class="mb-2 text-muted">
-                <strong>{% trans "Area" %}</strong> {{ subarea.area.id }} : {{ subarea.area.name }}<br>
-                <strong>{% trans "Subarea" %}</strong> {{ subarea.ref }} : {{ subarea.name }}<br>
-                <strong>{% trans "IEV ref" %}</strong> {{ term.ref }}
+                <strong>{% trans "Area" %}:</strong> {{ subarea.area.id }} : {{ subarea.area.name }}<br>
+                <strong>{% trans "Subarea" %}:</strong> {{ subarea.ref }} : {{ subarea.name }}<br>
+                <strong>{% trans "IEV ref" %}:</strong> {{ term.ref }}
             </p>
 
-            <p><strong>{% trans "Term" %}:</strong> {{ term.name }}</p>
+            <p><strong>{% trans "Term" %}:</strong> {{ term_name }}</p>
             <p><strong>{% trans "Description" %}:</strong> {{ term_description }}</p>
 
             {% if term.source %}
@@ -48,42 +51,8 @@
 
         </div>
     </div>
-
 </div>
 {% endblock %}
 
 
 
-
-{# sem bootstrap #}
-{% comment %}{% extends "base.html" %}
-{% load static i18n %}
-
-{% block title %}{{ term_name }}{% endblock %}
-
-{% block content %}
-
-    <a href="{% url 'term-list-by-subarea' subarea.ref %}">{% trans "Back to filtered Terms" %}
-    </a>
-
-    <p>
-        <strong>{% trans "Area" %}</strong> {{ subarea.area.id }} : {{ subarea.area.name }}<br>
-        <strong>{% trans "Subarea" %}</strong> {{ subarea.ref }} : {{ subarea.name }}<br>
-        <strong>{% trans "IEV ref" %}</strong> {{ term.ref }}
-    </p>
-
-    <p><strong>{% trans "Term" %}:</strong> {{ term.name }}</p>
-    <p><strong>{% trans "Description" %}:</strong> {{ term_description }}</p>
-    <p><strong>{% trans "Source" %}:</strong> {{ term.source }}</p>
-
-    {% if term.image %}
-        <img src="{{ term.image.url }}" alt="{{ term_name }}" />
-    {% endif %}
-
-    {% if term_extra %}
-        <h3>{% trans "Additional content" %}</h3>
-        <div>{{ term_extra|safe }}</div>
-    {% endif %}
-
-    </a>
-{% endblock %}{% endcomment %}

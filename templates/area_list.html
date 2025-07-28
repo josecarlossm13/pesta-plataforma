@@ -5,16 +5,17 @@
 
 {% block content %}
 <div class="container mt-4">
+
+    {% if back_url %}
+        <a href="{{ back_url }}" class="btn btn-outline-secondary mb-3">
+            <i class="bi bi-arrow-left"></i> {% trans "Back" %}
+        </a>
+    {% endif %}
+
     <h2 class="mb-4">{% trans "Subject areas" %}</h2>
 
     {% if areas %}
-        <table
-            class="table table-striped"
-            data-toggle="table"
-            data-search="true"
-            data-pagination="true"
-            data-page-size="10"
-        >
+        <table class="table table-striped datatable">
             <thead>
                 <tr>
                     <th>{% trans "Area ID" %}</th>
@@ -43,25 +44,3 @@
     {% endif %}
 </div>
 {% endblock %}
-
-
-{# sem bootstrap #}
-{% comment %}{% extends "base.html" %}
-{% load static i18n %}
-
-{% block title %}{% trans "Subject areas" %}{% endblock %}
-
-{% block content %}
-    <h2>{% trans "Subject areas" %}</h2>
-
-    <ul>
-        {% for area in areas %}
-            <li>
-
-                <a href="{% url 'subarea-list-by-area' area.id %}">{{ area.id }} : {{ area.name }}</a>
-
-            </li>
-
-        {% endfor %}
-    </ul>
-{% endblock %}{% endcomment %}

@@ -12,7 +12,9 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <!-- Bootstrap Table CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.1/dist/bootstrap-table.min.css">
-    <!-- Seu CSS personalizado -->
+    <!-- DataTables 2.3.2 CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+    <!-- CSS personalizado -->
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
 
     {% block extra_head %}{% endblock %}
@@ -22,7 +24,9 @@
 <header>
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Electrotechnical vocabulary</a>
+            <a class="navbar-brand fw-bold fs-5" href="{% url 'home' %}">{% trans "IEV Platform" %}
+            </a>
+
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -64,7 +68,7 @@
                 </form>
 
                 <form class="d-flex" role="search" method="GET" action="{% url 'term-list' %}">
-                    <input name="q" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <input name="q" class="form-control me-2" type="search" placeholder="Search term" aria-label="Search">
                     <button class="btn btn-outline-success" type="submit">{% trans "Search" %}</button>
                 </form>
 
@@ -88,128 +92,126 @@
     {% block content %}{% endblock %}
 </main>
 
-<footer class="text-center py-4 text-muted">
-    <p>{% trans "IEV project supporting international terminology dissemination." %}</p>
-    <p>{% trans "Created by José Carlos Magalhães, ISEP student" %}</p>
-    <p>&copy; 2025 – {% trans "All rights reserved" %}</p>
+
+<footer class="bd-footer py-5 mt-5 bg-light">
+  <div class="container py-5">
+    <div class="row">
+
+      <!-- Coluna principal com logo e descrição -->
+      <div class="col-lg-3 mb-3">
+        <a class="d-inline-flex align-items-center mb-2 link-dark text-decoration-none" href="{% url 'home' %}" aria-label="IEV Platform">
+          <span class="fs-5 fw-bold">{% trans "IEV Platform" %}</span>
+        </a>
+
+        <ul class="list-unstyled small text-muted">
+          <li class="mb-2">{% trans "Created by José Carlos Magalhães, ISEP student." %}</li>
+          <p>
+            <a href="https://www.isep.ipp.pt/" target="_blank" rel="noopener">
+              <img src="{% static 'core/img/ISEPbanner.png' %}" class="img-fluid" alt="Banner IEVP" width="260" height="80" loading="lazy">
+            </a>
+          </p>
+          <li class="mb-2">{% trans "Supporting international terminology dissemination." %}</li>
+          <li class="mb-2">&copy; 2025 – {% trans "All rights reserved." %}</li>
+        </ul>
+      </div>
+
+      <!-- Links principais -->
+      <div class="col-6 col-lg-2 offset-lg-1 mb-3">
+        <h5>{% trans "Pages" %}</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'home' %}">{% trans "Home" %}</a></li>
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'area-list' %}">{% trans "Areas" %}</a></li>
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a></li>
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'term-list' %}">{% trans "Terms" %}</a></li>
+        </ul>
+      </div>
+
+      <!-- Recursos -->
+      <div class="col-6 col-lg-2 mb-3">
+        <h5>{% trans "Resources" %}</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Tutorial" %}</a></li>
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Poster" %}</a></li>
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Documentation" %}</a></li>
+        </ul>
+      </div>
+
+      <!-- Comunidade -->
+      <div class="col-6 col-lg-2 mb-3">
+        <h5>{% trans "Community" %}</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2">
+            <a class="text-decoration-none link-dark" href="https://www.electropedia.org/">
+              {% trans "IEV Online - Eletropedia" %}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Administração -->
+      <div class="col-6 col-lg-2 mb-3">
+        <h5>{% trans "Administration" %}</h5>
+        <ul class="list-unstyled">
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Contact" %}</a></li>
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="http://127.0.0.1:8000/admin/">{% trans "Administrator panel" %}</a></li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
 </footer>
 
 <!-- jQuery (necessário para Bootstrap Table) -->
 <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
-
 <!-- Bootstrap Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
 <!-- Bootstrap Table -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap-table@1.24.1/dist/bootstrap-table.min.js"></script>
+<!-- DataTables 2.3.2 JS -->
+<script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
+
+
+<!-- Inicialização padrão do DataTables -->
+{% block datatables_init %}
+
+{% comment %}<script>
+    $(document).ready(function () {
+        $('.datatable').DataTable({
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/{{ LANGUAGE_CODE|default:"en" }}.json'
+            }
+        });
+    });
+</script>{% endcomment %}
+
+{# tive que mapear idioma a idioma porque dava erro ao usar a URL, os idiomas do django nao coincidem com o cdn.datatables.net... #}
+<script>
+  const langMap = {
+    'en': 'en-GB',
+    'pt-br': 'pt-BR',
+    'pt-pt': 'pt',
+    'es': 'es-ES',
+    //'fr': 'fr-FR'
+    // Adicionar outros idiomas conforme necessário
+    // o código do idioma da esquerda tem que ser o do django, o da direita o do CDN.
+  };
+
+  const langCode = '{{ LANGUAGE_CODE|default:"en" }}'.toLowerCase();
+  const langFile = langMap[langCode] || 'en-GB';
+
+  console.log('A tentar carregar idioma:', langFile);
+
+  $(document).ready(function () {
+    $('.datatable').DataTable({
+      language: {
+        url: `https://cdn.datatables.net/plug-ins/2.3.2/i18n/${langFile}.json`
+      }
+    });
+  });
+</script>
+
+{% endblock %}
 
 {% block extra_js %}{% endblock %}
 </body>
 </html>
-
-
-
-{# sem bootstrap #}
-{% comment %}
-{% load static i18n %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}{% trans "IEV Platform" %}{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-            crossorigin="anonymous"></script>
-    {% block extra_head %}{% endblock %}
-</head>
-<body>
-<header>
-    <nav class="navbar navbar-expand-lg bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">Electrotechnical vocabulary</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
-                    aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'home' %}active{% endif %}"
-                           aria-current="page" href="{% url 'home' %}">{% trans "Home" %}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'area-list' %}active{% endif %}"
-                           href="{% url 'area-list' %}">{% trans "Areas" %}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'subarea-list' %}active{% endif %}"
-                           href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a>
-                    </li>
-
-                    <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'term-list' %}active{% endif %}"
-                           href="{% url 'term-list' %}">{% trans "Terms" %}</a>
-                    </li>
-
-{#                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="{% url 'home' %}">{% trans "Home" %}</a></li>#}
-{#                    <li class="nav-item"><a class="nav-link" href="{% url 'area-list' %}">{% trans "Areas" %}</a></li>#}
-{#                    <li class="nav-item"><a class="nav-link" href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a></li>#}
-{#                    <li class="nav-item"><a class="nav-link" href="{% url 'term-list' %}">{% trans "Terms" %}</a></li>#}
-
-                </ul>
-                <form class="d-flex me-4" action="{% url 'set_language' %}" method="post">
-                    {% csrf_token %}
-                    <input class="form-control" name="next" type="hidden" value="{{ redirect_to }}">
-                    <select class="form-select me-2" name="language">
-                        {% get_current_language as LANGUAGE_CODE %}
-                        {% get_available_languages as LANGUAGES %}
-                        {% for lang in LANGUAGES %}
-                            <option value="{{ lang.0 }}" {% if lang.0 == LANGUAGE_CODE %}selected{% endif %}>
-                                {{ lang.1 }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                    <button class="btn btn-outline-info"  type="submit">{% trans "Change" %}</button>
-                </form>
-                <form class="d-flex" role="search" method="GET" action="{% url 'term-list' %}">
-                    <input name="q" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success" type="submit">{% trans "Search" %}</button>
-                </form>
-                {% if user.is_authenticated %}
-                    <div class="d-flex align-items-center ms-3">
-                        <a class="btn btn-outline-primary" href="{% url 'account' %}">
-                            {{ user.username }}
-                        </a>
-                    </div>
-                {% else %}
-                    <div class="d-flex align-items-center ms-3">
-                        <a class="btn btn-outline-secondary" href="{% url 'account' %}">{% trans "Account" %}</a>
-                    </div>
-                {% endif %}
-            </div>
-        </div>
-    </nav>
-
-</header>
-
-
-<main>
-    {% block content %}
-    {% endblock %}
-</main>
-
-<footer>
-
-    <p></p>
-    <p>{% trans "IEV project supporting international terminology dissemination." %}</p>
-    <p>{% trans "Created by José Carlos Magalhães, ISEP student" %}</p>
-    <p>&copy; 2025 – {% trans "All rights reserved" %}</p>
-</footer>
-</body>
-</html>{% endcomment %}
