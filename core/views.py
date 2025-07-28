@@ -116,17 +116,13 @@ class TermListView(LoginRequiredMixin, ListView):
     context_object_name = 'terms'
     login_url = "/accounts/account/"
 
-    # # para o botão voltar. armazenar manualmente o caminho anterior desejado em request.session, uma vez que o HTTP_REFERER usava apenas o histórico e não resultava sempre
-    # def get(self, request, *args, **kwargs):
-    #     request.session['previous_url'] = request.get_full_path()
-    #     return super().get(request, *args, **kwargs)
-
     def get(self, request, *args, **kwargs):
         update_navigation_stack(request)
         return super().get(request, *args, **kwargs)
 
     def get_queryset(self):
         q = self.request.GET.get("q")
+        area_id = self.request.GET.get("area")                  # para o filtro por area da navbar
         subarea_ref = self.kwargs.get('ref')  # vem da URL
         object_list = self.model.objects.all()
 
@@ -140,7 +136,11 @@ class TermListView(LoginRequiredMixin, ListView):
                     subarea__name_pt_br__icontains=q) | Q(subarea__name_es__icontains=q)
             )
 
-        # Filtra pela subárea guardada na sessão, se existir
+        # Filtro por área (menu dropdown da navbar)
+        if area_id:
+            object_list = object_list.filter(subarea__area__id=area_id)
+
+        # Filtro por subárea (URL)
         if subarea_ref:
             object_list = object_list.filter(subarea__ref=subarea_ref)
 
@@ -157,16 +157,11 @@ class TermListView(LoginRequiredMixin, ListView):
             context['subarea_ref'] = None
             context['subarea'] = None
 
-        # # Adiciona botão de voltar com fallback (técnica http_referer)
-        # referer = self.request.META.get('HTTP_REFERER')
-        # if referer and self.request.get_host() in referer:
-        #     context['back_url'] = referer
-        # elif subarea_ref:
-        #     context['back_url'] = reverse('subarea-list')
-        # else:
-        #     context['back_url'] = reverse('area-list')  # fallback mais genérico
+        # Adiciona o valor da área selecionada (se algum)
+        context['selected_area_id'] = self.request.GET.get('area')
+        context['search_query'] = self.request.GET.get('q', '')
 
-        # Botão voltar
+        #botão back
         context['back_url'] = get_back_url(self.request, fallback_url=reverse('subarea-list'))
 
         return context
