@@ -36,7 +36,7 @@
                         <td>{{ subarea.ref }}</td>
                         <td>{{ subarea.name|default:subarea.name_en }}</td>
                         <td>
-                            <a href="{% url 'term-list-by-subarea' subarea.ref %}" class="btn btn-sm btn-outline-primary">
+                            <a href="{% url 'term-list-by-subarea' ref=subarea.ref %}" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-search"></i> {% trans "View Terms" %}
                             </a>
                         </td>

@@ -76,10 +76,6 @@ class SubAreaListView(LoginRequiredMixin, ListView):
     context_object_name = 'subareas'
     login_url = "/accounts/account/"
 
-    # # para o botão voltar. armazenar manualmente o caminho anterior desejado em request.session, uma vez que o HTTP_REFERER usava apenas o histórico e não resultava sempre
-    # def get(self, request, *args, **kwargs):
-    #     request.session['previous_url'] = request.get_full_path()
-    #     return super().get(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         update_navigation_stack(request)
@@ -149,8 +145,11 @@ class TermListView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         subarea_ref = self.kwargs.get('ref')
+        subarea = None  ##############
         if subarea_ref:
-            context['subarea'] = SubArea.objects.filter(ref=subarea_ref).first()
+            subarea = SubArea.objects.select_related('area').filter(ref=subarea_ref).first()#############
+            #context['subarea'] = SubArea.objects.filter(ref=subarea_ref).first()
+            context['subarea'] = subarea #######################
             context['subarea_ref'] = subarea_ref
         else:
             # Se não há subarea, evita usar esses campos no template
@@ -161,8 +160,16 @@ class TermListView(LoginRequiredMixin, ListView):
         context['selected_area_id'] = self.request.GET.get('area')
         context['search_query'] = self.request.GET.get('q', '')
 
-        #botão back
-        context['back_url'] = get_back_url(self.request, fallback_url=reverse('subarea-list'))
+        # fallback dinâmico com área da subárea
+        if subarea and subarea.area:
+            fallback_url = reverse('subarea-list-by-area', args=[subarea.area.id])
+        else:
+            fallback_url = reverse('subarea-list')
+
+        context['back_url'] = get_back_url(self.request, fallback_url=fallback_url)
+
+        # #botão back
+        # context['back_url'] = get_back_url(self.request, fallback_url=reverse('subarea-list'))
 
         return context
 
@@ -183,26 +190,19 @@ class TermDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # # botão para voltar atrás com fallback caso seja acedido diretamente pelo link (técnica http_referer)
-        # referer = self.request.META.get('HTTP_REFERER')
-        # if referer and self.request.get_host() in referer:
-        #     context['back_url'] = referer
-        # else:
-        #     context['back_url'] = reverse('term-list')  # fallback seguro
-
-        # # Fallback robusto para back_url
-        # back_url = self.request.session.get('previous_url')
-        # if back_url and self.request.get_host() in back_url:
-        #     context['back_url'] = back_url
-        # else:
-        #     context['back_url'] = reverse('term-list')  # Ou algum outro valor seguro
-
         # Usar a função para obter o back_url (botão "voltar")
-        context['back_url'] = get_back_url(self.request, fallback_url=reverse('term-list'))
+        subarea_ref = self.request.GET.get('ref')
+        if subarea_ref:
+            fallback = reverse('term-list-by-subarea', kwargs={'ref': subarea_ref})
+        else:
+            fallback = reverse('term-list')
+
+        context['back_url'] = get_back_url(self.request, fallback_url=fallback)
 
         # Define o idioma do conteúdo a partir da query string ou da interface
         content_language = self.request.GET.get('language') or get_language()
-        query = self.request.GET.get('query', '')
+        query = self.request.GET.get('q', '')
+
 
         term = context['term']
         # Campos traduzidos dinamicamente

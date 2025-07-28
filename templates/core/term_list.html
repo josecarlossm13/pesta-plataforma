@@ -40,9 +40,14 @@
                         <td>{{ term.ref }}</td>
                         <td>{{ term.name|default:term.name_en }}</td>
                         <td>
-                            <a href="{% url 'term_detail' term.ref %}" class="btn btn-sm btn-outline-primary">
+{#                            <a href="{% url 'term_detail' term.ref %}" class="btn btn-sm btn-outline-primary">#}
+{#                                <i class="bi bi-search"></i> {% trans "View Detail" %}#}
+{#                            </a>#}
+
+                            <a href="{% url 'term_detail' term.ref %}?ref={{ term.subarea.ref }}{% if search_query %}&q={{ search_query }}{% endif %}{% if selected_area_id %}&area={{ selected_area_id }}{% endif %}" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-search"></i> {% trans "View Detail" %}
                             </a>
+
                         </td>
                     </tr>
                 {% endfor %}
