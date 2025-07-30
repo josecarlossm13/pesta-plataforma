@@ -1,5 +1,6 @@
 # Create your models here.
 from ckeditor.fields import RichTextField               # Importa o campo RichTextField do CKEditor, que permite a edição de texto rico em modelos Django.
+from ckeditor_uploader.fields import RichTextUploadingField         # para fazer upload de imagens no richtextfield
 from django.db import models                            # Importa o módulo models do Django, que contém classes para definir modelos de dados.
 from django.utils.translation import gettext as _       # Importa a função gettext do Django, renomeando-a como '_', para facilitar a tradução de strings. Documentação Django: Specify a translation string by using the function gettext(). It’s convention to import this as a shorter alias, _, to save typing.
 import reversion
@@ -51,7 +52,7 @@ class Term(models.Model):                               # Classe Term herda de m
     description = models.TextField(_('Description'), null=True) # Define o campo 'description' como um TextField, para descrever o termo, que pode ser nulo.
     source = models.TextField(_('Source'), blank=True, null=True) # Define o campo 'source' como um TextField, que pode ser deixado em branco ou nulo, para indicar a fonte do termo.
     image = models.ImageField(_('Image'), upload_to='imagens/', null=True, blank=True) # Define o campo 'image' como um ImageField, que pode ser nulo ou em branco, para armazenar uma imagem associada ao termo.
-    extra = RichTextField(blank=True, null=True)        # Define o campo 'extra' como um RichTextField, permitindo a edição de texto rico.
+    extra = RichTextUploadingField(blank=True, null=True)        # Define o campo 'extra' como um RichTextField, permitindo a edição de texto rico.
 
     created = models.DateTimeField(_('Created'), auto_now_add=True, null=True)
     updated = models.DateTimeField(_('Updated'), auto_now=True, null=True)
@@ -71,7 +72,9 @@ class Term(models.Model):                               # Classe Term herda de m
 
 class News(models.Model):
     title = models.CharField(_("Title"), max_length=200, default=_("Untitled"))
-    message = RichTextField(_("Message"))
+    #message = RichTextField(_("Message"))
+    message = RichTextUploadingField(_("Message"))
+
     active = models.BooleanField(_("Active"), default=False)
     start_date = models.DateTimeField(_("Show from"), null=True, blank=True)
     end_date = models.DateTimeField(_("Hide after"), null=True, blank=True)

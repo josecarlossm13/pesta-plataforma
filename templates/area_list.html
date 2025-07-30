@@ -20,14 +20,20 @@
                 <tr>
                     <th>{% trans "Area ID" %}</th>
                     <th>{% trans "Area" %}</th>
+                    <th>{% trans "Number of subareas" %}</th>
+                    <th>{% trans "Number of terms" %}</th>
                     <th>{% trans "Actions" %}</th>
                 </tr>
             </thead>
+
             <tbody>
                 {% for area in areas %}
                     <tr>
                         <td>{{ area.id }}</td>
                         <td>{{ area.name }}</td>
+                        <td>{{ area.subarea_count }}</td>
+                        <td>{{ area.term_count }}</td>
+
                         <td>
                             <a href="{% url 'subarea-list-by-area' area.id %}" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-diagram-3"></i> {% trans "View Subareas" %}
@@ -43,4 +49,17 @@
         </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{# scrip para a data table não pesquisar na coluna 2 e 3, (Nº de subareas e Nº de termos #}
+{% block datatables_init %}
+<script>
+  $(document).ready(function() {
+    $('.datatable').DataTable({
+      columnDefs: [
+        { targets: [2, 3], searchable: false }  // Desativa pesquisa nas colunas de contagem
+      ]
+    });
+  });
+</script>
 {% endblock %}

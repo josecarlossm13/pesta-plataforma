@@ -27,6 +27,7 @@
                 <tr>
                     <th>{% trans "Subarea ID" %}</th>
                     <th>{% trans "Subarea" %}</th>
+                    <th>{% trans "Number of terms" %}</th>    {# Contagem de termos  #}
                     <th>{% trans "Actions" %}</th>
                 </tr>
             </thead>
@@ -35,6 +36,7 @@
                     <tr>
                         <td>{{ subarea.ref }}</td>
                         <td>{{ subarea.name|default:subarea.name_en }}</td>
+                        <td>{{ subarea.term_count }}</td>   {# Contagem de termos  #}
                         <td>
 {#                            <a href="{% url 'term-list-by-subarea' ref=subarea.ref %}" class="btn btn-sm btn-outline-primary">#}
 {#                                <i class="bi bi-search"></i> {% trans "View Terms" %}#}
@@ -56,4 +58,17 @@
         </div>
     {% endif %}
 </div>
+{% endblock %}
+
+{# scrip para a data table não pesquisar na coluna 2, (Nº de termos #}
+{% block datatables_init %}
+<script>
+  $(document).ready(function() {
+    $('.datatable').DataTable({
+      columnDefs: [
+        { targets: [2], searchable: false }  // Desativa pesquisa na coluna de contagem
+      ]
+    });
+  });
+</script>
 {% endblock %}

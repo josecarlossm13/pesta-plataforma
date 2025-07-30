@@ -214,6 +214,32 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'    # Define o tipo de campo
 
 CKEDITOR_UPLOAD_PATH = "uploads/"                       # Define o diretório onde os arquivos enviados pelo CKEditor serão armazenados (texto e imagens)
 
+# Ativa o botão de imagem com upload direto no editor.
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': [
+            {'name': 'document', 'items': ['Source']},
+            {'name': 'styles', 'items': ['Format', 'Font', 'FontSize']},
+            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline']},
+            {'name': 'paragraph', 'items': [
+                'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
+                'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'
+            ]},
+            {'name': 'insert', 'items': ['Image', 'Table', 'HorizontalRule']},
+            {'name': 'links', 'items': ['Link', 'Unlink']},
+            {'name': 'clipboard', 'items': ['Undo', 'Redo']},
+        ],
+        'height': 300,
+        'width': '100%',
+        'extraPlugins': 'uploadimage,justify,image2',  # plugins extra
+        'filebrowserUploadUrl': '/ckeditor/upload/',
+        'filebrowserBrowseUrl': '/ckeditor/browse/',
+        'removePlugins': 'image',
+    }
+}
+
+
+
 LOGIN_REDIRECT_URL = "home"                                # Redireciona o user após login para a homepage
 LOGOUT_REDIRECT_URL = "home"                               # Redireciona o user após logout para a homepage
 

@@ -10,7 +10,7 @@
     <p class="lead">{% trans "Hello" %} {{ user.username }}!</p>
 
     {% if news %}
-      <div class="alert alert-info" role="alert">       {# estilos de avisos: alert-info, alert-success, alert-warning, alert-danger #}
+      <div class="alert alert-success" role="alert">       {# estilos de avisos: alert-info, alert-success, alert-warning, alert-danger #}
         <h5><i class="bi bi-info-circle-fill me-2"></i><strong>{{ news.title }}</strong></h5>
         <div>{{ news.message|safe }}</div>
       </div>

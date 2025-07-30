@@ -8,7 +8,7 @@ from django.urls import reverse_lazy
 from django.utils.translation import get_language               # Para obter idioma da interface
 from core.models import Term, Area, SubArea, News                                # Importa o modelo Term,  que contém os dados dos termos.
 from core.forms import UserRegistrationForm #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
-from django.db.models import Q
+from django.db.models import Q, Count                           # Count, Contar o nº de termos nas data tables
 from django.contrib.auth.forms import UserCreationForm              # Importa o formulário de criação de utilizador padrão do Django.
 from django.utils import translation
 from django.db import models
@@ -16,6 +16,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.urls import reverse                                     # usado para gerar URLs com base no nome dos caminhos
+
 
 # funções para gerar uma stack para usar no botão "voltar"
 def update_navigation_stack(request):
@@ -58,6 +59,12 @@ class AreaListView(LoginRequiredMixin, ListView):
         update_navigation_stack(request)
         return super().get(request, *args, **kwargs)
 
+    def get_queryset(self):
+        return Area.objects.annotate(                                           # Contador de subareas e termos. Distinct -> evita contagens duplicadas.
+            subarea_count=Count('subareas', distinct=True),          # conta quantas SubArea estão ligadas à Area
+            term_count=Count('subareas__termos', distinct=True)      # conta todos os termos associados às SubArea dessa Area
+        ).order_by('id')
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
@@ -80,7 +87,8 @@ class SubAreaListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         area_id = self.kwargs.get('area_id')
-        qs = SubArea.objects.select_related('area').order_by('area__id', 'id')
+        # já tem o contador de termos por subarea
+        qs = SubArea.objects.select_related('area').annotate(term_count=Count('termos')).order_by('area__id', 'id')
         if area_id:
             qs = qs.filter(area__id=area_id)
         return qs
@@ -121,13 +129,19 @@ class TermListView(LoginRequiredMixin, ListView):
 
         # Filtra pelo termo de busca, se existir
         if q:
-            object_list = object_list.filter(
-                Q(name__icontains=q) | Q(name_pt__icontains=q) | Q(name_pt_br__icontains=q) | Q(name_es__icontains=q) |
-                Q(description__icontains=q) | Q(description_pt__icontains=q) | Q(description_pt_br__icontains=q) | Q(
-                    description_es__icontains=q) |
-                Q(subarea__name__icontains=q) | Q(subarea__name_pt__icontains=q) | Q(
-                    subarea__name_pt_br__icontains=q) | Q(subarea__name_es__icontains=q)
-            )
+            search_queries = Q()
+
+            # Procura nos campos padrão (sem tradução)
+            search_queries |= Q(name__icontains=q)
+            search_queries |= Q(description__icontains=q)
+
+            # Procura nas traduções, para todos os idiomas definidos nas settings
+            for lang_code, _ in settings.LANGUAGES:
+                lang_suffix = lang_code.lower().replace('-', '_')              # resolve o problema do django só reconhecer pt-br, e na base de dados estar pt_br
+                search_queries |= Q(**{f'name_{lang_suffix}__icontains': q})
+                search_queries |= Q(**{f'description_{lang_suffix}__icontains': q})
+
+            object_list = object_list.filter(search_queries)
 
         # Filtro por área (menu dropdown da navbar)
         if area_id:
@@ -164,9 +178,6 @@ class TermListView(LoginRequiredMixin, ListView):
             fallback_url = reverse('subarea-list')
 
         context['back_url'] = get_back_url(self.request, fallback_url=fallback_url)
-
-        # #botão back
-        # context['back_url'] = get_back_url(self.request, fallback_url=reverse('subarea-list'))
 
         return context
 
