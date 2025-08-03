@@ -29,17 +29,17 @@
         <table class="table table-striped datatable">
             <thead>
                 <tr>
-                    <th>{% trans "IEV ref" %}</th>
+                    <th class="text-center">{% trans "IEV ref" %}</th>
                     <th>{% trans "Term" %}</th>
-                    <th>{% trans "Actions" %}</th>
+                    <th class="text-center">{% trans "Actions" %}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for term in terms %}
                     <tr>
-                        <td>{{ term.ref }}</td>
+                        <td class="text-center">{{ term.ref }}</td>
                         <td>{{ term.name|default:term.name_en }}</td>
-                        <td>
+                        <td class="text-center">
 {#                            <a href="{% url 'term_detail' term.ref %}" class="btn btn-sm btn-outline-primary">#}
 {#                                <i class="bi bi-search"></i> {% trans "View Detail" %}#}
 {#                            </a>#}
@@ -60,4 +60,17 @@
     {% endif %}
 
 </div>
+{% endblock %}
+
+{% block datatables_init %}
+<script>
+  $(document).ready(function() {
+    $('.datatable').DataTable({
+      columnDefs: [
+        { targets: [2], searchable: false },  // Desativa pesquisa na coluna de Actions
+          { orderable: false, targets: 2 } // Desativa ordenação na 3ª coluna (Actions)
+      ]
+    });
+  });
+</script>
 {% endblock %}

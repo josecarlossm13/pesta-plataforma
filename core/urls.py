@@ -13,4 +13,5 @@ urlpatterns = [
 
     path('subareas/', SubAreaListView.as_view(), name='subarea-list'),                         # todas as subareas
     path('subareas/<int:area_id>/', SubAreaListView.as_view(), name='subarea-list-by-area'),
+    path('tutorial/', views.tutorial_view, name='tutorial'),
 ]

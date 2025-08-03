@@ -25,19 +25,19 @@
         <table class="table table-striped datatable">
             <thead>
                 <tr>
-                    <th>{% trans "Subarea ID" %}</th>
+                    <th class="text-center">{% trans "Subarea ID" %}</th>
                     <th>{% trans "Subarea" %}</th>
-                    <th>{% trans "Number of terms" %}</th>    {# Contagem de termos  #}
-                    <th>{% trans "Actions" %}</th>
+                    <th class="text-center">{% trans "Terms" %}</th>    {# Contagem de termos  #}
+                    <th class="text-center">{% trans "Actions" %}</th>
                 </tr>
             </thead>
             <tbody>
                 {% for subarea in subareas %}
                     <tr>
-                        <td>{{ subarea.ref }}</td>
+                        <td class="text-center">{{ subarea.ref }}</td>
                         <td>{{ subarea.name|default:subarea.name_en }}</td>
-                        <td>{{ subarea.term_count }}</td>   {# Contagem de termos  #}
-                        <td>
+                        <td class="text-center">{{ subarea.term_count }}</td>   {# Contagem de termos  #}
+                        <td class="text-center">
 {#                            <a href="{% url 'term-list-by-subarea' ref=subarea.ref %}" class="btn btn-sm btn-outline-primary">#}
 {#                                <i class="bi bi-search"></i> {% trans "View Terms" %}#}
 {#                            </a>#}
@@ -60,13 +60,14 @@
 </div>
 {% endblock %}
 
-{# scrip para a data table não pesquisar na coluna 2, (Nº de termos #}
+{# scrip para a data table não pesquisar na coluna 2 e 3 (Nº de termos, view terms #}
 {% block datatables_init %}
 <script>
   $(document).ready(function() {
     $('.datatable').DataTable({
       columnDefs: [
-        { targets: [2], searchable: false }  // Desativa pesquisa na coluna de contagem
+        { targets: [2, 3], searchable: false },  // Desativa pesquisa na coluna de contagem
+          { orderable: false, targets: 3 } // Desativa ordenação na 4ª coluna (View terms)
       ]
     });
   });

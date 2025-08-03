@@ -29,6 +29,9 @@
                 <p><strong>{% trans "Source" %}:</strong> {{ term.source }}</p>
             {% endif %}
 
+            <p><strong>{% trans "Added to IEVP" %}:</strong> {{ term.created|date:"d-m-Y" }}</p>
+            <p><strong>{% trans "Last IEVP update" %}:</strong> {{ term.updated|date:"d-m-Y" }}</p>
+
             {% if term.image %}
                 <div class="my-4">
                     <img src="{{ term.image.url }}" alt="{{ term_name }}" class="img-fluid rounded border">

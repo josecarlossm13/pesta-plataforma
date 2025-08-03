@@ -1,10 +1,10 @@
 from import_export import resources, fields
 from django.contrib import admin                            # Importa o módulo admin do Django
 from import_export.admin import ImportExportModelAdmin, ExportActionMixin
-from import_export.widgets import ForeignKeyWidget
+#from import_export.widgets import ForeignKeyWidget
 from modeltranslation.admin import TranslationAdmin         # Importa o TranslationAdmin, uma classe fornecida pelo pacote django-modeltranslation para facilitar a tradução de campos de modelos do Django na interface de administração
 from reversion.admin import VersionAdmin
-from .models import Area, SubArea, Term, News                     # Importa os modelos Area, SubArea, e Term de models.py
+from .models import Area, SubArea, Term, News, Tutorial                     # Importa os modelos Area, SubArea, e Term de models.py
 
 #####tentativa####  (tem que ficar antes do AreaAdmin)                  #Define as colunas de importação/exportação para o modelo Area
 class AreaResource(resources.ModelResource):
@@ -34,59 +34,29 @@ class SubAreaAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin):     
     search_fields = ['name']                                            # Permite adicionar uma barra de pesquisa na interface de administração, onde os utilizadores podem procurar por 'name'.
     resource_classes = [SubAreaResource]
 
-class IEVRefWidget(ForeignKeyWidget):
-    def clean(self, value, row=None, **kwargs):
-                                                                        # Get values separated by '-' ex: '301-02-01'
-        area_id = value.split('-')[0]                                   # 301
-        subarea_ref = value.rsplit('-', 1)[0]                           # 301-02
-        term_id = value.rsplit('-', 1)[-1]                              # 01
+# Ordenar as opções do ForeignKey 'area' no painel de administração, menu drop down
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'area':
+            kwargs['queryset'] = Area.objects.all().order_by('id')  # Ordena as Áreas pelo 'id'
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-        try:
-            subarea = super().clean(value)
-        except SubArea.DoesNotExist:
-            (area, created) = Area.objects.get_or_create(name=row['area'], defaults={'id': row['area_id']})
-            subarea = SubArea.objects.create(name=row['subarea'], area=area)
-        return subarea
-
-##Acrescentei uma parte no fundo da class
 # class IEVRefWidget(ForeignKeyWidget):
 #     def clean(self, value, row=None, **kwargs):
-#         # Get values separated by '-' ex: '301-02-01'
-#         area_id = value.split('-')[0]  # 301
-#         subarea_ref = value.rsplit('-', 1)[0]  # 301-02
-#         term_id = value.rsplit('-', 1)[-1]  # 01
+#                                                                         # Get values separated by '-' ex: '301-02-01'
+#         area_id = value.split('-')[0]                                   # 301
+#         subarea_ref = value.rsplit('-', 1)[0]                           # 301-02
+#         term_id = value.rsplit('-', 1)[-1]                              # 01
 #
 #         try:
-#             subarea = super().clean(value)  # Tenta buscar a subárea
+#             subarea = super().clean(value)
 #         except SubArea.DoesNotExist:
-#             # Se a subárea não existir, criamos uma nova subárea
-#             (area, created) = Area.objects.get_or_create(name=row['area'], defaults={'id': area_id})
-#
-#             # Garante que o ID da subárea será sempre dois dígitos
-#             formatted_subarea_id = f"{subarea_ref.split('-')[1]:02d}"  # Garantir que o ID da subárea tem dois dígitos
-#             subarea = SubArea.objects.create(
-#                 name=row['subarea'],
-#                 area=area,
-#                 id=formatted_subarea_id  # Usamos o ID formatado
-#             )
+#             (area, created) = Area.objects.get_or_create(name=row['area'], defaults={'id': row['area_id']})
+#             subarea = SubArea.objects.create(name=row['subarea'], area=area)
 #         return subarea
 
 
+
 class TermResource(resources.ModelResource):
-#    area = fields.Field(column_name='IEV_ref', attribute='ref', widget=IEVRefWidget(Area, 'name'))
-#    area_id = fields.Field(column_name='area_id', attribute='subarea__area__id')
-#    subarea_name = fields.Field(column_name='subarea_name', attribute='subarea__name') ###################
-#    area_id = fields.Field()
-
-#   def dehydrate_area_id(self, term):
-#        return f'{term.subarea.area.id}'
-#     def import_instance(self, instance, row, **kwargs):
-#         # Convert empty strings to None for specific fields
-#         for field in ['name_en', 'name_pt', 'name_pt_br', 'name_es', 'name']:
-#             if getattr(instance, field) == '':
-#                 setattr(instance, field, None)
-#         super().import_instance(instance, row, **kwargs)
-
 
     def before_save_instance(self, instance, row, **kwargs):
         for field in ['name_en', 'name_pt', 'name_pt_br', 'name_es', 'name']:
@@ -99,9 +69,9 @@ class TermResource(resources.ModelResource):
         #dataset.headers.append("id")
         dataset.headers.append("ref")
         super().before_import(dataset, **kwargs)
-    #
+
     def before_import_row(self, row, **kwargs):
-        iev_ref = row['ref'].strip()                        ##########estava 'IEV_ref' em vez de 'ref'#############
+        iev_ref = row['ref'].strip()
         #area_id = iev_ref.split('-')[0]                    # 301
         subarea_ref = iev_ref.rsplit('-', 1)[0]             # 301-02
         term_id = iev_ref.rsplit('-', 1)[-1]                # 01
@@ -109,23 +79,10 @@ class TermResource(resources.ModelResource):
         row["subarea"] = subarea_ref
         row['ref'] = iev_ref
 
-        # # List of columns to check
-        # columns_to_check = ['name_en', 'name_pt', 'name_pt_br', 'name_es']
-        #
-        # # Iterate over the columns and set blank values to None
-        # for column in columns_to_check:
-        #     if column in row and (row[column] == '' or row[column] is None):
-        #         row[column] = None
-
     class Meta:
         model = Term
         import_id_fields = ['ref']
-        # fields = ['id', 'name_en', 'name_pt', 'name_pt_br', 'name_es',
-        #           'area_id', 'area', 'subarea_id', 'subarea__name',
-        #           'description_en', 'description_pt', 'description_pt_br', 'description_es',
-        #           'source_en', 'source_pt', 'source_pt_br', 'source_es',
-        #           'image', 'extra', 'created', 'updated']
-        ############## tentativa
+
         fields = ['ref', 'subarea', 'id',
                   'name_en', 'description_en', 'source_en', 'extra_en',
                   'name_pt', 'description_pt', 'source_pt', 'extra_pt',
@@ -134,7 +91,7 @@ class TermResource(resources.ModelResource):
                   'image',
                   'created', 'updated'
                   ]
-        ##############
+
         import_order = ['ref', 'subarea', 'id',
                         'name_en', 'description_en', 'source_en',
                         'name_pt', 'description_pt', 'source_pt',
@@ -143,12 +100,6 @@ class TermResource(resources.ModelResource):
                         ]
         #export_order = ('id', 'price', 'author', 'name')
 
-# @admin.register(Term)                                                       # Regista o modelo Term na interface de administração do Django, permitindo a sua gestão através do painel de administração.
-# class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportActionMixin) :         # Classe TermAdmin herda de TranslationAdmin, permitindo que a interface de administração suporte a tradução dos campos do modelo Term.
-#     list_display = ['ref','id', 'name', 'subarea__area', 'subarea']         # Define os campos do modelo que serão exibidos na lista de objetos na interface de administração.
-#     list_filter = ['subarea__area', 'subarea']                              # Adiciona filtros na interface de administração, permitindo filtrar os objetos com base na 'subarea' e na 'area' associada à 'subarea'.
-#     search_fields = ['name']
-#     resource_classes = [TermResource]
 
 @admin.register(Term)                                                         # Regista o modelo Term na interface de administração do Django, permitindo a sua gestão através do painel de administração.
 class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportActionMixin):         # Classe TermAdmin herda de TranslationAdmin, permitindo que a interface de administração suporte a tradução dos campos do modelo Term.
@@ -158,9 +109,16 @@ class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportAc
     resource_classes = [TermResource]
 
     def area(self, obj):
-        return obj.subarea.area  # ou obj.subarea.area.name para aparecer só o nome da Area sem o ID
+        return obj.subarea.area                 # ou obj.subarea.area.name para aparecer só o nome da Area sem o ID
     area.short_description = 'Area'
     area.admin_order_field = 'subarea__area'
+
+    # Ordenar as opções do ForeignKey 'subarea' no painel de administração
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'subarea':
+            # Ordena as subáreas pela referência (ref) da subárea
+            kwargs['queryset'] = SubArea.objects.all().order_by('ref')  # Ordena pelo campo 'ref' que já inclui ID da área
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 @admin.register(News)
@@ -168,3 +126,12 @@ class NewsAdmin(admin.ModelAdmin):
     list_display = ('title', 'active', 'start_date', 'end_date', 'created_at')
     list_filter = ('active',)
     ordering = ('-created_at',)
+
+
+@admin.register(Tutorial)
+class TutorialAdmin(admin.ModelAdmin):
+    list_display = ('title', 'active', 'position')
+    list_filter = ('active',)
+    search_fields = ('title', 'content')
+    ordering = ('position',)                    # ordenar por posição no painel admin
+    list_editable = ('position',)               # Editar a posição diretamente na lista

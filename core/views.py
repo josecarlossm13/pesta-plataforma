@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView                           # Importa a visualização de login do Django.
 from django.urls import reverse_lazy
 from django.utils.translation import get_language               # Para obter idioma da interface
-from core.models import Term, Area, SubArea, News                                # Importa o modelo Term,  que contém os dados dos termos.
+from core.models import Term, Area, SubArea, News, Tutorial                                # Importa o modelo Term,  que contém os dados dos termos.
 from core.forms import UserRegistrationForm #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
 from django.db.models import Q, Count                           # Count, Contar o nº de termos nas data tables
 from django.contrib.auth.forms import UserCreationForm              # Importa o formulário de criação de utilizador padrão do Django.
@@ -218,9 +218,6 @@ class TermDetailView(LoginRequiredMixin, DetailView):
         if query_params:
             fallback += '?' + '&'.join(query_params)
 
-        # Definir back_url usando a stack de navegação, ou fallback com filtros
-        context['back_url'] = get_back_url(self.request, fallback_url=fallback)
-
         # Conteúdo traduzido, etc.
         # Define o idioma do conteúdo a partir da query string ou da interface
         content_language = self.request.GET.get('language') or get_language()
@@ -242,6 +239,8 @@ class TermDetailView(LoginRequiredMixin, DetailView):
         context['query'] = query
         context['selected_area_id'] = area_id
         context['subarea_ref'] = subarea_ref
+        # Definir back_url usando a stack de navegação, ou fallback com filtros
+        context['back_url'] = get_back_url(self.request, fallback_url=fallback)
 
         return context
 
@@ -256,4 +255,19 @@ def home(request):
     ).order_by('-created_at').first()
 
     return render(request, 'home.html', {'news': news})
+
+
+# lista (queryset) de todos os tutoriais ativos, ordenados por posição, com restrição dependendo do grupo do user
+def tutorial_view(request):
+    # Verifica se o usuário é Admin, Gestor ou Superusuário
+    is_admin_or_gestor_or_superuser = request.user.groups.filter(name__in=['Admin', 'Gestor']).exists() or request.user.is_superuser
+
+    # Se o user for Admin, Gestor ou Superuser, mostra todos os tutoriais, caso contrário, só os não restritos
+    if is_admin_or_gestor_or_superuser:
+        tutorials = Tutorial.objects.all().order_by('position')
+    else:
+        tutorials = Tutorial.objects.filter(restricted=False).order_by('position')  # Exibe apenas os tutoriais não restritos
+
+    #tutorials = Tutorial.objects.filter(active=True).order_by('position')
+    return render(request, 'core/tutorial.html', {'tutorials': tutorials, 'is_admin_or_gestor_or_superuser': is_admin_or_gestor_or_superuser})
 

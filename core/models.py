@@ -71,8 +71,7 @@ class Term(models.Model):                               # Classe Term herda de m
 # para mostrar mensagens de avisos/notícias na homepage
 
 class News(models.Model):
-    title = models.CharField(_("Title"), max_length=200, default=_("Untitled"))
-    #message = RichTextField(_("Message"))
+    title = models.CharField(_("Title"), max_length=255, default=_("Untitled"))
     message = RichTextUploadingField(_("Message"))
 
     active = models.BooleanField(_("Active"), default=False)
@@ -91,6 +90,24 @@ class News(models.Model):
         if self.end_date and self.end_date < now:
             return False
         return True
+
+    def __str__(self):
+        return f"{self.title} ({'Active' if self.active else 'Inactive'})"
+
+
+class Tutorial(models.Model):
+    title = models.CharField(_('Title'), max_length=255 )#, null=True, blank=True)
+    content = RichTextUploadingField(_('Content'))#, null=True)  # Texto que explica o tutorial
+    video_url = models.URLField(_('Video URL'), blank=True, null=True)  # URL do vídeo tutorial
+
+    restricted = models.BooleanField(default=False)
+    active = models.BooleanField(_("Active"), default=False)
+    position = models.PositiveIntegerField(_('Position'), default=0, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _("Tutorial")
+        verbose_name_plural = _("Tutorials")
+        ordering = ['position']
 
     def __str__(self):
         return f"{self.title} ({'Active' if self.active else 'Inactive'})"

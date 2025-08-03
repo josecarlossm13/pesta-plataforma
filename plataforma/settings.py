@@ -81,7 +81,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                'core.context_processors.areas_dropdown',
+                'core.context_processors.areas_dropdown',                       # mostrar o menu de áreas em qualquer página
+                'core.context_processors.user_permissions',                     # verificar se o user é admin, gestor ou superuser
             ],
         },
     },
@@ -158,7 +159,7 @@ USE_TZ = True                   # Ativa o suporte de fusos horários.
 
 ################# Adiciona a configuração de tradução
 LOCALE_PATHS = [
-    BASE_DIR / 'locale',  # Ajuste conforme necessário
+    BASE_DIR / 'locale',
 ]
 # Lista de idiomas (comentados os que não estão a ser usados)
 LANGUAGES = [
@@ -183,11 +184,18 @@ LANGUAGES = [
     # ('no', _('Norueguês')),
     # ('cs', _('Checo')),
     # ('hu', _('Húngaro')),
-    
+
 ]
 #Idiomas para o Model translate, uma vez que havia conflito com o django por causa do name_pt-br/name_pt_br
 #MODELTRANSLATION_LANGUAGES = ('en', 'pt', 'pt_br', 'es')
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
+
+# Caso o campo do idioma selecionado esteja vazio, impede qualquer fallback para o idioma padrão
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    'default': ()
+}
+
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -212,7 +220,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'    # Define o tipo de campo
 #    'django.contrib.auth.backends.ModelBackend',  # O backend padrão
 #]
 
-CKEDITOR_UPLOAD_PATH = "uploads/"                       # Define o diretório onde os arquivos enviados pelo CKEditor serão armazenados (texto e imagens)
+CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"                       # Define o diretório onde os arquivos enviados pelo CKEditor serão armazenados (texto e imagens)
 
 # Ativa o botão de imagem com upload direto no editor.
 CKEDITOR_CONFIGS = {
@@ -229,7 +237,7 @@ CKEDITOR_CONFIGS = {
             {'name': 'links', 'items': ['Link', 'Unlink']},
             {'name': 'clipboard', 'items': ['Undo', 'Redo']},
         ],
-        'height': 300,
+        'height': 400,
         'width': '100%',
         'extraPlugins': 'uploadimage,justify,image2',  # plugins extra
         'filebrowserUploadUrl': '/ckeditor/upload/',

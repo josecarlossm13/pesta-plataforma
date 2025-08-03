@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static i18n %}
+
+{% block title %}{% trans "Tutorials" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{% trans "Tutorials" %}</h2>
+
+    {% if tutorials %}
+         <div class="tutorials-list">
+            {% for tutorial in tutorials %}
+                <div class="tutorial-item mb-4">
+
+                    <p><h3>{{ tutorial.title }}</h3></p>
+                    <p>{{ tutorial.content|safe }}</p>
+
+
+                    {% if tutorial.video_url %}
+                        <div class="tutorial-video">
+                            <a href="{{ tutorial.video_url }}" target="_blank" class="btn btn-primary">{% trans "Watch video tutorial" %}
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>{% trans "No active tutorials found." %}</p>
+    {% endif %}
+
+</div>
+{% endblock %}

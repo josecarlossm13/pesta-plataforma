@@ -1,0 +1,309 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-07-31 12:59+0100\n"
+"PO-Revision-Date: 2025-07-31 13:53+0100\n"
+"Last-Translator:   <>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+"X-Translated-Using: django-rosetta 0.10.2\n"
+
+#: core/models.py:13 core/models.py:26 core/models.py:49
+msgid "Id"
+msgstr ""
+
+#: core/models.py:14 core/models.py:27 core/models.py:51
+msgid "Name"
+msgstr ""
+
+#: core/models.py:17 core/models.py:28 templates/area_list.html:22
+#: templates/core/term_detail.html:20 templates/core/term_list.html:20
+#: templates/subarea_list.html:18
+msgid "Area"
+msgstr ""
+
+#: core/models.py:25
+msgid "Reference"
+msgstr ""
+
+#: core/models.py:31 core/models.py:50 templates/core/term_detail.html:21
+#: templates/core/term_list.html:21 templates/subarea_list.html:29
+msgid "Subarea"
+msgstr ""
+
+#: core/models.py:48
+msgid "IEV Reference"
+msgstr ""
+
+#: core/models.py:52 templates/core/term_detail.html:26
+msgid "Description"
+msgstr ""
+
+#: core/models.py:53 templates/core/term_detail.html:29
+msgid "Source"
+msgstr ""
+
+#: core/models.py:54
+msgid "Image"
+msgstr ""
+
+#: core/models.py:57
+msgid "Created"
+msgstr ""
+
+#: core/models.py:58
+msgid "Updated"
+msgstr ""
+
+#: core/models.py:65 templates/core/term_detail.html:25
+#: templates/core/term_list.html:33
+msgid "Term"
+msgstr ""
+
+#: core/models.py:74
+msgid "Title"
+msgstr ""
+
+#: core/models.py:74
+msgid "Untitled"
+msgstr ""
+
+#: core/models.py:76
+msgid "Message"
+msgstr ""
+
+#: core/models.py:78
+msgid "Active"
+msgstr ""
+
+#: core/models.py:79
+msgid "Show from"
+msgstr ""
+
+#: core/models.py:80
+msgid "Hide after"
+msgstr ""
+
+#: core/models.py:81
+msgid "Created at"
+msgstr ""
+
+#: core/models.py:84 core/models.py:85
+msgid "News"
+msgstr ""
+
+#: plataforma/settings.py:165
+msgid "English"
+msgstr ""
+
+#: plataforma/settings.py:166
+msgid "Portuguese"
+msgstr ""
+
+#: plataforma/settings.py:167
+msgid "Brazilian Portuguese"
+msgstr ""
+
+#: plataforma/settings.py:168
+msgid "Spanish"
+msgstr ""
+
+#: templates/account.html:8 templates/base.html:100
+msgid "Account"
+msgstr "Cuenta"
+
+#: templates/account.html:11
+msgid "User account page"
+msgstr "Página de cuenta de usuario"
+
+#: templates/area_list.html:4 templates/area_list.html:15
+msgid "Subject areas"
+msgstr ""
+
+#: templates/area_list.html:11 templates/core/term_detail.html:12
+#: templates/core/term_list.html:11 templates/subarea_list.html:11
+msgid "Back"
+msgstr ""
+
+#: templates/area_list.html:21
+msgid "Area ID"
+msgstr ""
+
+#: templates/area_list.html:23 templates/base.html:47 templates/base.html:141
+#: templates/subarea_list.html:4 templates/subarea_list.html:22
+msgid "Subareas"
+msgstr ""
+
+#: templates/area_list.html:24 templates/base.html:51 templates/base.html:142
+#: templates/core/term_list.html:4 templates/core/term_list.html:26
+#: templates/subarea_list.html:30
+msgid "Terms"
+msgstr ""
+
+#: templates/area_list.html:25 templates/core/term_list.html:34
+#: templates/subarea_list.html:31
+msgid "Actions"
+msgstr ""
+
+#: templates/area_list.html:39
+msgid "View Subareas"
+msgstr ""
+
+#: templates/area_list.html:48
+msgid "No areas found."
+msgstr ""
+
+#: templates/base.html:8 templates/base.html:27 templates/base.html:120
+msgid "IEV Platform"
+msgstr ""
+
+#: templates/base.html:39 templates/base.html:139 templates/home.html:4
+msgid "Home"
+msgstr ""
+
+#: templates/base.html:43 templates/base.html:140
+msgid "Areas"
+msgstr ""
+
+#: templates/base.html:67
+msgid "Change"
+msgstr ""
+
+#: templates/base.html:76
+msgid "Search term"
+msgstr "Término de búsqueda"
+
+#: templates/base.html:79
+msgid "All Areas"
+msgstr "Todas las áreas"
+
+#: templates/base.html:88
+msgid "Search"
+msgstr ""
+
+#: templates/base.html:124
+msgid "Created by José Carlos Magalhães, ISEP student."
+msgstr "Creado por José Carlos Magalhães, estudiante del ISEP."
+
+#: templates/base.html:130
+msgid "Supporting international terminology dissemination."
+msgstr "Apoyando la difusión de terminología internacional."
+
+#: templates/base.html:131
+msgid "All rights reserved."
+msgstr "Reservados todos los derechos."
+
+#: templates/base.html:137
+msgid "Pages"
+msgstr "Paginas"
+
+#: templates/base.html:148
+msgid "Resources"
+msgstr "Recursos"
+
+#: templates/base.html:150
+msgid "Tutorial"
+msgstr ""
+
+#: templates/base.html:151
+msgid "Poster"
+msgstr ""
+
+#: templates/base.html:152
+msgid "Documentation"
+msgstr ""
+
+#: templates/base.html:158
+msgid "Community"
+msgstr ""
+
+#: templates/base.html:162
+msgid "IEV Online - Eletropedia"
+msgstr ""
+
+#: templates/base.html:170
+msgid "Administration"
+msgstr ""
+
+#: templates/base.html:172
+msgid "Contacts"
+msgstr ""
+
+#: templates/base.html:173
+msgid "Administrator panel"
+msgstr ""
+
+#: templates/core/term_detail.html:22 templates/core/term_list.html:32
+msgid "IEV ref"
+msgstr ""
+
+#: templates/core/term_detail.html:32
+msgid "Added to IEVP"
+msgstr ""
+
+#: templates/core/term_detail.html:33
+msgid "Last IEVP update"
+msgstr ""
+
+#: templates/core/term_detail.html:44
+msgid "Show Additional Content"
+msgstr ""
+
+#: templates/core/term_list.html:19 templates/subarea_list.html:17
+msgid "Filtering by"
+msgstr ""
+
+#: templates/core/term_list.html:48
+msgid "View Detail"
+msgstr ""
+
+#: templates/core/term_list.html:58
+msgid "No terms found."
+msgstr ""
+
+#: templates/home.html:7
+msgid "IEVP - International Electrotechnical Vocabulary Platform"
+msgstr ""
+
+#: templates/home.html:10
+msgid "Hello"
+msgstr "Hola"
+
+#: templates/home.html:20
+msgid "Hello! You are not logged in."
+msgstr "¡Hola! No has iniciado sesión."
+
+#: templates/home.html:21
+msgid "To use the website, you need to be registered."
+msgstr "Para usar el sitio web, necesitas estar registrado."
+
+#: templates/home.html:22
+msgid "If you don’t have an account, please sign up on the account page."
+msgstr "Si no tienes una cuenta, regístrate en la página de la cuenta."
+
+#: templates/registration/login.html:4
+msgid "Login"
+msgstr ""
+
+#: templates/subarea_list.html:28
+msgid "Subarea ID"
+msgstr ""
+
+#: templates/subarea_list.html:46
+msgid "View Terms"
+msgstr ""
+
+#: templates/subarea_list.html:57
+msgid "No subareas found."
+msgstr ""

@@ -136,10 +136,12 @@
       <div class="col-6 col-lg-2 offset-lg-1 mb-3">
         <h5>{% trans "Pages" %}</h5>
         <ul class="list-unstyled">
-          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'home' %}">{% trans "Home" %}</a></li>
-          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'area-list' %}">{% trans "Areas" %}</a></li>
-          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a></li>
-          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'term-list' %}">{% trans "Terms" %}</a></li>
+
+            <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'home' %}">{% trans "Home" %}</a></li>
+            <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'area-list' %}">{% trans "Areas" %}</a></li>
+            <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a></li>
+            <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'term-list' %}">{% trans "Terms" %}</a></li>
+            <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'account' %}">{% trans "Account" %}</a></li>
         </ul>
       </div>
 
@@ -147,7 +149,7 @@
       <div class="col-6 col-lg-2 mb-3">
         <h5>{% trans "Resources" %}</h5>
         <ul class="list-unstyled">
-          <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Tutorial" %}</a></li>
+          <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'tutorial' %}">{% trans "Tutorials" %}</a></li>
           <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Poster" %}</a></li>
           <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Documentation" %}</a></li>
         </ul>
@@ -169,8 +171,11 @@
       <div class="col-6 col-lg-2 mb-3">
         <h5>{% trans "Administration" %}</h5>
         <ul class="list-unstyled">
-          <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Contacts" %}</a></li>
-          <li class="mb-2"><a class="text-decoration-none link-dark" href="http://127.0.0.1:8000/admin/">{% trans "Administrator panel" %}</a></li>
+            <li class="mb-2"><a class="text-decoration-none link-dark" href="#">{% trans "Contacts" %}</a></li>
+
+            {% if user.is_authenticated and is_admin_or_gestor %}
+                <li class="mb-2"><a class="text-decoration-none link-dark" href="http://127.0.0.1:8000/admin/">{% trans "Administrator panel" %}</a></li>
+            {% endif %}
         </ul>
       </div>
 
@@ -191,17 +196,8 @@
 <!-- Inicialização padrão do DataTables -->
 {% block datatables_init %}
 
-{% comment %}<script>
-    $(document).ready(function () {
-        $('.datatable').DataTable({
-            language: {
-                url: '//cdn.datatables.net/plug-ins/1.13.6/i18n/{{ LANGUAGE_CODE|default:"en" }}.json'
-            }
-        });
-    });
-</script>{% endcomment %}
 
-{# tive que mapear idioma a idioma porque dava erro ao usar a URL, os idiomas do django nao coincidem com o cdn.datatables.net... #}
+{# tive que mapear idioma a idioma porque dava erro ao usar a URL, as referências dos idiomas do django nao coincidem com o cdn.datatables.net... #}
 <script>
   const langMap = {
     'en': 'en-GB',
