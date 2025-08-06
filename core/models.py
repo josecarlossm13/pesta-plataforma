@@ -71,10 +71,10 @@ class Term(models.Model):                               # Classe Term herda de m
 # para mostrar mensagens de avisos/notícias na homepage
 
 class News(models.Model):
-    title = models.CharField(_("Title"), max_length=255, default=_("Untitled"))
-    message = RichTextUploadingField(_("Message"))
+    title = models.CharField(_("Title"), max_length=255)
+    content = RichTextUploadingField(_("content"))
 
-    active = models.BooleanField(_("Active"), default=False)
+    active = models.BooleanField(_("Active"), default=True)
     start_date = models.DateTimeField(_("Show from"), null=True, blank=True)
     end_date = models.DateTimeField(_("Hide after"), null=True, blank=True)
     created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
@@ -95,6 +95,25 @@ class News(models.Model):
         return f"{self.title} ({'Active' if self.active else 'Inactive'})"
 
 
+class Warning(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Title")
+    content = RichTextUploadingField(_("content"))
+    active = models.BooleanField(default=True, verbose_name="Active")
+    show_from = models.DateTimeField(null=True, blank=True, verbose_name="Show from")
+    hide_after = models.DateTimeField(null=True, blank=True, verbose_name="Hide after")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Warning"
+        verbose_name_plural = "Warnings"
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return self.title
+
+
+
+
 class Tutorial(models.Model):
     title = models.CharField(_('Title'), max_length=255 )#, null=True, blank=True)
     content = RichTextUploadingField(_('Content'))#, null=True)  # Texto que explica o tutorial
@@ -111,3 +130,47 @@ class Tutorial(models.Model):
 
     def __str__(self):
         return f"{self.title} ({'Active' if self.active else 'Inactive'})"
+
+
+class Poster(models.Model):
+    title = models.CharField(max_length=255, verbose_name=_("Title"))
+    description = RichTextUploadingField(verbose_name=_("Description"), blank=True, null=True)
+    file = models.FileField(upload_to="poster/", verbose_name=_("PDF File"))
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Uploaded At"))
+
+    def __str__(self):
+        return self.title
+
+
+class Thesis(models.Model):
+    title = models.CharField(max_length=255, verbose_name=_("Title"))
+    description = RichTextUploadingField(verbose_name=_("Description"), blank=True, null=True)
+    file = models.FileField(upload_to="thesis/", verbose_name=_("PDF File"))
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Uploaded At"))
+
+    def __str__(self):
+        return self.title
+
+
+class DocumentationLink(models.Model):
+    name = models.CharField(max_length=255, verbose_name=_("Link Name"))
+    url = models.URLField(verbose_name=_("URL"))
+
+    def __str__(self):
+        return self.name
+
+
+class ContactInfo(models.Model):
+    position = models.PositiveIntegerField(_('Position'), default=0)
+    details = models.CharField(_('Details'), max_length=255, blank=True, null=True)
+    name = models.CharField(_('Name'), max_length=255)
+    email = models.EmailField(_('Email'))
+
+    class Meta:
+        ordering = ['position']
+        verbose_name = _("Contact")
+        verbose_name_plural = _("Contacts")
+
+    def __str__(self):
+        return f"{self.name} ({self.email})"
+

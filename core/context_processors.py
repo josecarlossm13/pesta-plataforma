@@ -1,6 +1,8 @@
 # core/context_processors.py
 from .models import Area
 
+# variáveis globais para templates
+
 # para filtar na navbar por area
 # garantir que todas as views que usam o base.html enviem as áreas no contexto
 def areas_dropdown(request):

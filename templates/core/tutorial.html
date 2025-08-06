@@ -13,8 +13,6 @@
                 <div class="tutorial-item mb-4">
 
                     <p><h3>{{ tutorial.title }}</h3></p>
-                    <p>{{ tutorial.content|safe }}</p>
-
 
                     {% if tutorial.video_url %}
                         <div class="tutorial-video">
@@ -22,6 +20,9 @@
                             </a>
                         </div>
                     {% endif %}
+
+                    <p>{{ tutorial.content|safe }}</p>
+
                 </div>
             {% endfor %}
         </div>

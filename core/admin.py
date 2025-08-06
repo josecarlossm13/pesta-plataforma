@@ -4,7 +4,7 @@ from import_export.admin import ImportExportModelAdmin, ExportActionMixin
 #from import_export.widgets import ForeignKeyWidget
 from modeltranslation.admin import TranslationAdmin         # Importa o TranslationAdmin, uma classe fornecida pelo pacote django-modeltranslation para facilitar a tradução de campos de modelos do Django na interface de administração
 from reversion.admin import VersionAdmin
-from .models import Area, SubArea, Term, News, Tutorial                     # Importa os modelos Area, SubArea, e Term de models.py
+from .models import Area, SubArea, Term, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo                     # Importa os modelos Area, SubArea, e Term de models.py
 
 #####tentativa####  (tem que ficar antes do AreaAdmin)                  #Define as colunas de importação/exportação para o modelo Area
 class AreaResource(resources.ModelResource):
@@ -122,9 +122,18 @@ class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportAc
 
 
 @admin.register(News)
-class NewsAdmin(admin.ModelAdmin):
+class NewsAdmin(TranslationAdmin):
     list_display = ('title', 'active', 'start_date', 'end_date', 'created_at')
     list_filter = ('active',)
+    search_fields = ('title', 'content')
+    ordering = ('-created_at',)
+
+
+@admin.register(Warning)
+class WarningAdmin(TranslationAdmin):
+    list_display = ('title', 'active', 'show_from', 'hide_after', 'created_at')
+    list_filter = ('active',)
+    search_fields = ('title', 'content')
     ordering = ('-created_at',)
 
 
@@ -135,3 +144,24 @@ class TutorialAdmin(admin.ModelAdmin):
     search_fields = ('title', 'content')
     ordering = ('position',)                    # ordenar por posição no painel admin
     list_editable = ('position',)               # Editar a posição diretamente na lista
+
+
+@admin.register(Poster)
+class PosterAdmin(admin.ModelAdmin):
+    list_display = ("title", "uploaded_at")
+
+@admin.register(Thesis)
+class ThesisAdmin(admin.ModelAdmin):
+    list_display = ("title", "uploaded_at")
+
+@admin.register(DocumentationLink)
+class DocumentationLinkAdmin(admin.ModelAdmin):
+    list_display = ("name", "url")
+
+@admin.register(ContactInfo)
+class ContactInfoAdmin(admin.ModelAdmin):
+    list_display = ('details', 'name', 'email', 'position')
+    list_display_links = ('name',)
+    list_editable = ('position',)
+    ordering = ('position',)
+

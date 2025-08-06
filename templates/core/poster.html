@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Poster" %}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h2 class="mb-4">{{ poster.title }}</h2>
+
+    {% if poster.description %}
+      <div class="mb-4">
+        {{ poster.description|safe }}
+      </div>
+    {% endif %}
+
+    {% if poster.file %}
+      <a href="{{ poster.file.url }}" target="_blank" class="btn btn-outline-primary">
+        {% trans "Open Poster" %}
+      </a>
+    {% else %}
+      <p class="text-muted">{% trans "No PDF file available." %}</p>
+    {% endif %}
+  </div>
+{% endblock %}
+
+
+{% comment %}{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Poster" %}{% endblock %}
+
+{% block content %}
+<h2>{{ poster.title }}</h2>
+<div>{{ poster.description|safe }}</div>
+
+{% if poster.file %}
+    <iframe src="{{ poster.file.url }}" width="100%" height="600px" style="border:none;"></iframe>
+{% else %}
+    <p>{% trans "No poster available." %}</p>
+{% endif %}
+{% endblock %}{% endcomment %}

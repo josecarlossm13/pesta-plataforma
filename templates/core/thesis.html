@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Thesis" %}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h2 class="mb-4">{{ thesis.title }}</h2>
+
+    {% if thesis.description %}
+      <div class="mb-4">
+        {{ thesis.description|safe }}
+      </div>
+    {% endif %}
+
+    {% if thesis.file %}
+      <a href="{{ thesis.file.url }}" class="btn btn-outline-success" target="_blank" download>
+        {% trans "Download Thesis" %}
+      </a>
+    {% else %}
+      <p class="text-muted">{% trans "No thesis file available." %}</p>
+    {% endif %}
+  </div>
+{% endblock %}
+
+
+{% comment %}{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Thesis" %}{% endblock %}
+
+{% block content %}
+<h2>{{ thesis.title }}</h2>
+<div>{{ thesis.description|safe }}</div>
+
+{% if thesis.file %}
+    <a href="{{ thesis.file.url }}" class="btn btn-primary" download>{% trans "Download Thesis" %}</a>
+{% else %}
+    <p>{% trans "No thesis available." %}</p>
+{% endif %}
+{% endblock %}{% endcomment %}

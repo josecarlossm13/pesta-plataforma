@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView                           # Importa a visualização de login do Django.
 from django.urls import reverse_lazy
 from django.utils.translation import get_language               # Para obter idioma da interface
-from core.models import Term, Area, SubArea, News, Tutorial                                # Importa o modelo Term,  que contém os dados dos termos.
+from core.models import Term, Area, SubArea, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo                                # Importa o modelo Term,  que contém os dados dos termos.
 from core.forms import UserRegistrationForm #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
 from django.db.models import Q, Count                           # Count, Contar o nº de termos nas data tables
 from django.contrib.auth.forms import UserCreationForm              # Importa o formulário de criação de utilizador padrão do Django.
@@ -16,6 +16,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from django.urls import reverse                                     # usado para gerar URLs com base no nome dos caminhos
+from core.permissions import user_has_access, GroupAccessRequiredMixin
 
 
 # funções para gerar uma stack para usar no botão "voltar"
@@ -48,7 +49,7 @@ def get_back_url(request, fallback_url):
         return stack[-1]  # página anterior real
     return fallback_url
 
-class AreaListView(LoginRequiredMixin, ListView):
+class AreaListView(GroupAccessRequiredMixin, ListView):
     model = Area
     template_name = 'area_list.html'
     context_object_name = 'areas'
@@ -74,7 +75,7 @@ class AreaListView(LoginRequiredMixin, ListView):
 
 
 # View para listar subareas. [pode receber uma (area_id)]
-class SubAreaListView(LoginRequiredMixin, ListView):
+class SubAreaListView(GroupAccessRequiredMixin, ListView):
     model = SubArea
     template_name = 'subarea_list.html'
     context_object_name = 'subareas'
@@ -112,7 +113,7 @@ def term_detail(request, ref):
     return render(request, 'core/term_detail.html', {'term': term})  # aqui podemos escolher o idioma dos conteúdos se necessário
 
 
-class TermListView(LoginRequiredMixin, ListView):
+class TermListView(GroupAccessRequiredMixin, ListView):
     model = Term
     context_object_name = 'terms'
     login_url = "/accounts/account/"
@@ -182,7 +183,7 @@ class TermListView(LoginRequiredMixin, ListView):
         return context
 
 
-class TermDetailView(LoginRequiredMixin, DetailView):
+class TermDetailView(GroupAccessRequiredMixin, DetailView):
     model = Term
     context_object_name = 'term'
     login_url = "/accounts/account/"
@@ -244,20 +245,37 @@ class TermDetailView(LoginRequiredMixin, DetailView):
 
         return context
 
-#  para mostrar mensagens de avisos/notícias na homepage
+# homepage
+# listas vazias para evitar erros com users anonimos
 def home(request):
-    now = timezone.now()
-    news = News.objects.filter(
-        active=True
-    ).filter(
-        models.Q(start_date__lte=now) | models.Q(start_date__isnull=True),
-        models.Q(end_date__gte=now) | models.Q(end_date__isnull=True)
-    ).order_by('-created_at').first()
+    news = []
+    warnings = []
 
-    return render(request, 'home.html', {'news': news})
+    if request.user.is_authenticated and not request.user.groups.filter(name='SemAcesso').exists():
+        now = timezone.now()
+        news = News.objects.filter(
+            active=True
+        ).filter(
+            models.Q(start_date__lte=now) | models.Q(start_date__isnull=True),
+            models.Q(end_date__gte=now) | models.Q(end_date__isnull=True)
+        ).order_by('-created_at')
+
+        warnings = Warning.objects.filter(
+            active=True
+        ).filter(
+            models.Q(show_from__lte=now) | models.Q(show_from__isnull=True),
+            models.Q(hide_after__gte=now) | models.Q(hide_after__isnull=True)
+        ).order_by('-created_at')
+
+    return render(request, 'home.html', {
+        'news': news,
+        'warnings': warnings,
+    })
+
 
 
 # lista (queryset) de todos os tutoriais ativos, ordenados por posição, com restrição dependendo do grupo do user
+@user_has_access()
 def tutorial_view(request):
     # Verifica se o usuário é Admin, Gestor ou Superusuário
     is_admin_or_gestor_or_superuser = request.user.groups.filter(name__in=['Admin', 'Gestor']).exists() or request.user.is_superuser
@@ -271,3 +289,22 @@ def tutorial_view(request):
     #tutorials = Tutorial.objects.filter(active=True).order_by('position')
     return render(request, 'core/tutorial.html', {'tutorials': tutorials, 'is_admin_or_gestor_or_superuser': is_admin_or_gestor_or_superuser})
 
+
+def poster_view(request):
+    poster = Poster.objects.first()
+    return render(request, "core/poster.html", {"poster": poster})
+
+
+@user_has_access()
+def thesis_view(request):
+    thesis = Thesis.objects.first()
+    return render(request, "core/thesis.html", {"thesis": thesis})
+
+@user_has_access()
+def documentation_view(request):
+    links = DocumentationLink.objects.all()
+    return render(request, "core/documentation.html", {"links": links})
+
+def contacts_view(request):
+    contacts = ContactInfo.objects.all()
+    return render(request, "core/contacts.html", {"contacts": contacts})

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Contacts" %}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <h1 class="mb-4">{% trans "Contact Information" %}</h1>
+
+    {% if contacts %}
+      <div class="row row-cols-1 row-cols-md-2 g-4">
+        {% for contact in contacts %}
+          <div class="col">
+            <div class="card h-100 shadow-sm">
+              <div class="card-body">
+                {% if contact.details %}
+                  <p class="card-subtitle text-muted small mb-1">{{ contact.details }}</p>
+                {% endif %}
+                <h5 class="card-title">{{ contact.name }}</h5>
+                <p class="card-text">
+                </p>
+              </div>
+              <div class="card-footer bg-transparent border-0 text-end">
+                <a href="mailto:{{ contact.email }}" class="btn btn-outline-primary btn-sm">
+                  {% trans "Send Email" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">{% trans "No contact information available." %}</p>
+    {% endif %}
+  </div>
+{% endblock %}
