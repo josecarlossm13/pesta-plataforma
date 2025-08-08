@@ -40,8 +40,14 @@ INSTALLED_APPS = [
     'django.contrib.auth',              # Fornece funcionalidades para autenticação de utilizadores.
     'django.contrib.contenttypes',      # Permite o uso de tipos de conteúdo, essencial para o sistema de permissões do Django.
     'django.contrib.sessions',          # legacy # Permite a gestão de sessões, armazenando dados temporários no servidor para cada utilizador.
+    'django.contrib.sites',             # Necessário para django-allauth
     'django.contrib.messages',          # Permite exibir mensagens de notificação aos utilizadores.
     'django.contrib.staticfiles',       # Permite a gestão de ficheiros estáticos, como CSS, JavaScript e imagens.
+
+    'accounts',
+    'allauth',
+    'allauth.account',
+
     'core',                             # Regista a aplicação 'core' que criei.
     'plataforma',
     #"core.apps.PollsConfig"            # Pode ser usado para registar uma configuração de aplicação personalizada, se necessário.
@@ -51,7 +57,8 @@ INSTALLED_APPS = [
     'ckeditor_uploader',                # Permite o upload de ficheiros através do CKEditor.
     'import_export',                    # Permite importar e exportar ficheiros Excel
     'reversion',
-    'accounts',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
@@ -65,6 +72,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
+    'allauth.account.middleware.AccountMiddleware',     # django allauth
 
 ]
 
@@ -136,16 +144,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ##### Configurações de autenticação
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',  # Backend padrão
+    'allauth.account.auth_backends.AuthenticationBackend',      # `allauth` specific authentication methods, such as login by email
+
 ]
-
-######
-# URL para redirecionar após o login bem-sucedido
-LOGIN_REDIRECT_URL = 'home'  # Substitua 'home' pela sua URL de redirecionamento desejada
-
-# URL para redirecionar após o logout
-LOGOUT_REDIRECT_URL = 'login'  # Substitua 'login' pela sua URL de redirecionamento desejada após logout
-#######
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
@@ -196,13 +197,11 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 }
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
 
-                                #################adicionei
 STATICFILES_DIRS = [
     BASE_DIR / "plataforma/static/core",  # Adjust this path as necessary
 ]
@@ -247,10 +246,37 @@ CKEDITOR_CONFIGS = {
 }
 
 
-
-LOGIN_REDIRECT_URL = "home"                                # Redireciona o user após login para a homepage
-LOGOUT_REDIRECT_URL = "home"                               # Redireciona o user após logout para a homepage
+#LOGIN_REDIRECT_URL = "home"                                # Redireciona o user após login para a homepage
+#LOGOUT_REDIRECT_URL = "home"                               # Redireciona o user após logout para a homepage
 
 from import_export.formats.base_formats import CSV, XLSX, JSON, YAML, HTML
 IMPORT_FORMATS = [CSV, XLSX]
 EXPORT_FORMATS = [CSV, XLSX, JSON, YAML, HTML]
+
+# Configuraçoes django-allauth
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True     # ao abrir o link no browser, marca logo o email como verificado
+
+SITE_ID = 1
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+
+# Nova API: campos permitidos no registo
+ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'password1*', 'password2*']
+
+# Verificação de email obrigatória
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+
+# Formulário personalizado para signup
+ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.CustomSignupForm'
+
+# impede users de conseguir adicionar outro ou substituir. Staff pode através do painel admin
+ACCOUNT_MAX_EMAIL_ADDRESSES = 1
+
+# Config django-crispy-forms
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+##################APAGAR!!!!!!!!!!!!!!!!!!############ Foi para simular os emails enviados
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

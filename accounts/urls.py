@@ -1,9 +1,7 @@
 # accounts/urls.py
 from django.urls import path
-from .views import SignUpView
-from django.views.generic.base import TemplateView
+from .views import account_panel_view
 
 urlpatterns = [
-    path('signup/', SignUpView.as_view(), name='signup'),
-    path('account/', TemplateView.as_view(template_name="account.html"), name='account')
+    path("", account_panel_view, name="account_panel"),  # /account/
 ]

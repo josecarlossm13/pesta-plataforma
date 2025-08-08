@@ -1,23 +1,41 @@
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.mixins import UserPassesTestMixin
+from django.shortcuts import redirect
+from django.urls import reverse
 
 
-# decorador para limitar acesso
-def user_has_access():
+def user_has_access(redirect_url='/'):
     """
-    Permite acesso apenas a utilizadores autenticados que não estão no grupo 'SemAcesso'
+    Decorador: Permite acesso apenas a utilizadores autenticados que não estão no grupo 'SemAcesso'
+    Redireciona se não tiver acesso.
     """
     def check(user):
         return user.is_authenticated and not user.groups.filter(name="SemAcesso").exists()
-    return user_passes_test(check, login_url="/accounts/account/")
+
+    def decorator(view_func):
+        def _wrapped_view(request, *args, **kwargs):
+            if not request.user.is_authenticated:
+                from django.contrib.auth.views import redirect_to_login
+                return redirect_to_login(request.get_full_path())
+            elif not check(request.user):
+                return redirect(redirect_url)  # redireciona em vez de 403
+            return view_func(request, *args, **kwargs)
+        return _wrapped_view
+
+    return decorator
 
 
 class GroupAccessRequiredMixin(UserPassesTestMixin):
     """
-    Permite acesso apenas a utilizadores autenticados e que NÃO estão no grupo 'SemAcesso'
+    Mixin: bloqueia acesso a utilizadores no grupo 'SemAcesso'
+    Em vez de dar 403, redireciona para a home.
     """
     def test_func(self):
         user = self.request.user
         return user.is_authenticated and not user.groups.filter(name="SemAcesso").exists()
 
-    login_url = "/accounts/account/"
+    def handle_no_permission(self):
+        if not self.request.user.is_authenticated:
+            return super().handle_no_permission()  # redireciona para login
+        return redirect(reverse('home'))  # user autenticado mas sem permissão
+

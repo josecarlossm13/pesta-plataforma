@@ -1,16 +1,43 @@
-from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import Group
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from allauth.account.models import EmailAddress
+from django.views.decorators.http import require_POST
 
-# Create your views here.
+@require_POST
+def resend_verification_view(request):
+    email = request.POST.get("email", "").strip()
+    # Mensagem genérica para não revelar se o email existe
+    generic_msg = "If an account exists for this email, a verification link has been sent."
 
-# accounts/views.py
-from django.contrib.auth.forms import UserCreationForm
-from django.urls import reverse_lazy
-from django.views.generic import CreateView
+    if not email:
+        messages.info(request, generic_msg)
+        return redirect("account_email_verification_sent")  # ou 'account_login'
 
-#creating a new class called SignUpView that extends CreateView, sets the form as UserCreationForm,
-# and uses the template signup.html
+    try:
+        address = EmailAddress.objects.get(email__iexact=email)
+        if not address.verified:
+            # Reenvia o email de verificação
+            address.send_confirmation(request, signup=False)
+    except EmailAddress.DoesNotExist:
+        pass  # mesmo comportamento: mensagem genérica
 
-class SignUpView(CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy('login')
-    template_name = 'registration/signup.html'
+    messages.info(request, generic_msg)
+    return redirect("account_email_verification_sent")  # ou 'account_login'
+
+
+@login_required
+def account_panel_view(request):
+    user = request.user
+
+    # Verifica se o email foi confirmado
+    email_verified = EmailAddress.objects.filter(user=user, verified=True).exists()
+
+    # Verifica se está no grupo "SemAcesso"
+    is_sem_acesso = Group.objects.filter(name="SemAcesso", user=user).exists()
+
+    return render(request, "account/account_panel.html", {
+        "email_verified": email_verified,
+        "is_sem_acesso": is_sem_acesso,
+    })

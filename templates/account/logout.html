@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Log out" %}{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="alert alert-info text-center">
+    <h4>{% trans "You are about to log out." %}</h4>
+    <p>{% trans "Are you sure you want to log out?" %}</p>
+    <form method="post" action="{% url 'account_logout' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger mt-3">{% trans "Log out" %}</button>
+      <a href="{% url 'home' %}" class="btn btn-secondary mt-3 ms-2">{% trans "Cancel" %}</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

@@ -7,17 +7,17 @@ from django.contrib.auth.views import LoginView                           # Impo
 from django.urls import reverse_lazy
 from django.utils.translation import get_language               # Para obter idioma da interface
 from core.models import Term, Area, SubArea, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo                                # Importa o modelo Term,  que contém os dados dos termos.
-from core.forms import UserRegistrationForm #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
+#from core.forms import  #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
 from django.db.models import Q, Count                           # Count, Contar o nº de termos nas data tables
 from django.contrib.auth.forms import UserCreationForm              # Importa o formulário de criação de utilizador padrão do Django.
 from django.utils import translation
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.utils import timezone
 from django.urls import reverse                                     # usado para gerar URLs com base no nome dos caminhos
 from core.permissions import user_has_access, GroupAccessRequiredMixin
-
+from django.contrib.auth.models import Group
+from django.utils.timezone import now
 
 # funções para gerar uma stack para usar no botão "voltar"
 def update_navigation_stack(request):
@@ -54,7 +54,9 @@ class AreaListView(GroupAccessRequiredMixin, ListView):
     template_name = 'area_list.html'
     context_object_name = 'areas'
     ordering = ['id']
-    login_url = "/accounts/account/"
+    #login_url = '/accounts/login/'
+    login_url = reverse_lazy("account_login")
+
 
     def get(self, request, *args, **kwargs):
         update_navigation_stack(request)
@@ -79,7 +81,8 @@ class SubAreaListView(GroupAccessRequiredMixin, ListView):
     model = SubArea
     template_name = 'subarea_list.html'
     context_object_name = 'subareas'
-    login_url = "/accounts/account/"
+    #login_url = '/accounts/login/'
+    login_url = reverse_lazy("account_login")
 
 
     def get(self, request, *args, **kwargs):
@@ -107,7 +110,7 @@ class SubAreaListView(GroupAccessRequiredMixin, ListView):
 
 
 # função para detalhes de um termo
-@login_required(login_url='/accounts/account/')
+@login_required(login_url='/accounts/login/')
 def term_detail(request, ref):
     term = get_object_or_404(Term, ref=ref)                     # vai buscar o termo pela ref
     return render(request, 'core/term_detail.html', {'term': term})  # aqui podemos escolher o idioma dos conteúdos se necessário
@@ -116,7 +119,8 @@ def term_detail(request, ref):
 class TermListView(GroupAccessRequiredMixin, ListView):
     model = Term
     context_object_name = 'terms'
-    login_url = "/accounts/account/"
+    #login_url = '/accounts/login/'
+    login_url = reverse_lazy("account_login")
 
     def get(self, request, *args, **kwargs):
         update_navigation_stack(request)
@@ -186,7 +190,8 @@ class TermListView(GroupAccessRequiredMixin, ListView):
 class TermDetailView(GroupAccessRequiredMixin, DetailView):
     model = Term
     context_object_name = 'term'
-    login_url = "/accounts/account/"
+    #login_url = '/accounts/login/'
+    login_url = reverse_lazy("account_login")
 
     def get(self, request, *args, **kwargs):
         update_navigation_stack(request)
@@ -247,30 +252,63 @@ class TermDetailView(GroupAccessRequiredMixin, DetailView):
 
 # homepage
 # listas vazias para evitar erros com users anonimos
+
 def home(request):
-    news = []
-    warnings = []
+    context = {
+        'news': [],
+        'warnings': [],
+        'user_status': 'anonymous',  # default
+    }
 
-    if request.user.is_authenticated and not request.user.groups.filter(name='SemAcesso').exists():
-        now = timezone.now()
-        news = News.objects.filter(
-            active=True
-        ).filter(
-            models.Q(start_date__lte=now) | models.Q(start_date__isnull=True),
-            models.Q(end_date__gte=now) | models.Q(end_date__isnull=True)
-        ).order_by('-created_at')
+    if request.user.is_authenticated:
+        if not request.user.emailaddress_set.filter(verified=True).exists():
+            context['user_status'] = 'email_unverified'
+        elif Group.objects.filter(name="SemAcesso", user=request.user).exists():
+            context['user_status'] = 'awaiting_approval'
+        else:
+            context['user_status'] = 'approved'
+            # Só carrega conteúdos se tiver email verificado E for aprovado
+            context['news'] = News.objects.filter(
+                active=True
+            ).filter(
+                models.Q(start_date__lte=now()) | models.Q(start_date__isnull=True),
+                models.Q(end_date__gte=now()) | models.Q(end_date__isnull=True)
+            ).order_by('-created_at')
 
-        warnings = Warning.objects.filter(
-            active=True
-        ).filter(
-            models.Q(show_from__lte=now) | models.Q(show_from__isnull=True),
-            models.Q(hide_after__gte=now) | models.Q(hide_after__isnull=True)
-        ).order_by('-created_at')
+            context['warnings'] = Warning.objects.filter(
+                active=True
+            ).filter(
+                models.Q(show_from__lte=now()) | models.Q(show_from__isnull=True),
+                models.Q(hide_after__gte=now()) | models.Q(hide_after__isnull=True)
+            ).order_by('-created_at')
 
-    return render(request, 'home.html', {
-        'news': news,
-        'warnings': warnings,
-    })
+    return render(request, 'home.html', context)
+
+# def home(request):
+#     news = []
+#     warnings = []
+#
+#     if request.user.is_authenticated and not request.user.groups.filter(name='SemAcesso').exists():
+#
+#         now = timezone.now()
+#         news = News.objects.filter(
+#             active=True
+#         ).filter(
+#             models.Q(start_date__lte=now) | models.Q(start_date__isnull=True),
+#             models.Q(end_date__gte=now) | models.Q(end_date__isnull=True)
+#         ).order_by('-created_at')
+#
+#         warnings = Warning.objects.filter(
+#             active=True
+#         ).filter(
+#             models.Q(show_from__lte=now) | models.Q(show_from__isnull=True),
+#             models.Q(hide_after__gte=now) | models.Q(hide_after__isnull=True)
+#         ).order_by('-created_at')
+#
+#     return render(request, 'home.html', {
+#         'news': news,
+#         'warnings': warnings,
+#     })
 
 
 
@@ -308,3 +346,4 @@ def documentation_view(request):
 def contacts_view(request):
     contacts = ContactInfo.objects.all()
     return render(request, "core/contacts.html", {"contacts": contacts})
+

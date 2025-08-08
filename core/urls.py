@@ -12,10 +12,10 @@ urlpatterns = [
     path('areas/', AreaListView.as_view(), name='area-list'),
     path('subareas/', SubAreaListView.as_view(), name='subarea-list'),                         # todas as subareas
     path('subareas/<int:area_id>/', SubAreaListView.as_view(), name='subarea-list-by-area'),
-    path('tutorial/', views.tutorial_view, name='tutorial'),
 
-    path("poster/", poster_view, name="poster"),
-    path("thesis/", thesis_view, name="thesis"),
-    path("documentation/", documentation_view, name="documentation"),
-    path("contacts/", contacts_view, name="contacts"),
+    path('tutorial/', views.tutorial_view, name='tutorial'),
+    path('poster/', poster_view, name="poster"),
+    path('thesis/', thesis_view, name="thesis"),
+    path('documentation/', documentation_view, name="documentation"),
+    path('contacts/', contacts_view, name="contacts"),
 ]

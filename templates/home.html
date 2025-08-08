@@ -1,21 +1,51 @@
 {% extends "base.html" %}
 {% load i18n %}
 
+
 {% block title %}{% trans "IEV Platform" %}{% endblock %}
 
 {% block content %}
 <div class="container mt-4">
 
-  {% if not user.is_authenticated %}
+<div class="container mt-4">
+
+  {% if user_status == 'anonymous' %}
     <div class="alert alert-info text-center" role="alert">
       <h5>{% trans "Welcome to the IEV Platform!" %}</h5>
       <p>{% trans "To access all features, please log in or create an account." %}</p>
       <div class="d-flex justify-content-center mt-3 gap-2">
-        <a href="{% url 'account' %}" class="btn btn-outline-primary">{% trans "Log in" %}</a>
-{#        <a href="{% url 'account_signup' %}" class="btn btn-outline-success">{% trans "Create account" %}</a>#}
+        <a href="{% url 'account_login' %}" class="btn btn-outline-primary">{% trans "Log in" %}</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-outline-success">{% trans "Create account" %}</a>
       </div>
     </div>
+
+  {% elif user_status == 'email_unverified' %}
+    <div class="alert alert-warning text-center shadow-sm mb-4">
+      <i class="bi bi-envelope-exclamation me-2"></i>
+      {% trans "Please verify your email address to access the platform features." %}
+    </div>
+
+  {% elif user_status == 'awaiting_approval' %}
+    <div class="alert alert-warning text-center shadow-sm mb-4">
+      <i class="bi bi-hourglass-split me-2"></i>
+      {% trans "Your account is pending approval by an administrator. Please wait until your access is granted." %}
+    </div>
+
+  {% elif user_status == 'approved' %}
+    <!-- Não mostra alert, apenas continua para mostrar as news e warnings -->
   {% endif %}
+
+
+{% comment %}  {% if not user.is_authenticated %}
+    <div class="alert alert-info text-center" role="alert">
+      <h5>{% trans "Welcome to the IEV Platform!" %}</h5>
+      <p>{% trans "To access all features, please log in or create an account." %}</p>
+      <div class="d-flex justify-content-center mt-3 gap-2">
+        <a href="{% url 'account_login' %}" class="btn btn-outline-primary">{% trans "Log in" %}</a>
+        <a href="{% url 'account_signup' %}" class="btn btn-outline-success">{% trans "Create account" %}</a>
+      </div>
+    </div>
+  {% endif %}{% endcomment %}
 
   {% if warnings %}
     <div class="mb-4">
