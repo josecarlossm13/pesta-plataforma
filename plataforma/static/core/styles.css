@@ -21,3 +21,8 @@ a {
   margin-bottom: 0 !important;
 }
 
+/* Remover asterisco dos campos obrigatórios */
+
+.asteriskField {
+    display: none;
+}

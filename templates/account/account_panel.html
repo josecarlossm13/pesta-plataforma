@@ -7,26 +7,21 @@
 <div class="container mt-5">
   <h2 class="mb-4">{% trans "Account Panel" %}</h2>
 
-{% if not email_verified %}
-  <div class="alert alert-warning shadow-sm">
-    <i class="bi bi-envelope-exclamation me-2"></i>
-    {% trans "Please verify your email address to activate your account." %}
-  </div>
-{% elif is_sem_acesso %}
-  <div class="alert alert-warning text-center shadow-sm">
-    <i class="bi bi-hourglass-split me-2"></i>
-    {% trans "Your account is pending approval by an administrator. Please wait until your access is granted." %}
-  </div>
-{% endif %}
-
+    {% if is_sem_acesso %}
+      <div class="alert alert-warning text-center shadow-sm">
+        <i class="bi bi-hourglass-split me-2"></i>
+        {% trans "Your account is pending approval by an administrator. Please wait until your access is granted." %}
+      </div>
+    {% endif %}
 
   <div class="row g-4">
     <!-- Account Details -->
     <div class="col-md-6">
       <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title"><i class="bi bi-person-circle me-2"></i>{% trans "Account Details" %}</h5>
-{#          <p class="mb-1"><strong>{% trans "Username" %}:</strong> {{ user.username }}</p>#}
+          <h5 class="card-title">
+            <i class="bi bi-person-circle me-2"></i>{% trans "Account Details" %}
+          </h5>
           <p class="mb-1"><strong>{% trans "Email" %}:</strong> {{ user.email }}</p>
         </div>
       </div>
@@ -36,21 +31,28 @@
     <div class="col-md-6">
       <div class="card shadow-sm h-100">
         <div class="card-body">
-          <h5 class="card-title"><i class="bi bi-gear me-2"></i>{% trans "Manage your account" %}</h5>
-          <ul class="list-group list-group-flush">
-            <li class="list-group-item">
-              <i class="bi bi-key me-2 text-success"></i>
-              <a href="{% url 'account_change_password' %}">{% trans "Change password" %}</a>
-            </li>
-            <li class="list-group-item">
-              <i class="bi bi-question-circle me-2 text-warning"></i>
-              <a href="{% url 'account_reset_password' %}">{% trans "Forgot password?" %}</a>
-            </li>
-            <li class="list-group-item">
-              <i class="bi bi-box-arrow-right me-2 text-danger"></i>
-              <a href="{% url 'account_logout' %}">{% trans "Log out" %}</a>
-            </li>
-          </ul>
+              <h5 class="card-title">
+                <i class="bi bi-gear me-2"></i>{% trans "Manage your account" %}
+              </h5>
+
+            <div class="d-flex flex-column gap-2">
+              <a href="{% url 'account_change_password' %}" class="btn btn-outline-primary">
+                <i class="bi bi-key me-2"></i> {% trans "Change password" %}
+              </a>
+
+              <a href="{% url 'account_reset_password' %}" class="btn btn-outline-warning text-dark">
+                <i class="bi bi-question-circle me-2"></i> {% trans "Forgot password?" %}
+              </a>
+
+              <a href="{% url 'account_logout' %}" class="btn btn-outline-danger">
+                <i class="bi bi-box-arrow-right me-2"></i> {% trans "Log out" %}
+              </a>
+
+              <a href="{% url 'home' %}" class="btn btn-outline-secondary">
+                <i class="bi bi-house-door me-2"></i> {% trans "Back to Home" %}
+              </a>
+            </div>
+
         </div>
       </div>
     </div>

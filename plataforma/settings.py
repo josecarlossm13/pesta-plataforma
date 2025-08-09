@@ -274,6 +274,12 @@ ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.CustomSignupForm'
 # impede users de conseguir adicionar outro ou substituir. Staff pode através do painel admin
 ACCOUNT_MAX_EMAIL_ADDRESSES = 1
 
+# forçar funcionamento esperado da checkbox "remember me" ao fazer login
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Fecha a sessão ao fechar o browser por padrão
+# Mostra a checkbox "remember me" e deixa-a controlar se a sessão expirou
+# None => mostra checkbox; True => lembra-se sempre do login; False => nunca se lembra do login
+ACCOUNT_SESSION_REMEMBER = None
+
 # Config django-crispy-forms
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

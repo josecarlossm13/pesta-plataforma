@@ -17,7 +17,7 @@
     <!-- DataTables 2.3.2 CSS -->
     <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
     <!-- CSS personalizado -->
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'core/styles.css' %}">
 
     {% block extra_head %}{% endblock %}
 </head>
@@ -45,7 +45,7 @@
           <li class="nav-item me-2">
             <form class="d-flex align-items-center" method="GET" action="{% url 'term-list' %}">
               <input name="q" class="form-control me-2" type="search" style="width: auto; min-width: 220px;" placeholder="{% trans 'Search term/description' %}" aria-label="Search" value="{{ search_query|default:'' }}">
-              <select name="area" class="form-select form-select-sm me-2" style="width: auto;">
+              <select name="area" class="form-select form-select-sm me-2" style="width: auto; min-width: 160px;">
                 <option value="">{% trans "All Areas" %}</option>
                 {% for area in all_areas %}
                   <option value="{{ area.id }}" {% if area.id|stringformat:"s" == selected_area_id %}selected{% endif %}>{{ area.id }}</option>
@@ -90,15 +90,27 @@
 
 <main class="container mt-5 pt-5">
 {% if messages %}
-  <div class="container mt-3">
+  <div class="container mt-4">
     {% for message in messages %}
-      <div class="alert alert-{{ message.tags|default:"info" }} alert-dismissible fade show" role="alert">
-        {{ message }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      <div class="alert alert-{{ message.tags|default:"info" }} shadow-sm border-0 text-center" role="alert">
+        <div class="d-flex align-items-center justify-content-center">
+          {% if message.tags == "success" %}
+            <i class="bi bi-check-circle-fill text-success me-2 fs-5"></i>
+          {% elif message.tags == "error" or message.tags == "danger" %}
+            <i class="bi bi-x-circle-fill text-danger me-2 fs-5"></i>
+          {% elif message.tags == "warning" %}
+            <i class="bi bi-exclamation-triangle-fill text-warning me-2 fs-5"></i>
+          {% else %}
+            <i class="bi bi-info-circle-fill text-info me-2 fs-5"></i>
+          {% endif %}
+          <span>{{ message }}</span>
+        </div>
+        <button type="button" class="btn-close position-absolute end-0 top-50 translate-middle-y me-3" data-bs-dismiss="alert" aria-label="Close"></button>
       </div>
     {% endfor %}
   </div>
 {% endif %}
+
     {% block content %}
 
     {% endblock %}

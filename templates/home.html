@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-
 {% block title %}{% trans "IEV Platform" %}{% endblock %}
 
 {% block content %}
@@ -34,18 +33,6 @@
   {% elif user_status == 'approved' %}
     <!-- Não mostra alert, apenas continua para mostrar as news e warnings -->
   {% endif %}
-
-
-{% comment %}  {% if not user.is_authenticated %}
-    <div class="alert alert-info text-center" role="alert">
-      <h5>{% trans "Welcome to the IEV Platform!" %}</h5>
-      <p>{% trans "To access all features, please log in or create an account." %}</p>
-      <div class="d-flex justify-content-center mt-3 gap-2">
-        <a href="{% url 'account_login' %}" class="btn btn-outline-primary">{% trans "Log in" %}</a>
-        <a href="{% url 'account_signup' %}" class="btn btn-outline-success">{% trans "Create account" %}</a>
-      </div>
-    </div>
-  {% endif %}{% endcomment %}
 
   {% if warnings %}
     <div class="mb-4">
@@ -85,35 +72,3 @@
 
 </div>
 {% endblock %}
-
-
-
-
-{% comment %}{% extends "base.html" %}
-{% load static i18n %}
-
-{% block title %}{% trans "Home" %}{% endblock %}
-
-{% block content %}
-  <h1 class="mb-4">{% trans "IEVP - International Electrotechnical Vocabulary Platform" %}</h1>
-
-  {% if user.is_authenticated %}
-    <p class="lead">{% trans "Hello" %} {{ user.username }}!</p>
-
-    {% if news %}
-      <div class="alert alert-success" role="alert">       {# estilos de avisos: alert-info, alert-success, alert-warning, alert-danger #}
-        <h5><i class="bi bi-info-circle-fill me-2"></i><strong>{{ news.title }}</strong></h5>
-        <div>{{ news.message|safe }}</div>
-      </div>
-    {% endif %}
-
-  {% else %}
-    <p>{% trans "Hello! You are not logged in." %}</p>
-    <p>{% trans "To use the website, you need to be registered." %}</p>
-    <p>{% trans "If you don’t have an account, please sign up on the account page." %}</p>
-  {% endif %}
-
-  <section class="mt-5">
-    {# Aqui posso colocar conteúdo extra do home #}
-  </section>
-{% endblock %}{% endcomment %}
