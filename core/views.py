@@ -267,7 +267,7 @@ def home(request):
             context['user_status'] = 'awaiting_approval'
         else:
             context['user_status'] = 'approved'
-            # Só carrega conteúdos se tiver email verificado E for aprovado
+            # Só carrega conteúdos se tiver email verificado e for aprovado
             context['news'] = News.objects.filter(
                 active=True
             ).filter(
@@ -283,33 +283,6 @@ def home(request):
             ).order_by('-created_at')
 
     return render(request, 'home.html', context)
-
-# def home(request):
-#     news = []
-#     warnings = []
-#
-#     if request.user.is_authenticated and not request.user.groups.filter(name='SemAcesso').exists():
-#
-#         now = timezone.now()
-#         news = News.objects.filter(
-#             active=True
-#         ).filter(
-#             models.Q(start_date__lte=now) | models.Q(start_date__isnull=True),
-#             models.Q(end_date__gte=now) | models.Q(end_date__isnull=True)
-#         ).order_by('-created_at')
-#
-#         warnings = Warning.objects.filter(
-#             active=True
-#         ).filter(
-#             models.Q(show_from__lte=now) | models.Q(show_from__isnull=True),
-#             models.Q(hide_after__gte=now) | models.Q(hide_after__isnull=True)
-#         ).order_by('-created_at')
-#
-#     return render(request, 'home.html', {
-#         'news': news,
-#         'warnings': warnings,
-#     })
-
 
 
 # lista (queryset) de todos os tutoriais ativos, ordenados por posição, com restrição dependendo do grupo do user

@@ -8,10 +8,13 @@
   <h2 class="mb-4">{% trans "Account Panel" %}</h2>
 
     {% if is_sem_acesso %}
-      <div class="alert alert-warning text-center shadow-sm">
-        <i class="bi bi-hourglass-split me-2"></i>
+      <div class="alert alert-warning shadow-sm border-0 text-center mb-4">
+      <i class="bi bi-hourglass-split me-2 fs-4"></i>
+      <strong>{% trans "Pending Approval" %}</strong>
+      <p class="mb-0 mt-2 text-muted">
         {% trans "Your account is pending approval by an administrator. Please wait until your access is granted." %}
-      </div>
+      </p>
+    </div>
     {% endif %}
 
   <div class="row g-4">

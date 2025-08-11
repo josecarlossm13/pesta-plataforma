@@ -260,6 +260,8 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
+# aponta para o adapter para redireccionar para account panel após o botão change password
+ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
 
 # Nova API: campos permitidos no registo
 ACCOUNT_LOGIN_METHODS = {'email'}
