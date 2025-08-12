@@ -4,19 +4,20 @@
 {% block title %}{% trans "Tutorials" %}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="mb-4">{% trans "Tutorials" %}</h2>
+<div class="container mt-5">
+    <h2 class="mb-4"><i class="bi bi-book"></i> {% trans "Tutorials" %}</h2>
 
     {% if tutorials %}
          <div class="tutorials-list">
             {% for tutorial in tutorials %}
                 <div class="tutorial-item mb-4">
 
-                    <p><h3>{{ tutorial.title }}</h3></p>
+                    <h3 class="mb-3">{{ tutorial.title }}</h3>
 
                     {% if tutorial.video_url %}
-                        <div class="tutorial-video">
-                            <a href="{{ tutorial.video_url }}" target="_blank" class="btn btn-primary">{% trans "Watch video tutorial" %}
+                        <div class="tutorial-video mb-3">
+                            <a href="{{ tutorial.video_url }}" target="_blank" class="btn btn-outline-primary">
+                                <i class="bi bi-play-circle me-1"></i> {% trans "Watch video tutorial" %}
                             </a>
                         </div>
                     {% endif %}

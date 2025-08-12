@@ -35,7 +35,7 @@ class SubArea(models.Model):
         if self.id and self.id.isdigit():
             self.id = f"{int(self.id):02d}"
 
-        self.ref = f'{self.area.id}-{self.id}'
+        self.ref = f"{self.area.id}-{self.id}"
         super().save(*args, **kwargs)
 
     def __str__(self):                                   # Metodo que define a representação em string do modelo.
@@ -71,17 +71,19 @@ class Term(models.Model):                               # Classe Term herda de m
 # para mostrar mensagens de avisos/notícias na homepage
 
 class News(models.Model):
-    title = models.CharField(_("Title"), max_length=255)
-    content = RichTextUploadingField(_("content"))
+    title = models.CharField(_('Title'), max_length=255)
+    content = RichTextUploadingField(_('Content'))
 
-    active = models.BooleanField(_("Active"), default=True)
-    start_date = models.DateTimeField(_("Show from"), null=True, blank=True)
-    end_date = models.DateTimeField(_("Hide after"), null=True, blank=True)
-    created_at = models.DateTimeField(_("Created at"), auto_now_add=True)
+    active = models.BooleanField(_('Active'), default=True)
+    start_date = models.DateTimeField('Show from', null=True, blank=True)
+    end_date = models.DateTimeField('Hide after', null=True, blank=True)
+    created_at = models.DateTimeField(_('Created at'), auto_now_add=True)
+    position = models.PositiveIntegerField('Position', default=0)
 
     class Meta:
-        verbose_name = _("News")
-        verbose_name_plural = _("News")
+        verbose_name = _('News')
+        verbose_name_plural = _('News')
+        ordering = ('position', '-created_at')
 
     def is_valid_now(self):
         now = timezone.now()
@@ -96,17 +98,19 @@ class News(models.Model):
 
 
 class Warning(models.Model):
-    title = models.CharField(max_length=200, verbose_name="Title")
-    content = RichTextUploadingField(_("content"))
-    active = models.BooleanField(default=True, verbose_name="Active")
-    show_from = models.DateTimeField(null=True, blank=True, verbose_name="Show from")
-    hide_after = models.DateTimeField(null=True, blank=True, verbose_name="Hide after")
+    title = models.CharField(max_length=200, verbose_name=_('Title'))
+    content = RichTextUploadingField(_('content'))
+    active = models.BooleanField(default=True, verbose_name='Active')
+    show_from = models.DateTimeField(null=True, blank=True, verbose_name='Show from')
+    hide_after = models.DateTimeField(null=True, blank=True, verbose_name='Hide after')
     created_at = models.DateTimeField(auto_now_add=True)
+    position = models.PositiveIntegerField('Position', default=0)
+
 
     class Meta:
-        verbose_name = "Warning"
-        verbose_name_plural = "Warnings"
-        ordering = ['-created_at']
+        verbose_name = _('Warning')
+        verbose_name_plural = _('Warnings')
+        ordering = ['position','-created_at']
 
     def __str__(self):
         return self.title
@@ -120,12 +124,12 @@ class Tutorial(models.Model):
     video_url = models.URLField(_('Video URL'), blank=True, null=True)  # URL do vídeo tutorial
 
     restricted = models.BooleanField(default=False)
-    active = models.BooleanField(_("Active"), default=False)
-    position = models.PositiveIntegerField(_('Position'), default=0, blank=True, null=True)
+    active = models.BooleanField('Active', default=True)
+    position = models.PositiveIntegerField('Position', default=0, blank=True, null=True)
 
     class Meta:
-        verbose_name = _("Tutorial")
-        verbose_name_plural = _("Tutorials")
+        verbose_name = _('Tutorial')
+        verbose_name_plural = _('Tutorials')
         ordering = ['position']
 
     def __str__(self):
@@ -133,44 +137,67 @@ class Tutorial(models.Model):
 
 
 class Poster(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("Title"))
-    description = RichTextUploadingField(verbose_name=_("Description"), blank=True, null=True)
-    file = models.FileField(upload_to="poster/", verbose_name=_("PDF File"))
-    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Uploaded At"))
+    title = models.CharField(max_length=255, verbose_name=_('Title'))
+    description = RichTextUploadingField(verbose_name=_('Description'), blank=True, null=True)
+    file = models.FileField(upload_to='poster/', verbose_name=_('PDF File'))
+    active = models.BooleanField(default=True, verbose_name='Active')
+    position = models.PositiveIntegerField('Position', default=0, blank=True, null=True)
+
+    class Meta:
+        verbose_name = _('Poster')
+        verbose_name_plural = _('Posters')
 
     def __str__(self):
         return self.title
 
 
 class Thesis(models.Model):
-    title = models.CharField(max_length=255, verbose_name=_("Title"))
-    description = RichTextUploadingField(verbose_name=_("Description"), blank=True, null=True)
-    file = models.FileField(upload_to="thesis/", verbose_name=_("PDF File"))
-    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name=_("Uploaded At"))
+    title = models.CharField(max_length=255, verbose_name=_('Title'))
+    description = RichTextUploadingField(verbose_name=_('Description'), blank=True, null=True)
+    file = models.FileField(upload_to='thesis/', verbose_name='PDF File')
+    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name='Uploaded At')
+    active = models.BooleanField(default=True, verbose_name='Active')
 
     def __str__(self):
         return self.title
 
 
 class DocumentationLink(models.Model):
-    name = models.CharField(max_length=255, verbose_name=_("Link Name"))
-    url = models.URLField(verbose_name=_("URL"))
+    name = models.CharField(max_length=255, verbose_name=_('Link Name'))
+    url = models.URLField(verbose_name=_('URL'))
+    active = models.BooleanField(default=True, verbose_name='Active')
+    position = models.PositiveIntegerField('Position', default=0, blank=True, null=True)
+
 
     def __str__(self):
         return self.name
 
 
 class ContactInfo(models.Model):
-    position = models.PositiveIntegerField(_('Position'), default=0)
+    position = models.PositiveIntegerField('Position', default=0)
     details = models.CharField(_('Details'), max_length=255, blank=True, null=True)
-    name = models.CharField(_('Name'), max_length=255)
-    email = models.EmailField(_('Email'))
+    name = models.CharField('Name', max_length=255)
+    email = models.EmailField('Email')
+    active = models.BooleanField(default=True, verbose_name='Active')
 
     class Meta:
         ordering = ['position']
-        verbose_name = _("Contact")
-        verbose_name_plural = _("Contacts")
+        verbose_name = _('Contact')
+        verbose_name_plural = _('Contacts')
 
     def __str__(self):
         return f"{self.name} ({self.email})"
 
+# publicar mensagens na página contacts
+class ContactTopMessage(models.Model):
+    text = models.TextField(_('Message'))
+    active = models.BooleanField(default=True)
+    show_from = models.DateTimeField(null=True, blank=True)
+    hide_after = models.DateTimeField(null=True, blank=True)
+    position = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ('position', '-id')
+
+    def __str__(self):
+        return f"{self.position} – {self.text}"

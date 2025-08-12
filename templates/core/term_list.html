@@ -4,14 +4,13 @@
 {% block title %}{% trans "Terms" %}{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-1">
 
     {% if back_url %}
-        <a href="{{ back_url }}" class="btn btn-outline-secondary mb-3">
+        <a href="{{ back_url }}" class="btn btn-outline-secondary mt-0 mb-3">
             <i class="bi bi-arrow-left"></i> {% trans "Back" %}
         </a>
     {% endif %}
-
 
     {% if subarea %}
         <div class="mb-4">
@@ -40,14 +39,9 @@
                         <td class="text-center">{{ term.ref }}</td>
                         <td>{{ term.name|default:term.name_en }}</td>
                         <td class="text-center">
-{#                            <a href="{% url 'term_detail' term.ref %}" class="btn btn-sm btn-outline-primary">#}
-{#                                <i class="bi bi-search"></i> {% trans "View Detail" %}#}
-{#                            </a>#}
-
                             <a href="{% url 'term_detail' term.ref %}?{% if subarea_ref %}ref={{ subarea_ref }}&{% endif %}{% if search_query %}q={{ search_query }}&{% endif %}{% if selected_area_id %}area={{ selected_area_id }}{% endif %}" class="btn btn-sm btn-outline-primary">
                                 <i class="bi bi-search"></i> {% trans "View Detail" %}
                             </a>
-
                         </td>
                     </tr>
                 {% endfor %}

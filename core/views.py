@@ -6,7 +6,7 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.views import LoginView                           # Importa a visualização de login do Django.
 from django.urls import reverse_lazy
 from django.utils.translation import get_language               # Para obter idioma da interface
-from core.models import Term, Area, SubArea, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo                                # Importa o modelo Term,  que contém os dados dos termos.
+from core.models import Term, Area, SubArea, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo, ContactTopMessage                             # Importa o modelo Term,  que contém os dados dos termos.
 #from core.forms import  #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
 from django.db.models import Q, Count                           # Count, Contar o nº de termos nas data tables
 from django.contrib.auth.forms import UserCreationForm              # Importa o formulário de criação de utilizador padrão do Django.
@@ -16,7 +16,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse                                     # usado para gerar URLs com base no nome dos caminhos
 from core.permissions import user_has_access, GroupAccessRequiredMixin
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import Group, User
 from django.utils.timezone import now
 
 # funções para gerar uma stack para usar no botão "voltar"
@@ -251,13 +251,13 @@ class TermDetailView(GroupAccessRequiredMixin, DetailView):
         return context
 
 # homepage
-# listas vazias para evitar erros com users anonimos
-
 def home(request):
+    # listas vazias para evitar erros com users anonimos
     context = {
         'news': [],
         'warnings': [],
         'user_status': 'anonymous',  # default
+        'posters': Poster.objects.filter(active=True).order_by('position','-id')
     }
 
     if request.user.is_authenticated:
@@ -273,14 +273,14 @@ def home(request):
             ).filter(
                 models.Q(start_date__lte=now()) | models.Q(start_date__isnull=True),
                 models.Q(end_date__gte=now()) | models.Q(end_date__isnull=True)
-            ).order_by('-created_at')
+            ).order_by('position','-created_at')
 
             context['warnings'] = Warning.objects.filter(
                 active=True
             ).filter(
                 models.Q(show_from__lte=now()) | models.Q(show_from__isnull=True),
                 models.Q(hide_after__gte=now()) | models.Q(hide_after__isnull=True)
-            ).order_by('-created_at')
+            ).order_by('position','-created_at')
 
     return render(request, 'home.html', context)
 
@@ -302,8 +302,8 @@ def tutorial_view(request):
 
 
 def poster_view(request):
-    poster = Poster.objects.first()
-    return render(request, "core/poster.html", {"poster": poster})
+    posters = Poster.objects.filter(active=True).order_by('position','-id')
+    return render(request, "core/poster.html", {"posters": posters})
 
 
 @user_has_access()
@@ -316,7 +316,18 @@ def documentation_view(request):
     links = DocumentationLink.objects.all()
     return render(request, "core/documentation.html", {"links": links})
 
+
 def contacts_view(request):
-    contacts = ContactInfo.objects.all()
-    return render(request, "core/contacts.html", {"contacts": contacts})
+    top_messages = ContactTopMessage.objects.filter(
+        active=True
+    ).filter(
+        models.Q(show_from__lte=now()) | models.Q(show_from__isnull=True),
+        models.Q(hide_after__gte=now()) | models.Q(hide_after__isnull=True),
+    ).order_by("position", "-id")
+
+    contacts = ContactInfo.objects.all().order_by("position")
+    return render(request, "core/contacts.html", {
+        "top_messages": top_messages,
+        "contacts": contacts,
+    })
 

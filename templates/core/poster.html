@@ -4,38 +4,36 @@
 {% block title %}{% trans "Poster" %}{% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h2 class="mb-4">{{ poster.title }}</h2>
+  <div class="mt-5">
+        <h2 class="mb-4">
+          <i class="bi bi-image me-2"></i> {% trans "Poster" %}
+        </h2>
 
-    {% if poster.description %}
-      <div class="mb-4">
-        {{ poster.description|safe }}
-      </div>
-    {% endif %}
+        {% if posters %}
 
-    {% if poster.file %}
-      <a href="{{ poster.file.url }}" target="_blank" class="btn btn-outline-primary">
-        {% trans "Open Poster" %}
-      </a>
-    {% else %}
-      <p class="text-muted">{% trans "No poster file available." %}</p>
-    {% endif %}
+        <div class="d-flex flex-column gap-3">
+          {% for poster in posters %}
+            <div class="card shadow-sm w-100">
+              <div class="card-body">
+                <h5 class="mb-3">{{ poster.title }}</h5>
+
+                {% if poster.description %}
+                  <div class="text-muted mb-3" style="overflow-x: auto;">
+                    {{ poster.description|safe }}
+                  </div>
+                {% endif %}
+
+                {% if poster.file %}
+                  <a href="{{ poster.file.url }}" target="_blank" class="btn btn-outline-primary">
+                    <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Open Poster" %}
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+        {% else %}
+                  <span class="text-muted">{% trans "No poster file available." %}</span>
+        {% endif %}
   </div>
 {% endblock %}
-
-
-{% comment %}{% extends "base.html" %}
-{% load i18n %}
-
-{% block title %}{% trans "Poster" %}{% endblock %}
-
-{% block content %}
-<h2>{{ poster.title }}</h2>
-<div>{{ poster.description|safe }}</div>
-
-{% if poster.file %}
-    <iframe src="{{ poster.file.url }}" width="100%" height="600px" style="border:none;"></iframe>
-{% else %}
-    <p>{% trans "No poster available." %}</p>
-{% endif %}
-{% endblock %}{% endcomment %}

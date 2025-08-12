@@ -1,5 +1,11 @@
 from modeltranslation.translator import register, TranslationOptions, translator    # Importa as funções e classes necessárias para registar modelos e definir opções de tradução.
-from .models import Area, SubArea, Term, News, Warning                                             # Importa o modelo 'Area', 'SubArea', 'Term' do módulo 'models' localizado no mesmo diretório (plataforma)
+
+from .models import Area, SubArea, Term, News, Warning, ContactTopMessage, \
+    Tutorial, \
+    Thesis, \
+    DocumentationLink, \
+    ContactInfo, \
+    Poster  # Importa o modelo 'Area', 'SubArea', 'Term' do módulo 'models' localizado no mesmo diretório (plataforma)
 
 # Utilização do django-modeltranslation, para adicionar suporte a traduções para o modelo "Area"
 @register(Area)                                         # O decorador @register(Area) regista o modelo "Area" para que o django-modeltranslation saiba que ele deve ser tratado para traduções.
@@ -26,3 +32,27 @@ class NewsTranslationOptions(TranslationOptions):
 @register(Warning)
 class WarningTranslationOptions(TranslationOptions):
     fields = ['title', 'content']
+
+@register(Tutorial)
+class TutorialTranslationOptions(TranslationOptions):
+    fields = ['title', 'content', 'video_url']
+
+@register(Poster)
+class PosterTranslationOptions(TranslationOptions):
+    fields = ['title', 'description', 'file']
+
+@register(Thesis)
+class ThesisTranslationOptions(TranslationOptions):
+    fields = ['title', 'description']
+
+@register(DocumentationLink)
+class DocumentationLinkTranslationOptions(TranslationOptions):
+    fields = ['name', 'url']
+
+@register(ContactInfo)
+class ContactInfoTranslationOptions(TranslationOptions):
+    fields = ['details']
+
+@register(ContactTopMessage)
+class ContactTopMessageTranslationOptions(TranslationOptions):
+    fields = ('text',)

@@ -111,9 +111,9 @@
   </div>
 {% endif %}
 
-    {% block content %}
+{% block content %}
 
-    {% endblock %}
+{% endblock %}
 </main>
 
 
@@ -204,12 +204,10 @@
 <!-- DataTables 2.3.2 JS -->
 <script src="https://cdn.datatables.net/2.3.2/js/dataTables.min.js"></script>
 
-
 <!-- Inicialização padrão do DataTables -->
 {% block datatables_init %}
 
-
-{# tive que mapear idioma a idioma porque dava erro ao usar a URL, as referências dos idiomas do django nao coincidem com o cdn.datatables.net...#}
+{# tive que ligar idioma a idioma porque dava erro ao usar a URL, as referências dos idiomas do django nao coincidem com o cdn.datatables.net...#}
 <script>
   const langMap = {
     'en': 'en-GB',

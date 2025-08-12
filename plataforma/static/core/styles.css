@@ -22,7 +22,12 @@ a {
 }
 
 /* Remover asterisco dos campos obrigatórios */
-
 .asteriskField {
     display: none;
+}
+/* impedir que as imagens dentro do richtextfield nos posters saiam visualmente para fora do card */
+.card-body img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }

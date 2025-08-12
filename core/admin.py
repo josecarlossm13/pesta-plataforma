@@ -4,7 +4,7 @@ from import_export.admin import ImportExportModelAdmin, ExportActionMixin
 #from import_export.widgets import ForeignKeyWidget
 from modeltranslation.admin import TranslationAdmin         # Importa o TranslationAdmin, uma classe fornecida pelo pacote django-modeltranslation para facilitar a tradução de campos de modelos do Django na interface de administração
 from reversion.admin import VersionAdmin
-from .models import Area, SubArea, Term, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo                     # Importa os modelos Area, SubArea, e Term de models.py
+from .models import Area, SubArea, Term, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo, ContactTopMessage                     # Importa os modelos Area, SubArea, e Term de models.py
 
 #####tentativa####  (tem que ficar antes do AreaAdmin)                  #Define as colunas de importação/exportação para o modelo Area
 class AreaResource(resources.ModelResource):
@@ -40,21 +40,6 @@ class SubAreaAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin):     
             kwargs['queryset'] = Area.objects.all().order_by('id')  # Ordena as Áreas pelo 'id'
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
-# class IEVRefWidget(ForeignKeyWidget):
-#     def clean(self, value, row=None, **kwargs):
-#                                                                         # Get values separated by '-' ex: '301-02-01'
-#         area_id = value.split('-')[0]                                   # 301
-#         subarea_ref = value.rsplit('-', 1)[0]                           # 301-02
-#         term_id = value.rsplit('-', 1)[-1]                              # 01
-#
-#         try:
-#             subarea = super().clean(value)
-#         except SubArea.DoesNotExist:
-#             (area, created) = Area.objects.get_or_create(name=row['area'], defaults={'id': row['area_id']})
-#             subarea = SubArea.objects.create(name=row['subarea'], area=area)
-#         return subarea
-
-
 
 class TermResource(resources.ModelResource):
 
@@ -65,9 +50,8 @@ class TermResource(resources.ModelResource):
 
     def before_import(self, dataset, **kwargs):
                                                             # mimic a 'dynamic field' - i.e. append field which exists on
-        dataset.headers.append("subarea")                   # Book model, but not in dataset
-        #dataset.headers.append("id")
-        dataset.headers.append("ref")
+        dataset.headers.append('subarea')                   # Book model, but not in dataset
+        dataset.headers.append('ref')
         super().before_import(dataset, **kwargs)
 
     def before_import_row(self, row, **kwargs):
@@ -75,8 +59,8 @@ class TermResource(resources.ModelResource):
         #area_id = iev_ref.split('-')[0]                    # 301
         subarea_ref = iev_ref.rsplit('-', 1)[0]             # 301-02
         term_id = iev_ref.rsplit('-', 1)[-1]                # 01
-        row["id"] = term_id
-        row["subarea"] = subarea_ref
+        row['id'] = term_id
+        row['subarea'] = subarea_ref
         row['ref'] = iev_ref
 
     class Meta:
@@ -122,46 +106,59 @@ class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportAc
 
 
 @admin.register(News)
-class NewsAdmin(TranslationAdmin):
-    list_display = ('title', 'active', 'start_date', 'end_date', 'created_at')
+class NewsAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('title', 'start_date', 'end_date', 'created_at', 'position', 'active',)
     list_filter = ('active',)
+    list_editable = ('position', 'active',)
     search_fields = ('title', 'content')
-    ordering = ('-created_at',)
+    ordering = ('position', '-created_at',)
 
 
 @admin.register(Warning)
-class WarningAdmin(TranslationAdmin):
-    list_display = ('title', 'active', 'show_from', 'hide_after', 'created_at')
+class WarningAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('title', 'show_from', 'hide_after', 'created_at', 'position', 'active',)
     list_filter = ('active',)
+    list_editable = ('position', 'active',)     # Editar a posição diretamente na lista
     search_fields = ('title', 'content')
-    ordering = ('-created_at',)
+    ordering = ('position', '-created_at',)
 
 
 @admin.register(Tutorial)
-class TutorialAdmin(admin.ModelAdmin):
-    list_display = ('title', 'active', 'position')
+class TutorialAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('title', 'position', 'active',)
     list_filter = ('active',)
+    list_editable = ('position', 'active',)     # Editar a posição diretamente na lista
     search_fields = ('title', 'content')
     ordering = ('position',)                    # ordenar por posição no painel admin
-    list_editable = ('position',)               # Editar a posição diretamente na lista
 
 
 @admin.register(Poster)
-class PosterAdmin(admin.ModelAdmin):
-    list_display = ("title", "uploaded_at")
+class PosterAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('title', 'position', 'active',)
+    list_editable = ('position', 'active',)     # Editar a posição diretamente na lista
+    ordering = ('position',)                    # ordenar por posição no painel admin
 
 @admin.register(Thesis)
-class ThesisAdmin(admin.ModelAdmin):
-    list_display = ("title", "uploaded_at")
+class ThesisAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('title', 'active',)
 
 @admin.register(DocumentationLink)
-class DocumentationLinkAdmin(admin.ModelAdmin):
-    list_display = ("name", "url")
+class DocumentationLinkAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('name', 'url', 'position', 'active',)
+    list_editable = ('position', 'active')
+    search_fields = ('name', 'url',)
 
 @admin.register(ContactInfo)
-class ContactInfoAdmin(admin.ModelAdmin):
-    list_display = ('details', 'name', 'email', 'position')
+class ContactInfoAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('details', 'name', 'email', 'position', 'active')
     list_display_links = ('name',)
-    list_editable = ('position',)
+    list_editable = ('position', 'active')
     ordering = ('position',)
 
+
+@admin.register(ContactTopMessage)
+class ContactTopMessageAdmin(VersionAdmin, TranslationAdmin):
+    list_display = ('text', 'show_from', 'hide_after', 'position', 'active',)
+    list_editable = ('position', 'active',)
+
+# Alterar no menu drop-down o grupo de um user de "SemAcesso" para "Utilizador"

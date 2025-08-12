@@ -4,8 +4,8 @@
 {% block title %}{% trans "Thesis" %}{% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h2 class="mb-4">{{ thesis.title }}</h2>
+  <div class="container mt-5">
+    <h2 class="mb-4"><i class="bi bi-mortarboard me-2"></i> {{ thesis.title }}</h2>
 
     {% if thesis.description %}
       <div class="mb-4">
@@ -15,27 +15,10 @@
 
     {% if thesis.file %}
       <a href="{{ thesis.file.url }}" class="btn btn-outline-success" target="_blank" download>
-        {% trans "Download Thesis" %}
+        <i class="bi bi-download me-1"></i> {% trans "Download Thesis" %}
       </a>
     {% else %}
       <p class="text-muted">{% trans "No thesis file available." %}</p>
     {% endif %}
   </div>
 {% endblock %}
-
-
-{% comment %}{% extends "base.html" %}
-{% load i18n %}
-
-{% block title %}{% trans "Thesis" %}{% endblock %}
-
-{% block content %}
-<h2>{{ thesis.title }}</h2>
-<div>{{ thesis.description|safe }}</div>
-
-{% if thesis.file %}
-    <a href="{{ thesis.file.url }}" class="btn btn-primary" download>{% trans "Download Thesis" %}</a>
-{% else %}
-    <p>{% trans "No thesis available." %}</p>
-{% endif %}
-{% endblock %}{% endcomment %}

@@ -4,42 +4,24 @@
 {% block title %}{% trans "Documentation" %}{% endblock %}
 
 {% block content %}
-  <div class="container">
-    <h2 class="mb-4">{% trans "Documentation" %}</h2>
+<div class="container mt-5">
+  <h2 class="mb-4 text-start"><i class="bi bi-journal-text me-2"></i> {% trans "Documentation" %}</h2>
 
-    {% if links %}
-      <ul class="list-group">
+  {% if links %}
+    <div class="mx-auto" style="max-width: 900px;">
+      <ul class="list-group shadow-sm">
         {% for doc in links %}
-          <li class="list-group-item d-flex justify-content-between align-items-center">
-            {{ doc.name }}
+          <li class="list-group-item d-flex justify-content-between align-items-center flex-wrap">
+            <span class="me-3">{{ doc.name }}</span>
             <a href="{{ doc.url }}" target="_blank" class="btn btn-sm btn-outline-primary">
-              {% trans "Open" %}
+              <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Open" %}
             </a>
           </li>
         {% endfor %}
       </ul>
-    {% else %}
-      <p class="text-muted">{% trans "No documentation links available." %}</p>
-    {% endif %}
-  </div>
+    </div>
+  {% else %}
+    <p class="text-muted text-center">{% trans "No documentation links available." %}</p>
+  {% endif %}
+</div>
 {% endblock %}
-
-
-{% comment %}{% extends "base.html" %}
-{% load i18n %}
-
-{% block title %}{% trans "Documentation" %}{% endblock %}
-
-{% block content %}
-<h2>{% trans "Documentation" %}</h2>
-
-{% if links %}
-    <ul>
-        {% for link in links %}
-            <li><a href="{{ link.url }}" target="_blank">{{ link.name }}</a></li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>{% trans "No documentation links available." %}</p>
-{% endif %}
-{% endblock %}{% endcomment %}
