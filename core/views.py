@@ -229,6 +229,10 @@ class TermDetailView(GroupAccessRequiredMixin, DetailView):
         content_language = self.request.GET.get('language') or get_language()
         query = self.request.GET.get('q', '')
 
+        ######### added to IEVP, Last IEVP update #########
+        published_field = f'published_at_{content_language}'
+        ###################################################
+
         term = context['term']
         # Campos traduzidos dinamicamente
         name_field = f'name_{content_language}'
@@ -247,6 +251,8 @@ class TermDetailView(GroupAccessRequiredMixin, DetailView):
         context['subarea_ref'] = subarea_ref
         # Definir back_url usando a stack de navegação, ou fallback com filtros
         context['back_url'] = get_back_url(self.request, fallback_url=fallback)
+        ######### added to IEVP #############
+        context['term_published_at'] = getattr(term, published_field, None)
 
         return context
 

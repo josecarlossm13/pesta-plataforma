@@ -23,7 +23,7 @@ class SubAreaTranslationOptions(TranslationOptions):
 # Utilização do django-modeltranslation, para adicionar suporte a traduções para o modelo "Term"
 @register(Term)
 class TermTranslationOptions(TranslationOptions):
-    fields = ['name', 'description', 'source', 'extra']
+    fields = ['name', 'description', 'source', 'extra', 'published_at']
 ##############################################################################################
 @register(News)
 class NewsTranslationOptions(TranslationOptions):

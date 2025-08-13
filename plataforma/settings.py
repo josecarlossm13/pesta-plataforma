@@ -196,6 +196,8 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ()
 }
 
+# # Modeltranslation – evita copiar automaticamente o conteúdo do idioma principal (por causa do added to IEVP, IEVP update)
+# MODELTRANSLATION_AUTO_POPULATE = False
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
