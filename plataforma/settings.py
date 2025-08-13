@@ -227,7 +227,7 @@ CKEDITOR_CONFIGS = {
         'toolbar': [
             {'name': 'document', 'items': ['Source']},
             {'name': 'styles', 'items': ['Format', 'Font', 'FontSize']},
-            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline']},
+            {'name': 'basicstyles', 'items': ['Bold', 'Italic', 'Underline', 'RemoveFormat']},
             {'name': 'paragraph', 'items': [
                 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-',
                 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'
@@ -235,13 +235,18 @@ CKEDITOR_CONFIGS = {
             {'name': 'insert', 'items': ['Image', 'Table', 'HorizontalRule']},
             {'name': 'links', 'items': ['Link', 'Unlink']},
             {'name': 'clipboard', 'items': ['Undo', 'Redo']},
+            # barra de cores
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
         ],
         'height': 400,
         'width': '100%',
-        'extraPlugins': 'uploadimage,justify,image2',  # plugins extra
+        # Plugins extra
+        'extraPlugins': 'uploadimage,justify,image2,colorbutton,colordialog,font',
         'filebrowserUploadUrl': '/ckeditor/upload/',
         'filebrowserBrowseUrl': '/ckeditor/browse/',
-        'removePlugins': 'image',
+        'removePlugins': 'image',  # manténs o image2
+        # Permitir estilos de cor e marcador
+        'extraAllowedContent': 'span{color,background-color}[style];*(*);*{*}',
     }
 }
 
@@ -260,7 +265,7 @@ SITE_ID = 1
 
 LOGIN_REDIRECT_URL = '/'
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-# aponta para o adapter para redireccionar para account panel após o botão change password
+# aponta para o adapter para redirecionar para account panel após o botão change password
 ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
 
 # Nova API: campos permitidos no registo
@@ -286,5 +291,6 @@ ACCOUNT_SESSION_REMEMBER = None
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+#####################################################
 ##################APAGAR!!!!!!!!!!!!!!!!!!############ Foi para simular os emails enviados
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

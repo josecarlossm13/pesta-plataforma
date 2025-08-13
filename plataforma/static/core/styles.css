@@ -15,7 +15,7 @@ a {
   border-radius: 0.25rem;
 }
 
-/* Corrigir alinhamento vertical */
+/* Corrigir alinhamento vertical navbar */
 .navbar .form-control,
 .navbar .form-select {
   margin-bottom: 0 !important;
@@ -26,8 +26,24 @@ a {
     display: none;
 }
 /* impedir que as imagens dentro do richtextfield nos posters saiam visualmente para fora do card */
-.card-body img {
-  max-width: 100%;
-  height: auto;
+/*.card-body img {*/
+/*  max-width: 100%;*/
+/*  height: auto;*/
+/*  display: block;*/
+/*}*/
+
+
+/*.poster-description img {*/
+/*    display: block;*/
+/*    margin-left: auto;*/
+/*    margin-right: auto;*/
+/*    max-width: 100%; !* mantém responsivo *!*/
+/*    height: auto;*/
+/*}*/
+
+/* Garante que qualquer float dentro da descrição não afete o que vem a seguir */
+.poster-description::after {
+  content: "";
   display: block;
+  clear: both;
 }

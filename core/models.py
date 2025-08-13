@@ -2,7 +2,7 @@
 from ckeditor.fields import RichTextField               # Importa o campo RichTextField do CKEditor, que permite a edição de texto rico em modelos Django.
 from ckeditor_uploader.fields import RichTextUploadingField         # para fazer upload de imagens no richtextfield
 from django.db import models                            # Importa o módulo models do Django, que contém classes para definir modelos de dados.
-from django.utils.translation import gettext as _       # Importa a função gettext do Django, renomeando-a como '_', para facilitar a tradução de strings. Documentação Django: Specify a translation string by using the function gettext(). It’s convention to import this as a shorter alias, _, to save typing.
+from django.utils.translation import gettext_lazy as _       # Importa a função gettext do Django, renomeando-a como '_', para facilitar a tradução de strings. Documentação Django: Specify a translation string by using the function gettext(). It’s convention to import this as a shorter alias, _, to save typing.
 import reversion
 from django.utils import timezone
 
@@ -99,7 +99,7 @@ class News(models.Model):
 
 class Warning(models.Model):
     title = models.CharField(max_length=200, verbose_name=_('Title'))
-    content = RichTextUploadingField(_('content'))
+    content = RichTextUploadingField(_('Content'))
     active = models.BooleanField(default=True, verbose_name='Active')
     show_from = models.DateTimeField(null=True, blank=True, verbose_name='Show from')
     hide_after = models.DateTimeField(null=True, blank=True, verbose_name='Hide after')
@@ -146,6 +146,8 @@ class Poster(models.Model):
     class Meta:
         verbose_name = _('Poster')
         verbose_name_plural = _('Posters')
+        ordering = ['position']
+
 
     def __str__(self):
         return self.title
@@ -155,7 +157,6 @@ class Thesis(models.Model):
     title = models.CharField(max_length=255, verbose_name=_('Title'))
     description = RichTextUploadingField(verbose_name=_('Description'), blank=True, null=True)
     file = models.FileField(upload_to='thesis/', verbose_name='PDF File')
-    uploaded_at = models.DateTimeField(auto_now_add=True, verbose_name='Uploaded At')
     active = models.BooleanField(default=True, verbose_name='Active')
 
     def __str__(self):
@@ -167,6 +168,10 @@ class DocumentationLink(models.Model):
     url = models.URLField(verbose_name=_('URL'))
     active = models.BooleanField(default=True, verbose_name='Active')
     position = models.PositiveIntegerField('Position', default=0, blank=True, null=True)
+
+    class Meta:
+        ordering = ['position']
+
 
 
     def __str__(self):

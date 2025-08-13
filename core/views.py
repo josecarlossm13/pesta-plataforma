@@ -291,13 +291,13 @@ def tutorial_view(request):
     # Verifica se o usuário é Admin, Gestor ou Superusuário
     is_admin_or_gestor_or_superuser = request.user.groups.filter(name__in=['Admin', 'Gestor']).exists() or request.user.is_superuser
 
+
     # Se o user for Admin, Gestor ou Superuser, mostra todos os tutoriais, caso contrário, só os não restritos
     if is_admin_or_gestor_or_superuser:
-        tutorials = Tutorial.objects.all().order_by('position')
+        tutorials = Tutorial.objects.filter(active=True).order_by('position')
     else:
-        tutorials = Tutorial.objects.filter(restricted=False).order_by('position')  # Exibe apenas os tutoriais não restritos
+        tutorials = Tutorial.objects.filter(active=True, restricted=False).order_by('position')  # Exibe apenas os tutoriais não restritos
 
-    #tutorials = Tutorial.objects.filter(active=True).order_by('position')
     return render(request, 'core/tutorial.html', {'tutorials': tutorials, 'is_admin_or_gestor_or_superuser': is_admin_or_gestor_or_superuser})
 
 
@@ -305,15 +305,14 @@ def poster_view(request):
     posters = Poster.objects.filter(active=True).order_by('position','-id')
     return render(request, "core/poster.html", {"posters": posters})
 
-
 @user_has_access()
 def thesis_view(request):
-    thesis = Thesis.objects.first()
+    thesis = Thesis.objects.filter(active=True).first()
     return render(request, "core/thesis.html", {"thesis": thesis})
 
 @user_has_access()
 def documentation_view(request):
-    links = DocumentationLink.objects.all()
+    links = DocumentationLink.objects.filter(active=True).order_by('position','name')
     return render(request, "core/documentation.html", {"links": links})
 
 
@@ -325,7 +324,7 @@ def contacts_view(request):
         models.Q(hide_after__gte=now()) | models.Q(hide_after__isnull=True),
     ).order_by("position", "-id")
 
-    contacts = ContactInfo.objects.all().order_by("position")
+    contacts = ContactInfo.objects.filter(active=True).order_by("position")
     return render(request, "core/contacts.html", {
         "top_messages": top_messages,
         "contacts": contacts,

@@ -10,3 +10,6 @@ django-import-export==4.3.7 # https://github.com/django-import-export/django-imp
 django-reversion==5.1.0 # https://github.com/etianen/django-reversion
 django-extensions==4.1 # https://github.com/django-extensions/django-extensions
 django-model-utils==5.0.0 # https://github.com/jazzband/django-model-utils
+django-allauth==65.10.0 # https://github.com/pennersr/django-allauth
+django-crispy-forms==2.4 # https://github.com/django-crispy-forms/django-crispy-forms
+crispy-bootstrap5==2025.6 # https://github.com/django-crispy-forms/crispy-bootstrap5

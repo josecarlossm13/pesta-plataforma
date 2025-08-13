@@ -94,15 +94,17 @@
                     <h5 class="mb-3">{{ poster.title }}</h5>
 
                     {% if poster.description %}
-                      <div class="text-muted mb-3" style="overflow-x: auto;">
+                      <div class="poster-description mb-3 ">
                         {{ poster.description|safe }}
                       </div>
                     {% endif %}
 
                     {% if poster.file %}
-                      <a href="{{ poster.file.url }}" target="_blank" class="btn btn-outline-primary">
-                        <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Open Poster" %}
-                      </a>
+                        <div class="poster-actions">
+                            <a href="{{ poster.file.url }}" target="_blank" class="btn btn-outline-primary">
+                                <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Open Poster" %}
+                            </a>
+                        </div>
                     {% endif %}
                   </div>
                 </div>
