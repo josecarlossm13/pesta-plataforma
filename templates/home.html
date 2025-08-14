@@ -29,7 +29,7 @@
     {% elif user_status == 'email_unverified' %}
     <div class="alert alert-warning text-center shadow-sm mb-4">
       <i class="bi bi-envelope-exclamation me-2"></i>
-      {% trans "Please verify your email address to access the platform features." %}
+      {% trans "Please verify your e-mail address to access the platform features." %}
     </div>
 
     {% elif user_status == 'awaiting_approval' %}
@@ -43,6 +43,36 @@
 
     {% elif user_status == 'approved' %}
     <!-- Não mostra alert, apenas continua para mostrar as news e warnings -->
+    {% endif %}
+
+    {# Botões Acesso rápido #}
+    {% if show_quick %}
+      <div class="mb-4">
+        <h4 class="text-center mb-3">
+          <i class="bi bi-lightning-charge me-2"></i>{% trans "Quick access" %}
+        </h4>
+        <div class="d-flex flex-wrap justify-content-center gap-2 ">
+            <a href="{% url 'term-list' %}" class="btn btn-outline-primary">
+                <i class="bi bi-search me-1"></i> {% trans "Search terms" %}
+            </a>
+            <a href="{% url 'tutorial' %}" class="btn btn-outline-primary">
+                <i class="bi bi-play-circle me-1"></i> {% trans "Tutorials" %}
+            </a>
+            <a href="{% url 'documentation' %}" class="btn btn-outline-primary">
+                <i class="bi bi-journal-text me-1"></i> {% trans "Documentation" %}
+            </a>
+            {% if user.is_authenticated %}
+                <a href="{% url 'account_panel' %}" class="btn btn-outline-primary">
+                  <i class="bi bi-person-circle me-1"></i> {% trans "Account Panel" %}
+                </a>
+            {% endif %}
+            {% if is_admin_or_gestor %}
+                <a href="{% url 'admin:index' %}" class="btn btn-outline-primary">
+                  <i class="bi bi-speedometer2 me-1"></i> {% trans "Administrator Panel" %}
+                </a>
+            {% endif %}
+        </div>
+      </div>
     {% endif %}
 
     {% if warnings %}
@@ -81,6 +111,28 @@
     </div>
     {% endif %}
 
+    {# Últimos termos adicionados #}
+    {% if latest_terms %}
+      <div class="mb-4">
+        <h4 class="mb-3">
+          <i class="bi bi-clock-history me-2"></i>{% trans "Recently added terms" %}
+        </h4>
+        <ul class="list-group shadow-sm">
+          {% for t in latest_terms %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+              <div class="me-3">
+                <div class="fw-semibold">{{ t.ref }}</div>
+                <div class="text-muted small">{{ t.name }}</div>
+              </div>
+              <a href="{% url 'term_detail' ref=t.ref %}" class="btn btn-sm btn-outline-secondary">
+                <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Open" %}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    {% endif %}
+
     {% if posters %}
         <div class="mt-4">
             <h4 class="mb-3">
@@ -102,7 +154,7 @@
                     {% if poster.file %}
                         <div class="poster-actions">
                             <a href="{{ poster.file.url }}" target="_blank" class="btn btn-outline-primary">
-                                <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Open Poster" %}
+                                <i class="bi bi-box-arrow-up-right me-1"></i> {% trans "Open poster" %}
                             </a>
                         </div>
                     {% endif %}

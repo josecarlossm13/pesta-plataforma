@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Thesis" %}{% endblock %}
+{% block title %}{% trans "Dissertation" %}{% endblock %}
 
 {% block content %}
     <div class="container mt-5">
@@ -12,7 +12,7 @@
         {% if thesis %}
           {{ thesis.title }}
         {% else %}
-          {% trans "Thesis" %}
+          {% trans "Dissertation" %}
         {% endif %}
         </h2>
 
@@ -27,12 +27,12 @@
                     {% endif %}
 
                     <a href="{{ thesis.file.url }}" class="btn btn-outline-success" target="_blank" download>
-                      <i class="bi bi-download me-1"></i> {% trans "Download Thesis" %}
+                      <i class="bi bi-download me-1"></i> {% trans "Download dissertation" %}
                     </a>
                 </div>
             </div>
         {% else %}
-            <span class="text-muted">{% trans "No thesis available." %}</span>
+            <span class="text-muted">{% trans "Dissertation not available." %}</span>
         {% endif %}
     </div>
 

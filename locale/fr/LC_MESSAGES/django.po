@@ -9,167 +9,165 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-08-14 22:50+0100\n"
-"PO-Revision-Date: 2025-08-14 12:12+0100\n"
-"Last-Translator:   <admin@admin.com>\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? "
-"1 : 2;\n"
-"X-Translated-Using: django-rosetta 0.10.2\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #: core/models.py:14 core/models.py:27 core/models.py:50
 msgid "Id"
-msgstr "Id"
+msgstr ""
 
 #: core/models.py:15 core/models.py:28 core/models.py:52
 msgid "Name"
-msgstr "Nombre"
+msgstr ""
 
 #: core/models.py:18 core/models.py:29 templates/area_list.html:22
 #: templates/core/term_detail.html:37 templates/core/term_list.html:19
 #: templates/subarea_list.html:18
 msgid "Area"
-msgstr "Área"
+msgstr ""
 
 #: core/models.py:26
 msgid "Reference"
-msgstr "Referencia"
+msgstr ""
 
 #: core/models.py:32 core/models.py:51 templates/core/term_detail.html:41
 #: templates/core/term_list.html:20 templates/subarea_list.html:29
 msgid "Subarea"
-msgstr "Subárea"
+msgstr ""
 
 #: core/models.py:49
 msgid "IEV Reference"
-msgstr "Referencia IEV"
+msgstr ""
 
 #: core/models.py:53 core/models.py:175 core/models.py:192
 #: templates/core/term_detail.html:50
 msgid "Description"
-msgstr "Descripción"
+msgstr ""
 
 #: core/models.py:54 templates/core/term_detail.html:79
 msgid "Source"
-msgstr "Fuente"
+msgstr ""
 
 #: core/models.py:55 templates/core/term_detail.html:66
 msgid "Image"
-msgstr "Imagen"
+msgstr ""
 
 #: core/models.py:58
 msgid "Created"
-msgstr "Creado"
+msgstr ""
 
 #: core/models.py:59
 msgid "Updated"
-msgstr "Actualizado"
+msgstr ""
 
 #: core/models.py:62
 msgid "Added to IEVP"
-msgstr "Añadido a IEVP"
+msgstr ""
 
 #: core/models.py:102 templates/core/term_list.html:32
 msgid "Term"
-msgstr "Término"
+msgstr ""
 
 #: core/models.py:110 core/models.py:137 core/models.py:156 core/models.py:174
 #: core/models.py:191
 msgid "Title"
-msgstr "título"
+msgstr ""
 
 #: core/models.py:111 core/models.py:138 core/models.py:157
 msgid "Content"
-msgstr "Contenido"
+msgstr ""
 
 #: core/models.py:113
 msgid "Active"
-msgstr "Activo"
+msgstr ""
 
 #: core/models.py:116
 msgid "Created at"
-msgstr "Creado en"
+msgstr ""
 
 #: core/models.py:120 core/models.py:121 templates/home.html:98
 msgid "News"
-msgstr "Noticias"
+msgstr ""
 
 #: core/models.py:147
 msgid "Warning"
-msgstr "Advertencia"
+msgstr ""
 
 #: core/models.py:148 templates/home.html:80
 msgid "Warnings"
-msgstr "Advertencias"
+msgstr ""
 
 #: core/models.py:158
 msgid "Video URL"
-msgstr "URL del vídeo"
+msgstr ""
 
 #: core/models.py:165
 msgid "Tutorial"
-msgstr "Tutorial"
+msgstr ""
 
 #: core/models.py:166 templates/base.html:238 templates/core/tutorial.html:4
 #: templates/core/tutorial.html:9 templates/home.html:59
 msgid "Tutorials"
-msgstr "Tutoriales"
+msgstr ""
 
 #: core/models.py:176
 msgid "PDF File"
-msgstr "Archivo PDF"
+msgstr ""
 
 #: core/models.py:181 templates/base.html:241 templates/core/poster.html:4
 #: templates/core/poster.html:9 templates/home.html:139
 msgid "Poster"
-msgstr "Póster"
+msgstr ""
 
 #: core/models.py:182
 msgid "Posters"
-msgstr "Pósters"
+msgstr ""
 
 #: core/models.py:201
 msgid "Link Name"
-msgstr "Nombre del enlace"
+msgstr ""
 
 #: core/models.py:202
 msgid "URL"
-msgstr "URL"
+msgstr ""
 
 #: core/models.py:217
 msgid "Details"
-msgstr "Detalles"
+msgstr ""
 
 #: core/models.py:224
 msgid "Contact"
-msgstr "Contacto"
+msgstr ""
 
 #: core/models.py:225 templates/base.html:264 templates/core/contacts.html:4
 msgid "Contacts"
-msgstr "Contactos"
+msgstr ""
 
 #: core/models.py:232
 msgid "Message"
-msgstr "Mensaje"
+msgstr ""
 
 #: plataforma/settings.py:164
 msgid "English"
-msgstr "Inglés"
+msgstr ""
 
 #: plataforma/settings.py:165
 msgid "Portuguese"
-msgstr "Portugués"
+msgstr ""
 
 #: plataforma/settings.py:166
 msgid "Brazilian Portuguese"
-msgstr "Portugués brasileño"
+msgstr ""
 
 #: plataforma/settings.py:167
 msgid "Spanish"
-msgstr "Español"
+msgstr ""
 
 #: plataforma/settings.py:169
 msgid "Albanian"
@@ -200,10 +198,8 @@ msgid "Croatian"
 msgstr ""
 
 #: plataforma/settings.py:176
-#, fuzzy
-#| msgid "Spanish"
 msgid "Danish"
-msgstr "Español"
+msgstr ""
 
 #: plataforma/settings.py:177
 msgid "Dutch"
@@ -219,7 +215,7 @@ msgstr ""
 
 #: plataforma/settings.py:180
 msgid "French"
-msgstr "Francés"
+msgstr ""
 
 #: plataforma/settings.py:181
 msgid "German"
@@ -274,10 +270,8 @@ msgid "Norwegian"
 msgstr ""
 
 #: plataforma/settings.py:194
-#, fuzzy
-#| msgid "English"
 msgid "Polish"
-msgstr "Inglés"
+msgstr ""
 
 #: plataforma/settings.py:195
 msgid "Romanian"
@@ -313,59 +307,57 @@ msgstr ""
 
 #: templates/account/account_panel.html:4
 msgid "My Account"
-msgstr "Mi cuenta"
+msgstr ""
 
 #: templates/account/account_panel.html:8 templates/home.html:66
 msgid "Account Panel"
-msgstr "Panel de cuenta"
+msgstr ""
 
 #: templates/account/account_panel.html:13 templates/home.html:38
 msgid "Pending Approval"
-msgstr "Pendiente de aprobación"
+msgstr ""
 
 #: templates/account/account_panel.html:15 templates/home.html:40
 msgid ""
 "Your account is pending approval by an administrator. Please wait until your "
 "access is granted."
 msgstr ""
-"Su cuenta está pendiente de aprobación por parte de un administrador. Espere "
-"a que se le conceda el acceso."
 
 #: templates/account/account_panel.html:29
 msgid "Account Details"
-msgstr "Detalles de la cuenta"
+msgstr ""
 
 #: templates/account/account_panel.html:38
 msgid "E-mail"
-msgstr "E-mail"
+msgstr ""
 
 #: templates/account/account_panel.html:49
 msgid "Role"
-msgstr "Rol"
+msgstr ""
 
 #: templates/account/account_panel.html:53
 msgid "Staff"
-msgstr "Staff"
+msgstr ""
 
 #: templates/account/account_panel.html:57
 msgid "Superuser"
-msgstr "Superuser"
+msgstr ""
 
 #: templates/account/account_panel.html:65
 msgid "No role assigned."
-msgstr "Ningún rol asignado."
+msgstr ""
 
 #: templates/account/account_panel.html:76
 msgid "First name"
-msgstr "Nombre de pila"
+msgstr ""
 
 #: templates/account/account_panel.html:86
 msgid "Last name"
-msgstr "Apellido"
+msgstr ""
 
 #: templates/account/account_panel.html:103
 msgid "Manage your account"
-msgstr "Administra tu cuenta"
+msgstr ""
 
 #: templates/account/account_panel.html:108
 #: templates/account/password_change.html:4
@@ -373,57 +365,55 @@ msgstr "Administra tu cuenta"
 #: templates/account/password_change.html:26
 #: templates/account/password_reset_from_key.html:27
 msgid "Change password"
-msgstr "Cambiar la contraseña"
+msgstr ""
 
 #: templates/account/account_panel.html:112 templates/account/login.html:24
 msgid "Forgot password?"
-msgstr "¿Has olvidado tu contraseña?"
+msgstr ""
 
 #: templates/account/account_panel.html:116 templates/account/logout.html:4
 #: templates/account/logout.html:20
 msgid "Log out"
-msgstr "Finalizar la sesión"
+msgstr ""
 
 #: templates/account/account_panel.html:120
 msgid "Back to Home"
-msgstr "Volver a Inicio"
+msgstr ""
 
 #: templates/account/login.html:4 templates/account/login.html:13
 msgid "Login"
-msgstr "Acceso"
+msgstr ""
 
 #: templates/account/login.html:21
 #: templates/account/password_reset_from_key_done.html:25
 #: templates/account/signup.html:36 templates/home.html:20
 msgid "Log in"
-msgstr "Acceder"
+msgstr ""
 
 #: templates/account/login.html:32
 msgid "Don't have an account?"
-msgstr "¿No tienes una cuenta?"
+msgstr ""
 
 #: templates/account/login.html:33 templates/account/signup.html:4
 #: templates/account/signup.html:13 templates/home.html:23
 msgid "Create account"
-msgstr "Crear una cuenta"
+msgstr ""
 
 #: templates/account/logout.html:13
 msgid "You are about to log out"
-msgstr "Estás a punto de cerrar sesión"
+msgstr ""
 
 #: templates/account/logout.html:15
 msgid "Are you sure you want to log out?"
-msgstr "¿Estás seguro de que quieres cerrar sesión?"
+msgstr ""
 
 #: templates/account/logout.html:23
 msgid "Cancel"
-msgstr "Cancelar"
+msgstr ""
 
 #: templates/account/password_change.html:15
 msgid "Enter your current password below and choose a new valid password."
 msgstr ""
-"Ingrese su contraseña actual a continuación y elija una nueva contraseña "
-"válida."
 
 #: templates/account/password_change.html:17
 #: templates/account/password_reset_from_key.html:18
@@ -432,8 +422,6 @@ msgid ""
 "IEVP recommends using a password manager to store and generate a strong "
 "password."
 msgstr ""
-"IEVP recomienda utilizar un administrador de contraseñas para almacenar y "
-"generar una contraseña segura."
 
 #: templates/account/password_change.html:29
 #: templates/account/password_reset.html:28
@@ -441,366 +429,340 @@ msgstr ""
 #: templates/account/password_reset_from_key.html:31
 #: templates/account/password_reset_from_key_done.html:21
 msgid "Back to Account Panel"
-msgstr "Volver al panel de cuenta"
+msgstr ""
 
 #: templates/account/password_reset.html:4
 msgid "Password Reset"
-msgstr "Restablecer contraseña"
+msgstr ""
 
 #: templates/account/password_reset.html:13
 msgid "Reset your password"
-msgstr "Restablece tu contraseña"
+msgstr ""
 
 #: templates/account/password_reset.html:15
 msgid ""
 "Enter your e-mail address below and we'll send you a link to reset your "
 "password."
 msgstr ""
-"Ingrese su e-mail a continuación y le enviaremos un enlace para restablecer "
-"su contraseña."
 
 #: templates/account/password_reset.html:24
 msgid "Send password reset e-mail"
-msgstr "Enviar e-mail de restablecimiento de contraseña"
+msgstr ""
 
 #: templates/account/password_reset.html:32
 #: templates/account/password_reset_done.html:25
 #: templates/account/password_reset_from_key.html:35
 #: templates/account/signup.html:30
 msgid "Back to login"
-msgstr "Volver a iniciar sesión"
+msgstr ""
 
 #: templates/account/password_reset_done.html:4
 msgid "Password reset sent"
-msgstr "Restablecimiento de contraseña enviado"
+msgstr ""
 
 #: templates/account/password_reset_done.html:14
 msgid "Check your e-mail"
-msgstr "Revisa tu correo electrónico"
+msgstr ""
 
 #: templates/account/password_reset_done.html:16
 msgid "We've sent you an e-mail with instructions to reset your password."
 msgstr ""
-"Le hemos enviado un correo electrónico con instrucciones para restablecer su "
-"contraseña."
 
 #: templates/account/password_reset_from_key.html:4
 msgid "Set New Password"
-msgstr "Establecer nueva contraseña"
+msgstr ""
 
 #: templates/account/password_reset_from_key.html:13
 msgid "Set a new password"
-msgstr "Establecer una nueva contraseña"
+msgstr ""
 
 #: templates/account/password_reset_from_key.html:16
 msgid "Choose and enter below a new valid password."
-msgstr "Elija e ingrese a continuación una nueva contraseña válida."
+msgstr ""
 
 #: templates/account/password_reset_from_key_done.html:4
 msgid "Password Changed"
-msgstr "Contraseña cambiada"
+msgstr ""
 
 #: templates/account/password_reset_from_key_done.html:14
 msgid "Password reset successful"
-msgstr "Restablecimiento de contraseña exitoso"
+msgstr ""
 
 #: templates/account/password_reset_from_key_done.html:16
 msgid "You can now log in with your new password."
-msgstr "Ahora puedes iniciar sesión con tu nueva contraseña."
+msgstr ""
 
 #: templates/account/signup.html:16
 msgid "Enter your e-mail address below, name and choose a valid password."
 msgstr ""
-"Ingrese a continuación su dirección de correo electrónico, nombre y elija "
-"una contraseña válida."
 
 #: templates/account/signup.html:27
 msgid "Sign up"
-msgstr "Inscribirse"
+msgstr ""
 
 #: templates/account/signup.html:36
 msgid "Already have an account?"
-msgstr "¿Ya tienes una cuenta?"
+msgstr ""
 
 #: templates/account/verification_sent.html:4
 msgid "E-mail verification sent"
-msgstr "Verificación de e-mail enviada"
+msgstr ""
 
 #: templates/account/verification_sent.html:14
 msgid "Verify your e-mail address"
-msgstr "Verifique su e-mail"
+msgstr ""
 
 #: templates/account/verification_sent.html:18
 msgid "We have sent you an e-mail with a confirmation link."
-msgstr "Le hemos enviado un e-mail con un enlace de confirmación."
+msgstr ""
 
 #: templates/account/verification_sent.html:20
 msgid ""
 "Please check your e-mail inbox and click the link to activate your account."
 msgstr ""
-"Por favor revise su bandeja de entrada de e-mail y haga clic en el enlace "
-"para activar su cuenta."
 
 #: templates/account/verification_sent.html:29
 msgid "Return to login"
-msgstr "Volver a iniciar sesión"
+msgstr ""
 
 #: templates/account/verification_sent.html:41
 msgid "Your e-mail"
-msgstr "Tu e-mail"
+msgstr ""
 
 #: templates/account/verification_sent.html:45
 msgid "Resend verification"
-msgstr "Reenviar verificación"
+msgstr ""
 
 #: templates/area_list.html:4 templates/area_list.html:15
 msgid "Subject areas"
-msgstr "Áreas temáticas"
+msgstr ""
 
 #: templates/area_list.html:11 templates/core/term_detail.html:11
 #: templates/core/term_list.html:11 templates/subarea_list.html:11
 msgid "Back"
-msgstr "volver"
+msgstr ""
 
 #: templates/area_list.html:21
 msgid "Area ID"
-msgstr "ID de área"
+msgstr ""
 
 #: templates/area_list.html:23 templates/base.html:39 templates/base.html:227
 #: templates/subarea_list.html:4 templates/subarea_list.html:22
 msgid "Subareas"
-msgstr "Subáreas"
+msgstr ""
 
 #: templates/area_list.html:24 templates/base.html:40 templates/base.html:228
 #: templates/core/term_list.html:4 templates/core/term_list.html:25
 #: templates/subarea_list.html:30
 msgid "Terms"
-msgstr "Términos"
+msgstr ""
 
 #: templates/area_list.html:25 templates/core/term_list.html:33
 #: templates/subarea_list.html:31
 msgid "Actions"
-msgstr "Acciones"
+msgstr ""
 
 #: templates/area_list.html:39
 msgid "View Subareas"
-msgstr "Ver subáreas"
+msgstr ""
 
 #: templates/area_list.html:48
 msgid "No areas found."
-msgstr "No se encontraron áreas."
+msgstr ""
 
 #: templates/base.html:10 templates/base.html:29 templates/base.html:205
 #: templates/home.html:4
 msgid "IEV Platform"
-msgstr "IEV Platform"
+msgstr ""
 
 #: templates/base.html:37 templates/base.html:225
 msgid "Home"
-msgstr "Inicio"
+msgstr ""
 
 #: templates/base.html:38 templates/base.html:226
 msgid "Areas"
-msgstr "Áreas"
+msgstr ""
 
 #: templates/base.html:47
 msgid "Search term/description"
-msgstr "Término de búsqueda/descripción"
+msgstr ""
 
 #: templates/base.html:49
 msgid "All Areas"
-msgstr "Todas las áreas"
+msgstr ""
 
 #: templates/base.html:54
 msgid "Search"
-msgstr "Buscar"
+msgstr ""
 
 #: templates/base.html:160
 msgid "Account"
-msgstr "Cuenta"
+msgstr ""
 
 #: templates/base.html:209
 msgid "Created by José Carlos Magalhães, ISEP student."
-msgstr "Creado por José Carlos Magalhães, estudiante del ISEP."
+msgstr ""
 
 #: templates/base.html:210
 msgid "Supporting international terminology dissemination."
-msgstr "Apoyando la difusión de terminología internacional."
+msgstr ""
 
 #: templates/base.html:211
 msgid "All rights reserved."
-msgstr "Reservados todos los derechos."
+msgstr ""
 
 #: templates/base.html:222
 msgid "Pages"
-msgstr "Paginas"
+msgstr ""
 
 #: templates/base.html:229
 msgid "Account panel"
-msgstr "Panel de cuenta"
+msgstr ""
 
 #: templates/base.html:235
 msgid "Resources"
-msgstr "Recursos"
+msgstr ""
 
 #: templates/base.html:239 templates/core/documentation.html:4
 #: templates/core/documentation.html:8 templates/home.html:62
 msgid "Documentation"
-msgstr "Documentación"
+msgstr ""
 
 #: templates/base.html:243 templates/core/thesis.html:4
 #: templates/core/thesis.html:15
 msgid "Dissertation"
-msgstr "Disertación"
+msgstr ""
 
 #: templates/base.html:250
 msgid "Community"
-msgstr "Comunidad"
+msgstr ""
 
 #: templates/base.html:254
 msgid "IEV Online - Eletropedia"
-msgstr "IEV Online - Eletropedia"
+msgstr ""
 
 #: templates/base.html:262
 msgid "Administration"
-msgstr "Administración"
+msgstr ""
 
 #: templates/base.html:267
 msgid "Administrator panel"
-msgstr "Panel de administrador"
+msgstr ""
 
 #: templates/core/contacts.html:8
 msgid "Contact Information"
-msgstr "Información del contacto"
+msgstr ""
 
 #: templates/core/contacts.html:37
 msgid "Send e-mail"
-msgstr "Información del contacto"
+msgstr ""
 
 #: templates/core/contacts.html:45
 msgid "No contact information available."
-msgstr "No hay información de contacto disponible."
+msgstr ""
 
 #: templates/core/documentation.html:17 templates/home.html:128
 msgid "Open"
-msgstr "Abrir"
+msgstr ""
 
 #: templates/core/documentation.html:24
 msgid "No documentation links available."
-msgstr "No hay enlaces de documentación disponibles."
+msgstr ""
 
 #: templates/core/poster.html:29 templates/home.html:157
 msgid "Open poster"
-msgstr "Abrir póster"
+msgstr ""
 
 #: templates/core/poster.html:38
 msgid "No posters available."
-msgstr "No hay carteles disponibles."
+msgstr ""
 
 #: templates/core/term_detail.html:24
 msgid "Term not available in this language."
-msgstr "Término no disponible en este idioma."
+msgstr ""
 
 #: templates/core/term_detail.html:28 templates/core/term_list.html:31
 msgid "IEV ref"
-msgstr "ref IEV"
+msgstr ""
 
 #: templates/core/term_detail.html:58
 msgid "Description not available in this language."
-msgstr "Descripción no disponible en este idioma."
+msgstr ""
 
 #: templates/core/term_detail.html:88
 msgid "Added to IEVP (this language)"
-msgstr "Añadido a IEVP (este idioma)"
+msgstr ""
 
 #: templates/core/term_detail.html:108
 msgid "Additional Content"
-msgstr "Contenido adicional"
+msgstr ""
 
 #: templates/core/term_list.html:18 templates/subarea_list.html:17
 msgid "Filtering by"
-msgstr "Filtrando por"
+msgstr ""
 
 #: templates/core/term_list.html:43
 msgid "View Detail"
-msgstr "Ver detalle"
+msgstr ""
 
 #: templates/core/term_list.html:52
 msgid "No terms found."
-msgstr "No se encontraron términos."
+msgstr ""
 
 #: templates/core/thesis.html:30
 msgid "Download dissertation"
-msgstr "Descargar disertación"
+msgstr ""
 
 #: templates/core/thesis.html:35
 msgid "Dissertation not available."
-msgstr "Disertación no disponible."
+msgstr ""
 
 #: templates/core/tutorial.html:22
 msgid "Watch video tutorial"
-msgstr "Ver vídeo tutorial"
+msgstr ""
 
 #: templates/core/tutorial.html:35
 msgid "No tutorials available."
-msgstr "No hay tutoriales disponibles"
+msgstr ""
 
 #: templates/home.html:14
 msgid "Welcome to the International Electrotechnical Vocabulary Platform!"
-msgstr "¡Bienvenido a la International Electrotechnical Vocabulary Platform!"
+msgstr ""
 
 #: templates/home.html:16
 msgid ""
 "Access curated terminology, news and guidance. Log in or create your account "
 "to access all features."
 msgstr ""
-"Acceda a terminología, noticias y orientación seleccionadas. Inicie sesión o "
-"cree su cuenta para acceder a todas las funciones."
 
 #: templates/home.html:32
 msgid "Please verify your e-mail address to access the platform features."
 msgstr ""
-"Por favor verifique su e-mail para acceder a las funciones de la plataforma."
 
 #: templates/home.html:52
 msgid "Quick access"
-msgstr "Acceso rápido"
+msgstr ""
 
 #: templates/home.html:56
 msgid "Search terms"
-msgstr "Buscar términos"
+msgstr ""
 
 #: templates/home.html:71
 msgid "Administrator Panel"
-msgstr "Panel de administrador"
+msgstr ""
 
 #: templates/home.html:118
 msgid "Recently added terms"
-msgstr "Términos agregados recientemente"
+msgstr ""
 
 #: templates/subarea_list.html:28
 msgid "Subarea ID"
-msgstr "ID de subárea"
+msgstr ""
 
 #: templates/subarea_list.html:44
 msgid "View Terms"
-msgstr "Ver términos"
+msgstr ""
 
 #: templates/subarea_list.html:54
 msgid "No subareas found."
-msgstr "No se encontraron subáreas."
-
-#~ msgid "User account page"
-#~ msgstr "Página de cuenta de usuario"
-
-#~ msgid "Hello"
-#~ msgstr "Hola"
-
-#~ msgid "Hello! You are not logged in."
-#~ msgstr "¡Hola! No has iniciado sesión."
-
-#~ msgid "To use the website, you need to be registered."
-#~ msgstr "Para usar el sitio web, necesitas estar registrado."
-
-#~ msgid "If you don’t have an account, please sign up on the account page."
-#~ msgstr "Si no tienes una cuenta, regístrate en la página de la cuenta."
+msgstr ""

@@ -55,25 +55,103 @@
             </form>
           </li>
 
-          <li class="nav-item dropdown me-2">
-            <a class="nav-link dropdown-toggle btn btn-outline-secondary btn-sm" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              {% if LANGUAGE_CODE == "pt" %}🇵🇹{% elif LANGUAGE_CODE == "pt-br" %}🇧🇷{% elif LANGUAGE_CODE == "en" %}🇬🇧{% elif LANGUAGE_CODE == "es" %}🇪🇸{% else %}🌐{% endif %}
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="languageDropdown">
-              {% for lang in LANGUAGES %}
-                <li>
-                  <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('lang-{{ lang.0 }}').submit();">
-                    {% if lang.0 == "pt" %}🇵🇹{% elif lang.0 == "pt-br" %}🇧🇷{% elif lang.0 == "en" %}🇬🇧{% elif lang.0 == "es" %}🇪🇸{% else %}🌐{% endif %} {{ lang.1 }}
-                  </a>
-                  <form id="lang-{{ lang.0 }}" action="{% url 'set_language' %}" method="post" style="display: none;">
-                    {% csrf_token %}
-                    <input type="hidden" name="language" value="{{ lang.0 }}">
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                  </form>
-                </li>
-              {% endfor %}
-            </ul>
-          </li>
+            <li class="nav-item dropdown me-2">
+              <a class="nav-link dropdown-toggle btn btn-outline-secondary btn-sm" href="#" id="languageDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {% if LANGUAGE_CODE == "pt" %}🇵🇹
+                {% elif LANGUAGE_CODE == "pt-br" %}🇧🇷
+                {% elif LANGUAGE_CODE == "en" %}🇬🇧
+                {% elif LANGUAGE_CODE == "es" %}🇪🇸
+                {% elif LANGUAGE_CODE == "fr" %}🇫🇷
+                {% elif LANGUAGE_CODE == "sq" %}🇦🇱
+                {% elif LANGUAGE_CODE == "ar" %}🇸🇦
+                {% elif LANGUAGE_CODE == "hy" %}🇦🇲
+                {% elif LANGUAGE_CODE == "bs" %}🇧🇦
+                {% elif LANGUAGE_CODE == "bg" %}🇧🇬
+                {% elif LANGUAGE_CODE == "zh-hans" %}🇨🇳
+                {% elif LANGUAGE_CODE == "hr" %}🇭🇷
+                {% elif LANGUAGE_CODE == "da" %}🇩🇰
+                {% elif LANGUAGE_CODE == "nl" %}🇳🇱
+                {% elif LANGUAGE_CODE == "et" %}🇪🇪
+                {% elif LANGUAGE_CODE == "fi" %}🇫🇮
+                {% elif LANGUAGE_CODE == "de" %}🇩🇪
+                {% elif LANGUAGE_CODE == "ka" %}🇬🇪
+                {% elif LANGUAGE_CODE == "el" %}🇬🇷
+                {% elif LANGUAGE_CODE == "hu" %}🇭🇺
+                {% elif LANGUAGE_CODE == "is" %}🇮🇸
+                {% elif LANGUAGE_CODE == "ga" %}🇮🇪
+                {% elif LANGUAGE_CODE == "it" %}🇮🇹
+                {% elif LANGUAGE_CODE == "ja" %}🇯🇵
+                {% elif LANGUAGE_CODE == "ko" %}🇰🇷
+                {% elif LANGUAGE_CODE == "lv" %}🇱🇻
+                {% elif LANGUAGE_CODE == "lt" %}🇱🇹
+                {% elif LANGUAGE_CODE == "mk" %}🇲🇰
+                {% elif LANGUAGE_CODE == "nb" %}🇳🇴
+                {% elif LANGUAGE_CODE == "pl" %}🇵🇱
+                {% elif LANGUAGE_CODE == "ro" %}🇷🇴
+                {% elif LANGUAGE_CODE == "ru" %}🇷🇺
+                {% elif LANGUAGE_CODE == "sr" %}🇷🇸
+                {% elif LANGUAGE_CODE == "sk" %}🇸🇰
+                {% elif LANGUAGE_CODE == "sl" %}🇸🇮
+                {% elif LANGUAGE_CODE == "sv" %}🇸🇪
+                {% elif LANGUAGE_CODE == "tr" %}🇹🇷
+                {% elif LANGUAGE_CODE == "uk" %}🇺🇦
+                {% else %}🌐{% endif %}
+              </a>
+
+              <ul class="dropdown-menu dropdown-menu-end lang-menu" aria-labelledby="languageDropdown">
+                {% for lang in LANGUAGES %}
+                  <li>
+                    <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('lang-{{ lang.0 }}').submit();">
+                      {% if lang.0 == "pt" %}🇵🇹
+                      {% elif lang.0 == "pt-br" %}🇧🇷
+                      {% elif lang.0 == "en" %}🇬🇧
+                      {% elif lang.0 == "es" %}🇪🇸
+                      {% elif lang.0 == "fr" %}🇫🇷
+                      {% elif lang.0 == "sq" %}🇦🇱
+                      {% elif lang.0 == "ar" %}🇸🇦
+                      {% elif lang.0 == "hy" %}🇦🇲
+                      {% elif lang.0 == "bs" %}🇧🇦
+                      {% elif lang.0 == "bg" %}🇧🇬
+                      {% elif lang.0 == "zh-hans" %}🇨🇳
+                      {% elif lang.0 == "hr" %}🇭🇷
+                      {% elif lang.0 == "da" %}🇩🇰
+                      {% elif lang.0 == "nl" %}🇳🇱
+                      {% elif lang.0 == "et" %}🇪🇪
+                      {% elif lang.0 == "fi" %}🇫🇮
+                      {% elif lang.0 == "de" %}🇩🇪
+                      {% elif lang.0 == "ka" %}🇬🇪
+                      {% elif lang.0 == "el" %}🇬🇷
+                      {% elif lang.0 == "hu" %}🇭🇺
+                      {% elif lang.0 == "is" %}🇮🇸
+                      {% elif lang.0 == "ga" %}🇮🇪
+                      {% elif lang.0 == "it" %}🇮🇹
+                      {% elif lang.0 == "ja" %}🇯🇵
+                      {% elif lang.0 == "ko" %}🇰🇷
+                      {% elif lang.0 == "lv" %}🇱🇻
+                      {% elif lang.0 == "lt" %}🇱🇹
+                      {% elif lang.0 == "mk" %}🇲🇰
+                      {% elif lang.0 == "nb" %}🇳🇴
+                      {% elif lang.0 == "pl" %}🇵🇱
+                      {% elif lang.0 == "ro" %}🇷🇴
+                      {% elif lang.0 == "ru" %}🇷🇺
+                      {% elif lang.0 == "sr" %}🇷🇸
+                      {% elif lang.0 == "sk" %}🇸🇰
+                      {% elif lang.0 == "sl" %}🇸🇮
+                      {% elif lang.0 == "sv" %}🇸🇪
+                      {% elif lang.0 == "tr" %}🇹🇷
+                      {% elif lang.0 == "uk" %}🇺🇦
+                      {% else %}🌐{% endif %}
+                      {{ lang.1 }}
+                    </a>
+                    <form id="lang-{{ lang.0 }}" action="{% url 'set_language' %}" method="post" style="display: none;">
+                      {% csrf_token %}
+                      <input type="hidden" name="language" value="{{ lang.0 }}">
+                      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    </form>
+                  </li>
+                {% endfor %}
+              </ul>
+            </li>
 
           <li class="nav-item">
             {% if user.is_authenticated %}
@@ -148,7 +226,7 @@
             <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'area-list' %}">{% trans "Areas" %}</a></li>
             <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'subarea-list' %}">{% trans "Subareas" %}</a></li>
             <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'term-list' %}">{% trans "Terms" %}</a></li>
-            <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'account_panel' %}">{% trans "Account" %}</a></li>
+            <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'account_panel' %}">{% trans "Account panel" %}</a></li>
         </ul>
       </div>
 
@@ -162,7 +240,7 @@
             {% endif %}
             <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'poster' %}">{% trans "Poster" %}</a></li>
             {% if user.is_authenticated %}
-                <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'thesis' %}">{% trans "Thesis" %}</a></li>
+                <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'thesis' %}">{% trans "Dissertation" %}</a></li>
             {% endif %}
         </ul>
       </div>
@@ -207,17 +285,52 @@
 <!-- Inicialização padrão do DataTables -->
 {% block datatables_init %}
 
-{# tive que ligar idioma a idioma porque dava erro ao usar a URL, as referências dos idiomas do django nao coincidem com o cdn.datatables.net...#}
+{# tive que ligar idioma a idioma porque dava erro ao usar a URL, as referências dos idiomas do django nao coincidem com o cdn.datatables.net/plug-ins/2.3.2/i18n/ #}
 <script>
-  const langMap = {
-    'en': 'en-GB',
-    'pt-br': 'pt-BR',
-    'pt-pt': 'pt',
-    'es': 'es-ES',
-    //'fr': 'fr-FR'
-    // Adicionar outros idiomas conforme necessário
-    // o código do idioma da esquerda tem que ser o do django, o da direita o do CDN.
-  };
+    const langMap = {
+        'en': 'en-GB',
+        'pt-br': 'pt-BR',
+        'pt-pt': 'pt',
+        'es': 'es-ES',
+        'fr': 'fr-FR'
+        // ordenado por nome do idioma em inglês
+        'sq':      'sq',       // Albanian
+        'ar':      'ar',       // Arabic
+        'hy':      'hy-AM',    // Armenian
+        'bs':      'bs-BA',    // Bosnian
+        'bg':      'bg',    // Bulgarian
+        'zh-hans': 'zh',    // Chinese (Simplified)
+        'hr':      'hr',    // Croatian
+        'da':      'da',    // Danish
+        'nl':      'nl-NL',    // Dutch
+        'et':      'et',    // Estonian
+        'fi':      'fi',    // Finnish
+        'de':      'de-DE',    // German
+        'ka':      'ka',    // Georgian
+        'el':      'el',    // Greek
+        'hu':      'hu',    // Hungarian
+        'is':      'is',    // Icelandic
+        'ga':      'ga',    // Irish
+        'it':      'it-IT',    // Italian
+        'ja':      'ja',       // Japanese
+        'ko':      'ko',       // Korean
+        'lv':      'lv',    // Latvian
+        'lt':      'lt',    // Lithuanian
+        'mk':      'mk',    // Macedonian
+        'nb':      'no-NB',    // Norwegian Bokmål  (no CDN é "no-NB.json")
+        'pl':      'pl',       // Polish
+        'ro':      'ro',    // Romanian
+        'ru':      'ru',       // Russian
+        'sr':      'sr',       // Serbian (Cyrillic no CDN)
+        'sk':      'sk',    // Slovak
+        'sl':      'sl',    // Slovenian
+        'sv':      'sv-SE',    // Swedish
+        'tr':      'tr-TR',    // Turkish
+        'uk':      'uk'     // Ukrainian
+
+        // Adicionar outros idiomas
+        // o código do idioma da esquerda tem que ser o do django, o da direita o do CDN.
+    };
 
   const langCode = '{{ LANGUAGE_CODE|default:"en" }}'.toLowerCase();
   const langFile = langMap[langCode] || 'en-GB';

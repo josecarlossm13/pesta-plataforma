@@ -1,20 +1,15 @@
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.views.generic import TemplateView, DetailView, ListView       # Importa classes de visualização genéricas do Django.
-from django.views import View                                   # Base para CBV simples
-from django.shortcuts import render, redirect, get_object_or_404                             # Importa funções para renderizar templates e redirecionar.
-from django.contrib.auth import login, logout
-from django.contrib.auth.views import LoginView                           # Importa a visualização de login do Django.
+# core/views.py
+
+from django.views.generic import DetailView, ListView       # Importa classes de visualização genéricas do Django.
+from django.shortcuts import render, redirect, get_object_or_404        # Importa funções para renderizar templates e redirecionar.
 from django.urls import reverse_lazy
-from django.utils.translation import get_language               # Para obter idioma da interface
+from django.utils.translation import get_language                       # Para obter idioma da interface
 from core.models import Term, Area, SubArea, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo, ContactTopMessage                             # Importa o modelo Term,  que contém os dados dos termos.
-#from core.forms import  #, SearchForm                       # Importa o formulário de registro de utilizador que será criado e o de pesquisa
-from django.db.models import Q, Count                           # Count, Contar o nº de termos nas data tables
-from django.contrib.auth.forms import UserCreationForm              # Importa o formulário de criação de utilizador padrão do Django.
-from django.utils import translation
+from django.db.models import Q, Count                                   # Count, Contar o nº de termos nas data tables
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse                                     # usado para gerar URLs com base no nome dos caminhos
+from django.urls import reverse                                         # usado para gerar URLs com base no nome dos caminhos
 from core.permissions import user_has_access, GroupAccessRequiredMixin
 from django.contrib.auth.models import Group, User
 from django.utils.timezone import now
@@ -81,7 +76,6 @@ class SubAreaListView(GroupAccessRequiredMixin, ListView):
     model = SubArea
     template_name = 'subarea_list.html'
     context_object_name = 'subareas'
-    #login_url = '/accounts/login/'
     login_url = reverse_lazy("account_login")
 
 
@@ -108,18 +102,15 @@ class SubAreaListView(GroupAccessRequiredMixin, ListView):
 
         return context
 
-
 # função para detalhes de um termo
 @login_required(login_url='/accounts/login/')
 def term_detail(request, ref):
     term = get_object_or_404(Term, ref=ref)                     # vai buscar o termo pela ref
     return render(request, 'core/term_detail.html', {'term': term})  # aqui podemos escolher o idioma dos conteúdos se necessário
 
-
 class TermListView(GroupAccessRequiredMixin, ListView):
     model = Term
     context_object_name = 'terms'
-    #login_url = '/accounts/login/'
     login_url = reverse_lazy("account_login")
 
     def get(self, request, *args, **kwargs):
@@ -129,7 +120,7 @@ class TermListView(GroupAccessRequiredMixin, ListView):
     def get_queryset(self):
         q = self.request.GET.get("q")
         area_id = self.request.GET.get("area")                  # para o filtro por area da navbar
-        subarea_ref = self.kwargs.get('ref')  # vem da URL
+        subarea_ref = self.kwargs.get('ref')                    # vem da URL
         object_list = self.model.objects.all()
 
         # Filtra pelo termo de busca, se existir
@@ -161,11 +152,10 @@ class TermListView(GroupAccessRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         subarea_ref = self.kwargs.get('ref')
-        subarea = None  ##############
+        subarea = None
         if subarea_ref:
             subarea = SubArea.objects.select_related('area').filter(ref=subarea_ref).first()#############
-            #context['subarea'] = SubArea.objects.filter(ref=subarea_ref).first()
-            context['subarea'] = subarea #######################
+            context['subarea'] = subarea
             context['subarea_ref'] = subarea_ref
         else:
             # Se não há subarea, evita usar esses campos no template
@@ -190,7 +180,6 @@ class TermListView(GroupAccessRequiredMixin, ListView):
 class TermDetailView(GroupAccessRequiredMixin, DetailView):
     model = Term
     context_object_name = 'term'
-    #login_url = '/accounts/login/'
     login_url = reverse_lazy("account_login")
 
     def get(self, request, *args, **kwargs):
@@ -204,7 +193,7 @@ class TermDetailView(GroupAccessRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        # Montar fallback_url preservando filtros
+        # Fallback_url preservando filtros
         # Usar a função para obter o back_url (botão "voltar")
         subarea_ref = self.request.GET.get('ref')
         query = self.request.GET.get('q')
@@ -229,16 +218,14 @@ class TermDetailView(GroupAccessRequiredMixin, DetailView):
         content_language = self.request.GET.get('language') or get_language()
         query = self.request.GET.get('q', '')
 
-        ######### added to IEVP, Last IEVP update #########
+        ######### added to IEVP #########
         published_field = f'published_at_{content_language}'
         ###################################################
-
         term = context['term']
         # Campos traduzidos dinamicamente
         name_field = f'name_{content_language}'
         description_field = f'description_{content_language}'
         extra_field = f'extra_{content_language}'
-
         # Atribui os valores traduzidos ao contexto
         context['term_name'] = getattr(term, name_field, term.name)
         context['term_description'] = getattr(term, description_field, term.description)
@@ -266,6 +253,15 @@ def home(request):
         'posters': Poster.objects.filter(active=True).order_by('position','-id')
     }
 
+    # verificação para mostrar o botão quick access do painel admin
+    context['is_admin_or_gestor'] = (
+            request.user.is_authenticated
+            and (
+                    request.user.is_superuser
+                    or request.user.groups.filter(name__in=['Admin', 'Gestor']).exists()
+            )
+    )
+
     if request.user.is_authenticated:
         if not request.user.emailaddress_set.filter(verified=True).exists():
             context['user_status'] = 'email_unverified'
@@ -288,15 +284,22 @@ def home(request):
                 models.Q(hide_after__gte=now()) | models.Q(hide_after__isnull=True)
             ).order_by('position','-created_at')
 
+    # Se aprovado mostra os últimos termos adicionados + atalhos
+    context['latest_terms'] = []
+    context['show_quick'] = False
+
+    if context['user_status'] == 'approved':
+        context['latest_terms'] = Term.objects.order_by('-created')[:6]
+        context['show_quick'] = True
+
     return render(request, 'home.html', context)
 
 
 # lista (queryset) de todos os tutoriais ativos, ordenados por posição, com restrição dependendo do grupo do user
 @user_has_access()
 def tutorial_view(request):
-    # Verifica se o usuário é Admin, Gestor ou Superusuário
+    # Verifica se o user é Admin, Gestor ou Superuser
     is_admin_or_gestor_or_superuser = request.user.groups.filter(name__in=['Admin', 'Gestor']).exists() or request.user.is_superuser
-
 
     # Se o user for Admin, Gestor ou Superuser, mostra todos os tutoriais, caso contrário, só os não restritos
     if is_admin_or_gestor_or_superuser:

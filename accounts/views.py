@@ -1,3 +1,4 @@
+# accounts/views.py
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 from django.shortcuts import redirect, render
@@ -13,7 +14,7 @@ def resend_verification_view(request):
 
     if not email:
         messages.info(request, generic_msg)
-        return redirect("account_email_verification_sent")  # ou 'account_login'
+        return redirect("account_email_verification_sent")      # rota do allauth que por defeito abre o templates/account/verification_sent.html
 
     try:
         address = EmailAddress.objects.get(email__iexact=email)
@@ -24,7 +25,7 @@ def resend_verification_view(request):
         pass  # mesmo comportamento: mensagem genérica
 
     messages.info(request, generic_msg)
-    return redirect("account_email_verification_sent")  # ou 'account_login'
+    return redirect("account_email_verification_sent")      # rota do allauth que por defeito abre o templates/account/verification_sent.html
 
 
 @login_required

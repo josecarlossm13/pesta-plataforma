@@ -33,7 +33,6 @@ ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     'modeltranslation',                 # Regista o modeltranslation antes do .admin para evitar bugs relacionados com a tradução de modelos.
     'django.contrib.admin',             # Permite a gestão de dados através da interface de administração do Django.
@@ -50,7 +49,6 @@ INSTALLED_APPS = [
 
     'core',                             # Regista a aplicação 'core' que criei.
     'plataforma',
-    #"core.apps.PollsConfig"            # Pode ser usado para registar uma configuração de aplicação personalizada, se necessário.
 
     'rosetta',                          # Permite a tradução de strings diretamente na interface de administração.
     'ckeditor',                         # Integra o CKEditor, um editor de texto rico, na aplicação Django.
@@ -64,15 +62,14 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  ############## Talvez faltasse este middleware. Permitia ao django usar o request.LANGUAGE_CODE e determinar automaticamente o idioma da interface
+    'django.middleware.locale.LocaleMiddleware',                # Talvez faltasse este middleware. Permitia ao django usar o request.LANGUAGE_CODE e determinar automaticamente o idioma da interface
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    #'core.middleware.CustomLocaleMiddleware',         ########### middleware personalizado que adicionei no middleware.py
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 
-    'allauth.account.middleware.AccountMiddleware',     # django allauth
+    'allauth.account.middleware.AccountMiddleware',             # django allauth
 
 ]
 
@@ -162,31 +159,49 @@ USE_TZ = True                   # Ativa o suporte de fusos horários.
 LOCALE_PATHS = [
     BASE_DIR / 'locale',
 ]
-# Lista de idiomas (comentados os que não estão a ser usados)
+# Lista de idiomas
 LANGUAGES = [
     ('en', _('English')),
     ('pt', _('Portuguese')),
     ('pt-br', _('Brazilian Portuguese')),
     ('es', _('Spanish')),
-    # ('fr', _('Francês')),
-    # ('de', _('Alemão')),
-    # ('it', _('Italiano')),
-    # ('ru', _('Russo')),
-    # ('zh-hans', _('Chinês Simplificado')),
-    # ('ja', _('Japonês')),
-    # ('ar', _('Árabe')),
-    # ('nl', _('Neerlandês')),
-    # ('pl', _('Polaco')),
-    # ('tr', _('Turco')),
-    # ('ko', _('Coreano')),
-    # ('sv', _('Sueco')),
-    # ('da', _('Dinamarquês')),
-    # ('fi', _('Finlandês')),
-    # ('no', _('Norueguês')),
-    # ('cs', _('Checo')),
-    # ('hu', _('Húngaro')),
-
+# Restantes idiomas sem tradução personalizada na UI do site (ordenados por nome do idioma em inglês)
+    ('sq',     _('Albanian')),
+    ('ar',     _('Arabic')),
+    ('hy',     _('Armenian')),
+    ('bs',     _('Bosnian')),
+    ('bg',     _('Bulgarian')),
+    ('zh-hans',_('Chinese (Simplified)')),
+    ('hr',     _('Croatian')),
+    ('da',     _('Danish')),
+    ('nl',     _('Dutch')),
+    ('et',     _('Estonian')),
+    ('fi',     _('Finnish')),
+    ('fr',     _('French')),
+    ('de',     _('German')),
+    ('ka',     _('Georgian')),
+    ('el',     _('Greek')),
+    ('hu',     _('Hungarian')),
+    ('is',     _('Icelandic')),
+    ('ga',     _('Irish')),
+    ('it',     _('Italian')),
+    ('ja',     _('Japanese')),
+    ('ko',     _('Korean')),
+    ('lv',     _('Latvian')),
+    ('lt',     _('Lithuanian')),
+    ('mk',     _('Macedonian')),
+    ('nb',     _('Norwegian')),          # usar 'nb' (Bokmål)
+    ('pl',     _('Polish')),
+    ('ro',     _('Romanian')),
+    ('ru',     _('Russian')),
+    ('sr',     _('Serbian')),            # A usar Cirílico. Também existe 'sr-latn' para sérvio (latim)
+    ('sk',     _('Slovak')),
+    ('sl',     _('Slovenian')),
+    ('sv',     _('Swedish')),
+    ('tr',     _('Turkish')),
+    ('uk',     _('Ukrainian')),
 ]
+
 #Idiomas para o Model translate, uma vez que havia conflito com o django por causa do name_pt-br/name_pt_br
 #MODELTRANSLATION_LANGUAGES = ('en', 'pt', 'pt_br', 'es')
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'en'
@@ -196,16 +211,13 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ()
 }
 
-# # Modeltranslation – evita copiar automaticamente o conteúdo do idioma principal (por causa do added to IEVP, IEVP update)
-# MODELTRANSLATION_AUTO_POPULATE = False
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
-    BASE_DIR / "plataforma/static/core",  # Adjust this path as necessary
+    BASE_DIR / "plataforma/static/core",
 ]
 
 # Default primary key field type
@@ -213,17 +225,11 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'    # Define o tipo de campo automático padrão para as primary keys como BigAutoField, que suporta valores maiores.
 
-# Adiciona a configuração para que o Django reconheça o modelo de utilizador personalizado,
-#AUTH_USER_MODEL = 'core.User'
 
-#Tentar resolver o erro do painel admin não dar para fazer login. (A soluçao foi criar um novo superuser depois de ter personalizado o modelo User do django)
-#AUTHENTICATION_BACKENDS = [
-#    'django.contrib.auth.backends.ModelBackend',  # O backend padrão
-#]
 
-CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"                       # Define o diretório onde os arquivos enviados pelo CKEditor serão armazenados (texto e imagens)
+CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"              # Define o diretório onde os arquivos enviados pelo CKEditor serão armazenados (texto e imagens)
 
-# Ativa o botão de imagem com upload direto no editor.
+# Ativa o botão de imagem etc. com upload direto no CKEditor
 CKEDITOR_CONFIGS = {
     'default': {
         'toolbar': [
@@ -246,15 +252,12 @@ CKEDITOR_CONFIGS = {
         'extraPlugins': 'uploadimage,justify,image2,colorbutton,colordialog,font',
         'filebrowserUploadUrl': '/ckeditor/upload/',
         'filebrowserBrowseUrl': '/ckeditor/browse/',
-        'removePlugins': 'image',  # manténs o image2
+        'removePlugins': 'image',  # mantem o image2
         # Permitir estilos de cor e marcador
         'extraAllowedContent': 'span{color,background-color}[style];*(*);*{*}',
     }
 }
 
-
-#LOGIN_REDIRECT_URL = "home"                                # Redireciona o user após login para a homepage
-#LOGOUT_REDIRECT_URL = "home"                               # Redireciona o user após logout para a homepage
 
 from import_export.formats.base_formats import CSV, XLSX, JSON, YAML, HTML
 IMPORT_FORMATS = [CSV, XLSX]
@@ -265,9 +268,10 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True     # ao abrir o link no browser, marca logo
 
 SITE_ID = 1
 
-LOGIN_REDIRECT_URL = '/'
-ACCOUNT_LOGOUT_REDIRECT_URL = '/'
-# aponta para o adapter para redirecionar para account panel após o botão change password
+LOGIN_REDIRECT_URL = '/'                # Redireciona o user após login para a homepage
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'       # Redireciona o user após logout para a homepage
+
+# aponta para o adapter para redirecionar para account panel após clicar no botão change password
 ACCOUNT_ADAPTER = "accounts.adapters.AccountAdapter"
 
 # Nova API: campos permitidos no registo
@@ -280,11 +284,12 @@ ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
 # Formulário personalizado para signup
 ACCOUNT_SIGNUP_FORM_CLASS = 'accounts.forms.CustomSignupForm'
 
-# impede users de conseguir adicionar outro ou substituir. Staff pode através do painel admin
+# Impede users de conseguir adicionar outro email ou substituir. Staff pode através do painel admin
 ACCOUNT_MAX_EMAIL_ADDRESSES = 1
 
 # forçar funcionamento esperado da checkbox "remember me" ao fazer login
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # Fecha a sessão ao fechar o browser por padrão
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True          # Fecha a sessão ao fechar o browser por padrão
+
 # Mostra a checkbox "remember me" e deixa-a controlar se a sessão expirou
 # None => mostra checkbox; True => lembra-se sempre do login; False => nunca se lembra do login
 ACCOUNT_SESSION_REMEMBER = None

@@ -1,25 +1,36 @@
-from import_export import resources, fields
-from django.contrib import admin                            # Importa o módulo admin do Django
+# core/admin.py
+from import_export import resources
 from import_export.admin import ImportExportModelAdmin, ExportActionMixin
-#from import_export.widgets import ForeignKeyWidget
-from modeltranslation.admin import TranslationAdmin         # Importa o TranslationAdmin, uma classe fornecida pelo pacote django-modeltranslation para facilitar a tradução de campos de modelos do Django na interface de administração
+from modeltranslation.admin import TranslationAdmin                         # Importa o TranslationAdmin, uma classe fornecida pelo pacote django-modeltranslation para facilitar a tradução de campos de modelos do Django na interface de administração
 from reversion.admin import VersionAdmin
-from .models import Area, SubArea, Term, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo, ContactTopMessage                     # Importa os modelos Area, SubArea, e Term de models.py
+from .models import Area, SubArea, Term, News, Warning, Tutorial, Poster, Thesis, DocumentationLink, ContactInfo, ContactTopMessage
+from django.contrib import admin, messages
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
+from django.db import transaction
 
-#####tentativa####  (tem que ficar antes do AreaAdmin)                  #Define as colunas de importação/exportação para o modelo Area
+# Define as colunas de importação/exportação para o modelo Area (tem que ficar antes do AreaAdmin)
 class AreaResource(resources.ModelResource):
     class Meta:
         model = Area
-        import_id_fields = ['id']                                       # Define o campo que será usado como identificador único durante a importação
-        fields = ['id', 'name_en', 'name_pt', 'name_pt_br', 'name_es']  # Define os campos a serem importados/exportados
+        import_id_fields = ['id']                                           # Define o campo que será usado como identificador único durante a importação
+        fields = ['id', 'name_en', 'name_pt', 'name_pt_br', 'name_es', 'name_sq', 'name_ar', 'name_hy',
+                  'name_bs', 'name_bg', 'name_zh_hans', 'name_hr', 'name_da', 'name_nl', 'name_et', 'name_fi', 'name_fr',
+                  'name_de', 'name_ka', 'name_el', 'name_hu', 'name_is', 'name_ga', 'name_it', 'name_ja', 'name_ko',
+                  'name_lv', 'name_lt', 'name_mk', 'name_nb', 'name_pl', 'name_ro', 'name_ru', 'name_sr', 'name_sk',
+                  'name_sl', 'name_sv', 'name_tr', 'name_uk']               # Define os campos a serem importados/exportados
 
-##########                                                              #Define as colunas de importação/exportação para o modelo SubArea
+# Define as colunas de importação/exportação para o modelo SubArea
 class SubAreaResource(resources.ModelResource):
     class Meta:
         model = SubArea
         import_id_fields = ['ref']
-        fields = ['ref', 'area', 'id', 'name_en', 'name_pt', 'name_pt_br', 'name_es']
-##########
+        fields = ['ref', 'area', 'id', 'name_en', 'name_pt', 'name_pt_br', 'name_es', 'name_sq', 'name_ar', 'name_hy',
+                  'name_bs', 'name_bg', 'name_zh_hans', 'name_hr', 'name_da', 'name_nl', 'name_et', 'name_fi', 'name_fr',
+                  'name_de', 'name_ka', 'name_el', 'name_hu', 'name_is', 'name_ga', 'name_it', 'name_ja', 'name_ko',
+                  'name_lv', 'name_lt', 'name_mk', 'name_nb', 'name_pl', 'name_ro', 'name_ru', 'name_sr', 'name_sk',
+                  'name_sl', 'name_sv', 'name_tr', 'name_uk']
+
 
 @admin.register(Area)                                                   # Regista o modelo Area na interface de administração do Django, permitindo a sua gestão através do painel de administração.
 class AreaAdmin(VersionAdmin,TranslationAdmin, ImportExportModelAdmin):                    # Classe AreaAdmin herda de TranslationAdmin, permitindo que a interface de administração suporte a tradução dos campos do modelo Area.
@@ -34,23 +45,27 @@ class SubAreaAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin):     
     search_fields = ['name']                                            # Permite adicionar uma barra de pesquisa na interface de administração, onde os utilizadores podem procurar por 'name'.
     resource_classes = [SubAreaResource]
 
-# Ordenar as opções do ForeignKey 'area' no painel de administração, menu drop down
+    # Ordenar as opções do ForeignKey 'area' no painel de administração, menu drop down
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'area':
-            kwargs['queryset'] = Area.objects.all().order_by('id')  # Ordena as Áreas pelo 'id'
+            kwargs['queryset'] = Area.objects.all().order_by('id')      # Ordena as Áreas pelo 'id'
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
 class TermResource(resources.ModelResource):
 
     def before_save_instance(self, instance, row, **kwargs):
-        for field in ['name_en', 'name_pt', 'name_pt_br', 'name_es', 'name']:
+        for field in ['name_en', 'name_pt', 'name_pt_br', 'name_es', 'name_sq', 'name_ar', 'name_hy', 'name_bs',
+                      'name_bg', 'name_zh_hans', 'name_hr', 'name_da', 'name_nl', 'name_et', 'name_fi', 'name_fr',
+                      'name_de', 'name_ka', 'name_el', 'name_hu', 'name_is', 'name_ga', 'name_it', 'name_ja', 'name_ko',
+                      'name_lv', 'name_lt', 'name_mk', 'name_nb', 'name_pl', 'name_ro', 'name_ru', 'name_sr', 'name_sk',
+                      'name_sl', 'name_sv', 'name_tr', 'name_uk']:
             if getattr(instance, field) == '':
                 setattr(instance, field, None)
 
     def before_import(self, dataset, **kwargs):
-                                                            # mimic a 'dynamic field' - i.e. append field which exists on
-        dataset.headers.append('subarea')                   # Book model, but not in dataset
+                                                            # mimic a 'dynamic field' - i.e. append field which exists on Book model, but not in dataset
+        dataset.headers.append('subarea')
         dataset.headers.append('ref')
         super().before_import(dataset, **kwargs)
 
@@ -68,32 +83,100 @@ class TermResource(resources.ModelResource):
         import_id_fields = ['ref']
 
         fields = ['ref', 'subarea', 'id',
-                  'name_en', 'description_en', 'source_en', 'extra_en',
-                  'name_pt', 'description_pt', 'source_pt', 'extra_pt',
-                  'name_es', 'description_es', 'source_es', 'extra_es',
-                  'name_pt_br', 'description_pt_br', 'source_pt_br', 'extra_pt_br',
-                  'image',
-                  'created', 'updated'
-                  ]
+            'name_en', 'description_en', 'source_en', 'extra_en',
+            'name_pt', 'description_pt', 'source_pt', 'extra_pt',
+            'name_pt_br', 'description_pt_br', 'source_pt_br', 'extra_pt_br',
+            'name_es', 'description_es', 'source_es', 'extra_es',
+            'name_sq', 'description_sq', 'source_sq', 'extra_sq',
+            'name_ar', 'description_ar', 'source_ar', 'extra_ar',
+            'name_hy', 'description_hy', 'source_hy', 'extra_hy',
+            'name_bs', 'description_bs', 'source_bs', 'extra_bs',
+            'name_bg', 'description_bg', 'source_bg', 'extra_bg',
+            'name_zh_hans', 'description_zh_hans', 'source_zh_hans', 'extra_zh_hans',
+            'name_hr', 'description_hr', 'source_hr', 'extra_hr',
+            'name_da', 'description_da', 'source_da', 'extra_da',
+            'name_nl', 'description_nl', 'source_nl', 'extra_nl',
+            'name_et', 'description_et', 'source_et', 'extra_et',
+            'name_fi', 'description_fi', 'source_fi', 'extra_fi',
+            'name_fr', 'description_fr', 'source_fr', 'extra_fr',
+            'name_de', 'description_de', 'source_de', 'extra_de',
+            'name_ka', 'description_ka', 'source_ka', 'extra_ka',
+            'name_el', 'description_el', 'source_el', 'extra_el',
+            'name_hu', 'description_hu', 'source_hu', 'extra_hu',
+            'name_is', 'description_is', 'source_is', 'extra_is',
+            'name_ga', 'description_ga', 'source_ga', 'extra_ga',
+            'name_it', 'description_it', 'source_it', 'extra_it',
+            'name_ja', 'description_ja', 'source_ja', 'extra_ja',
+            'name_ko', 'description_ko', 'source_ko', 'extra_ko',
+            'name_lv', 'description_lv', 'source_lv', 'extra_lv',
+            'name_lt', 'description_lt', 'source_lt', 'extra_lt',
+            'name_mk', 'description_mk', 'source_mk', 'extra_mk',
+            'name_nb', 'description_nb', 'source_nb', 'extra_nb',
+            'name_pl', 'description_pl', 'source_pl', 'extra_pl',
+            'name_ro', 'description_ro', 'source_ro', 'extra_ro',
+            'name_ru', 'description_ru', 'source_ru', 'extra_ru',
+            'name_sr', 'description_sr', 'source_sr', 'extra_sr',
+            'name_sk', 'description_sk', 'source_sk', 'extra_sk',
+            'name_sl', 'description_sl', 'source_sl', 'extra_sl',
+            'name_sv', 'description_sv', 'source_sv', 'extra_sv',
+            'name_tr', 'description_tr', 'source_tr', 'extra_tr',
+            'name_uk', 'description_uk', 'source_uk', 'extra_uk',
+            'image',
+            'created', 'updated'
+            ]
 
         import_order = ['ref', 'subarea', 'id',
-                        'name_en', 'description_en', 'source_en',
-                        'name_pt', 'description_pt', 'source_pt',
-                        'name_es', 'description_es', 'source_es',
-                        'name_pt_br', 'description_pt_br', 'source_pt_br',
-                        ]
-        #export_order = ('id', 'price', 'author', 'name')
-
+            'name_en', 'description_en', 'source_en', 'extra_en',
+            'name_pt', 'description_pt', 'source_pt', 'extra_pt',
+            'name_pt_br', 'description_pt_br', 'source_pt_br', 'extra_pt_br',
+            'name_es', 'description_es', 'source_es', 'extra_es',
+            'name_sq', 'description_sq', 'source_sq', 'extra_sq',
+            'name_ar', 'description_ar', 'source_ar', 'extra_ar',
+            'name_hy', 'description_hy', 'source_hy', 'extra_hy',
+            'name_bs', 'description_bs', 'source_bs', 'extra_bs',
+            'name_bg', 'description_bg', 'source_bg', 'extra_bg',
+            'name_zh_hans', 'description_zh_hans', 'source_zh_hans', 'extra_zh_hans',
+            'name_hr', 'description_hr', 'source_hr', 'extra_hr',
+            'name_da', 'description_da', 'source_da', 'extra_da',
+            'name_nl', 'description_nl', 'source_nl', 'extra_nl',
+            'name_et', 'description_et', 'source_et', 'extra_et',
+            'name_fi', 'description_fi', 'source_fi', 'extra_fi',
+            'name_fr', 'description_fr', 'source_fr', 'extra_fr',
+            'name_de', 'description_de', 'source_de', 'extra_de',
+            'name_ka', 'description_ka', 'source_ka', 'extra_ka',
+            'name_el', 'description_el', 'source_el', 'extra_el',
+            'name_hu', 'description_hu', 'source_hu', 'extra_hu',
+            'name_is', 'description_is', 'source_is', 'extra_is',
+            'name_ga', 'description_ga', 'source_ga', 'extra_ga',
+            'name_it', 'description_it', 'source_it', 'extra_it',
+            'name_ja', 'description_ja', 'source_ja', 'extra_ja',
+            'name_ko', 'description_ko', 'source_ko', 'extra_ko',
+            'name_lv', 'description_lv', 'source_lv', 'extra_lv',
+            'name_lt', 'description_lt', 'source_lt', 'extra_lt',
+            'name_mk', 'description_mk', 'source_mk', 'extra_mk',
+            'name_nb', 'description_nb', 'source_nb', 'extra_nb',
+            'name_pl', 'description_pl', 'source_pl', 'extra_pl',
+            'name_ro', 'description_ro', 'source_ro', 'extra_ro',
+            'name_ru', 'description_ru', 'source_ru', 'extra_ru',
+            'name_sr', 'description_sr', 'source_sr', 'extra_sr',
+            'name_sk', 'description_sk', 'source_sk', 'extra_sk',
+            'name_sl', 'description_sl', 'source_sl', 'extra_sl',
+            'name_sv', 'description_sv', 'source_sv', 'extra_sv',
+            'name_tr', 'description_tr', 'source_tr', 'extra_tr',
+            'name_uk', 'description_uk', 'source_uk', 'extra_uk',
+            'image',
+            'created', 'updated'
+            ]
 
 @admin.register(Term)                                                         # Regista o modelo Term na interface de administração do Django, permitindo a sua gestão através do painel de administração.
 class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportActionMixin):         # Classe TermAdmin herda de TranslationAdmin, permitindo que a interface de administração suporte a tradução dos campos do modelo Term.
     list_display = ['ref', 'id', 'name', 'area', 'subarea']                   # Define os campos do modelo que serão exibidos na lista de objetos na interface de administração.
-    list_filter = ['subarea__area', 'subarea']                                # Adiciona filtros na interface de administração, permitindo filtrar os objetos com base na 'subarea' e na 'area' associada à 'subarea'.
+    list_filter = ['subarea__area', 'subarea']                                # Adiciona filtros na interface de administração, permitindo filtrar os objetos com base na 'area' associada à 'subarea' ('subarea__area') e na 'subarea'
     search_fields = ['name']
     resource_classes = [TermResource]
 
     def area(self, obj):
-        return obj.subarea.area                 # ou obj.subarea.area.name para aparecer só o nome da Area sem o ID
+        return obj.subarea.area
     area.short_description = 'Area'
     area.admin_order_field = 'subarea__area'
 
@@ -101,7 +184,7 @@ class TermAdmin(VersionAdmin, TranslationAdmin, ImportExportModelAdmin, ExportAc
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'subarea':
             # Ordena as subáreas pela referência (ref) da subárea
-            kwargs['queryset'] = SubArea.objects.all().order_by('ref')  # Ordena pelo campo 'ref' que já inclui ID da área
+            kwargs['queryset'] = SubArea.objects.all().order_by('ref')        # Ordena pelo campo 'ref' que já inclui ID da área
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
 
@@ -161,4 +244,39 @@ class ContactTopMessageAdmin(VersionAdmin, TranslationAdmin):
     list_display = ('text', 'show_from', 'hide_after', 'position', 'active',)
     list_editable = ('position', 'active',)
 
-# Alterar no menu drop-down o grupo de um user de "SemAcesso" para "Utilizador"
+##############################################################################################
+# Ação global: mover utilizadores do grupo 'SemAcesso' para 'Utilizador', sem ter que editar o UserAdmin
+User = get_user_model()
+def mover_para_utilizador(modeladmin, request, queryset):
+    # Só faz sentido na lista de Users, daí a verificação com o "if"
+    # Garante que só corre na lista de utilizadores
+    if getattr(modeladmin, "model", None) is not User:
+        messages.warning(request, "Esta ação só se aplica a utilizadores.")
+        return
+
+    try:
+        sem_acesso = Group.objects.get(name="SemAcesso")
+        utilizador = Group.objects.get(name="Utilizador")
+    except Group.DoesNotExist as e:
+        messages.error(request, f"Grupo em falta: {e}")
+        return
+
+    qs = queryset.prefetch_related("groups")
+    movidos = 0
+    with transaction.atomic():
+        for user in qs:
+            if sem_acesso in user.groups.all():
+                user.groups.remove(sem_acesso)
+                user.groups.add(utilizador)
+                movidos += 1
+
+    messages.success(
+        request,
+        f"{movidos} utilizador(es) movidos de 'SemAcesso' para 'Utilizador'."
+    )
+
+# Descrição no menu e permissões necessárias
+mover_para_utilizador.short_description = "Mover de 'SemAcesso' para 'Utilizador'"
+mover_para_utilizador.allowed_permissions = ('change',)
+# Regista como ação global (fica disponível em todos os modelos, mas o próprio handler ignora se não for o User)
+admin.site.add_action(mover_para_utilizador)

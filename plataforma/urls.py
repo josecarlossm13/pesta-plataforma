@@ -18,11 +18,7 @@ Including another URLconf
 from django.contrib import admin            # Importa o módulo de administração do Django.
 from django.urls import include, path       # Importa as funções para incluir URLs e definir caminhos.
 from django.conf import settings            # Importa as configurações do Django.
-#from plataforma.core.views import TermDetailView, area_list, area_detail, subareas_list #, UserLoginView, logout_view, HomeView,
 from django.conf.urls.static import static
-#from ..core import views
-from django.views.generic.base import TemplateView
-from django.contrib.auth import views as auth_views
 from core.views import home
 from accounts.views import account_panel_view, resend_verification_view
 

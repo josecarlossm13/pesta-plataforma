@@ -1,14 +1,13 @@
-from django.contrib.auth.decorators import user_passes_test
+# core/permissions.py
 from django.contrib.auth.mixins import UserPassesTestMixin
 from django.shortcuts import redirect
 from django.urls import reverse
 
 
+# Decorador: Permite acesso apenas a utilizadores autenticados que não estão no grupo 'SemAcesso'
+# Redireciona se não tiver acesso.
 def user_has_access(redirect_url='/'):
-    """
-    Decorador: Permite acesso apenas a utilizadores autenticados que não estão no grupo 'SemAcesso'
-    Redireciona se não tiver acesso.
-    """
+
     def check(user):
         return user.is_authenticated and not user.groups.filter(name="SemAcesso").exists()
 
@@ -24,12 +23,9 @@ def user_has_access(redirect_url='/'):
 
     return decorator
 
-
+# Mixin: bloqueia acesso a utilizadores no grupo 'SemAcesso' e redireciona para a home.
 class GroupAccessRequiredMixin(UserPassesTestMixin):
-    """
-    Mixin: bloqueia acesso a utilizadores no grupo 'SemAcesso'
-    Em vez de dar 403, redireciona para a home.
-    """
+
     def test_func(self):
         user = self.request.user
         return user.is_authenticated and not user.groups.filter(name="SemAcesso").exists()
