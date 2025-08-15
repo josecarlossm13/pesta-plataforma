@@ -8,3 +8,8 @@ __pycache__/
 # Ignora arquivos do ambiente virtual
 venv/
 env/
+
+
+.env
+staticfiles/
+db_test.sqlite3

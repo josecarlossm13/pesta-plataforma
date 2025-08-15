@@ -13,10 +13,16 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path                                    # Importa a classe Path do módulo pathlib, que facilita a manipulação de caminhos de arquivos e diretórios.
 from django.utils.translation import gettext_lazy as _      # Importa a função gettext_lazy do Django, renomeando-a como '_', para facilitar a tradução de strings de forma preguiçosa (lazy). A tradução só será avaliada quando a string for realmente utilizada, algo útil quando a tradução pode depender do estado atual da aplicação.
 import os                                                   # Módulo para manipular caminhos de arquivos de forma independente do sistema operativo usado
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(BASE_DIR / ".env")
 
+## ADicionei para deploy###
+import dj_database_url
+import os
+############################
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
@@ -24,13 +30,24 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-#41)0v#%ndo&lb)m^+az&vqb4_u-9zmykc^re&f=+grx+@@)ot'
+SECRET_KEY = os.environ.get("SECRET_KEY", "dev-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG", "False") == "True"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
+#ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip() for origin in os.environ.get(
+        "CSRF_TRUSTED_ORIGINS",
+        "http://127.0.0.1:8000,http://localhost:8000"
+    ).split(",")
+]
+######## adicionei para deploy####### Para evitar erros de CSRF em produção###
+#CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+#############################################################################
 
 # Application definition
 INSTALLED_APPS = [
@@ -61,6 +78,9 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    #### adicionado para deploy###
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    #############################
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',                # Talvez faltasse este middleware. Permitia ao django usar o request.LANGUAGE_CODE e determinar automaticamente o idioma da interface
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -108,16 +128,26 @@ WSGI_APPLICATION = 'plataforma.wsgi.application'
 #}
 
 # Configuração da base de dados
+import dj_database_url
+
 DATABASES = {
-    "default": {                                    # Configuração da base de dados padrão da aplicação.
-        "ENGINE": "django.db.backends.postgresql",  # Especifica o backend da base de dados a ser utilizada, neste caso, o PostgreSQL.
-        "NAME": "dev1",                             # Nome da base de dados
-        "USER": "jcsm",                             # Nome do utilizador que tem acesso à base de dados.
-        "PASSWORD": "pass_jcsm",                    # Password do utilizador para autenticação na base de dados.
-        "HOST": "localhost",                        # Endereço do servidor onde a base de dados está alojada.
-        "PORT": "5432",                             # Porto no qual o servidor da base de dados está a escutar (5432 é o padrão do PostgreSQL).
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",  # fallback local
+        conn_max_age=600,
+        ssl_require=os.environ.get("DB_SSL_REQUIRE", "False") == "True",
+    )
 }
+
+# DATABASES = {
+#     "default": {                                    # Configuração da base de dados padrão da aplicação.
+#         "ENGINE": "django.db.backends.postgresql",  # Especifica o backend da base de dados a ser utilizada, neste caso, o PostgreSQL.
+#         "NAME": "dev1",                             # Nome da base de dados
+#         "USER": "jcsm",                             # Nome do utilizador que tem acesso à base de dados.
+#         "PASSWORD": "pass_jcsm",                    # Password do utilizador para autenticação na base de dados.
+#         "HOST": "localhost",                        # Endereço do servidor onde a base de dados está alojada.
+#         "PORT": "5432",                             # Porto no qual o servidor da base de dados está a escutar (5432 é o padrão do PostgreSQL).
+#     }
+# }
 
 
 # Password validation
@@ -219,6 +249,13 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / "plataforma/static/core",
 ]
+
+###### Adicionei para deploy##########
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# Otimizar ficheiros estáticos no deploy
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+######################################
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

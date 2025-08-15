@@ -13,3 +13,7 @@ django-model-utils==5.0.0 # https://github.com/jazzband/django-model-utils
 django-allauth==65.10.0 # https://github.com/pennersr/django-allauth
 django-crispy-forms==2.4 # https://github.com/django-crispy-forms/django-crispy-forms
 crispy-bootstrap5==2025.6 # https://github.com/django-crispy-forms/crispy-bootstrap5
+dj-database-url==3.0.1
+gunicorn==23.0.0
+whitenoise==6.9.0
+
