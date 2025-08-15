@@ -16,4 +16,4 @@ crispy-bootstrap5==2025.6 # https://github.com/django-crispy-forms/crispy-bootst
 dj-database-url==3.0.1
 gunicorn==23.0.0
 whitenoise==6.9.0
-
+python-dotenv==1.0.1
