@@ -245,9 +245,9 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "plataforma/static/core",
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "plataforma/static/core",
+# ]
 
 ###### Adicionei para deploy##########
 STATIC_ROOT = BASE_DIR / 'staticfiles'
