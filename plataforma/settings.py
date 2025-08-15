@@ -17,11 +17,15 @@ from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-load_dotenv(BASE_DIR / ".env")
 
 ## ADicionei para deploy###
 import dj_database_url
 import os
+# Em desenvolvimento local, usa o .env
+# Em produção (Railway/Heroku), as variáveis já estão no ambiente
+dotenv_path = BASE_DIR / ".env"
+if dotenv_path.exists():
+    load_dotenv(dotenv_path)
 ############################
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
