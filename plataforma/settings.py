@@ -39,14 +39,14 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
 #ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
 
-CSRF_TRUSTED_ORIGINS = [
-    origin.strip() for origin in os.environ.get(
-        "CSRF_TRUSTED_ORIGINS",
-        "http://127.0.0.1:8000,http://localhost:8000"
-    ).split(",")
-]
+# CSRF_TRUSTED_ORIGINS = [
+#     origin.strip() for origin in os.environ.get(
+#         "CSRF_TRUSTED_ORIGINS",
+#         "http://127.0.0.1:8000,http://localhost:8000"
+#     ).split(",")
+# ]
 ######## adicionei para deploy####### Para evitar erros de CSRF em produção###
-#CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 #############################################################################
 
 # Application definition
@@ -128,7 +128,6 @@ WSGI_APPLICATION = 'plataforma.wsgi.application'
 #}
 
 # Configuração da base de dados
-import dj_database_url
 
 DATABASES = {
     "default": dj_database_url.config(
