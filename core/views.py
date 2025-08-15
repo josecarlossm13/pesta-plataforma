@@ -46,7 +46,7 @@ def get_back_url(request, fallback_url):
 
 class AreaListView(GroupAccessRequiredMixin, ListView):
     model = Area
-    template_name = 'area_list.html'
+    template_name = 'core/area_list.html'
     context_object_name = 'areas'
     ordering = ['id']
     #login_url = '/accounts/login/'
@@ -74,7 +74,7 @@ class AreaListView(GroupAccessRequiredMixin, ListView):
 # View para listar subareas. [pode receber uma (area_id)]
 class SubAreaListView(GroupAccessRequiredMixin, ListView):
     model = SubArea
-    template_name = 'subarea_list.html'
+    template_name = 'core/subarea_list.html'
     context_object_name = 'subareas'
     login_url = reverse_lazy("account_login")
 
