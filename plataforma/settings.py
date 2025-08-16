@@ -340,4 +340,10 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 #####################################################
 ##################APAGAR!!!!!!!!!!!!!!!!!!############ Foi para simular os emails enviados
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Email: usa o que vier do ambiente; se nada estiver definido e estiver em DEBUG, usa console
+EMAIL_BACKEND = os.environ.get(
+    "EMAIL_BACKEND",
+    "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend"
+)
