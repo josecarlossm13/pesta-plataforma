@@ -261,7 +261,10 @@ STATIC_URL = 'static/'
 # ]
 
 ###### Adicionei para deploy##########
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+#STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Otimizar ficheiros estáticos no deploy
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
