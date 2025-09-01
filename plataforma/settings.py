@@ -364,5 +364,5 @@ EMAIL_PORT = os.environ.get("EMAIL_PORT",587)
 EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS",True)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL",'default from email')
 
-import certifi
-os.environ['SSL_CERT_FILE'] = certifi.where()
+#import certifi
+#os.environ['SSL_CERT_FILE'] = certifi.where()
