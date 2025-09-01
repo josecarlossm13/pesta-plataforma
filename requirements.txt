@@ -17,3 +17,4 @@ dj-database-url==3.0.1
 gunicorn==23.0.0
 whitenoise==6.9.0
 python-dotenv==1.0.1
+django-anymail[resend]==13.0.1
