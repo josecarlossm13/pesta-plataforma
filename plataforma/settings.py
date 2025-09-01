@@ -37,7 +37,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False") == "True"
+DEBUG = os.environ.get("DEBUG", False)
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
@@ -85,6 +85,7 @@ INSTALLED_APPS = [
     'reversion',
     'crispy_forms',
     'crispy_bootstrap5',
+    "anymail",
 ]
 
 MIDDLEWARE = [
@@ -355,14 +356,19 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 # Email: usa o que vier do ambiente; se nada estiver definido e estiver em DEBUG, usa console
 EMAIL_BACKEND = os.environ.get(
     "EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend"
+    "anymail.backends.resend.EmailBackend"
+    #"django.core.mail.backends.console.EmailBackend" if DEBUG else "django.core.mail.backends.smtp.EmailBackend"
 )
-EMAIL_HOST = os.environ.get("EMAIL_HOST",'smtp.gmail.com')
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER",'yoorusername@gmail.com')
-EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD",'key') #past the key or password app here
-EMAIL_PORT = os.environ.get("EMAIL_PORT",587)
-EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS",True)
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL",'default from email')
+#EMAIL_HOST = os.environ.get("EMAIL_HOST",'smtp.gmail.com')
+#EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER",'yoorusername@gmail.com')
+#EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD",'key') #past the key or password app here
+#EMAIL_PORT = os.environ.get("EMAIL_PORT",587)
+#EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS",True)
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", 'onboarding@resend.dev')
+
+ANYMAIL = {
+    "RESEND_API_KEY": os.environ.get("RESEND_API_KEY", 're_...'),
+}
 
 #import certifi
 #os.environ['SSL_CERT_FILE'] = certifi.where()
