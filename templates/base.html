@@ -251,7 +251,7 @@
         <ul class="list-unstyled">
           <li class="mb-2">
             <a class="text-decoration-none link-dark" href="https://www.electropedia.org/">
-              {% trans "IEV Online - Eletropedia" %}
+              {% trans "IEV Online - Electropedia" %}
             </a>
           </li>
         </ul>
@@ -264,7 +264,7 @@
           <li class="mb-2"><a class="text-decoration-none link-dark" href="{% url 'contacts' %}">{% trans "Contacts" %}</a></li>
 
             {% if user.is_authenticated and is_admin_or_gestor %}
-                <li class="mb-2"><a class="text-decoration-none link-dark" href="http://127.0.0.1:8000/admin/">{% trans "Administrator panel" %}</a></li>
+                <li class="mb-2"><a class="text-decoration-none link-dark" href="/admin/">{% trans "Administrator panel" %}</a></li>
             {% endif %}
         </ul>
       </div>
