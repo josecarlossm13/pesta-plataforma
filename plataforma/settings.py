@@ -265,10 +265,10 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 # ]
 
 ###### Adicionei para deploy##########
-#STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'staticfiles'      # não é usado pelo GoogleCS, pode ser útil para collect static local
 
-STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
+#STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+#STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
 # Otimizar ficheiros estáticos no deploy ####tirei para usar google cloud S, é necessário para correr localmente!!!""""
 #STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
@@ -391,6 +391,7 @@ if _gcp_creds_json:
 # Base pública (se o bucket/objetos tiverem leitura pública)
 _GCS_BASE = f"https://storage.googleapis.com/{GS_BUCKET_NAME}"
 
+
 STORAGES = {
     # Uploads (default): CKEditor e afins gravam aqui → prefixo 'media/'
     "default": {
@@ -405,14 +406,20 @@ STORAGES = {
         },
     },
     # Ficheiros estáticos (collectstatic) → prefixo 'static/'
+    # STATIC (collectstatic) → cache longa + immutable (exige colocar versões nas URLs dos estáticos nos templates!!CSS,JS,URLs)
     "staticfiles": {
-        "BACKEND": "storages.backends.gcloud.GoogleCloudManifestStaticStorage",
+        #"BACKEND": "storages.backends.gcloud.GoogleCloudManifestStaticStorage",
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+
         "OPTIONS": {
             "bucket_name": GS_BUCKET_NAME,
             "credentials": GS_CREDENTIALS,
             "location": "static",
             "default_acl": None,          # Uniform access
             "querystring_auth": False,    # para estáticos públicos
+            "object_parameters": {
+                "cache_control": "public, max-age=31536000, immutable"      # 1 ano
+            },
         },
     },
 }

@@ -13,3 +13,4 @@ env/
 .env
 staticfiles/
 db_test.sqlite3
+/plataforma/staticfiles/
