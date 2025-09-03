@@ -20,3 +20,4 @@ python-dotenv==1.0.1
 django-anymail[resend]==13.0.1
 openpyxl==3.1.5
 tablib==3.8.0
+django-storages==1.14.6

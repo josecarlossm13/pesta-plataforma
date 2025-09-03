@@ -12,8 +12,9 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path                                    # Importa a classe Path do módulo pathlib, que facilita a manipulação de caminhos de arquivos e diretórios.
 from django.utils.translation import gettext_lazy as _      # Importa a função gettext_lazy do Django, renomeando-a como '_', para facilitar a tradução de strings de forma preguiçosa (lazy). A tradução só será avaliada quando a string for realmente utilizada, algo útil quando a tradução pode depender do estado atual da aplicação.
-import os                                                   # Módulo para manipular caminhos de arquivos de forma independente do sistema operativo usado
+import os, json                                                   # Módulo para manipular caminhos de arquivos de forma independente do sistema operativo usado
 from dotenv import load_dotenv
+from google.oauth2 import service_account
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -27,8 +28,8 @@ dotenv_path = BASE_DIR / ".env"
 if dotenv_path.exists():
     load_dotenv(dotenv_path)
 ############################
-MEDIA_URL = '/media/'
-MEDIA_ROOT = BASE_DIR / 'media'
+#MEDIA_URL = '/media/'
+#MEDIA_ROOT = BASE_DIR / 'media'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -37,7 +38,9 @@ MEDIA_ROOT = BASE_DIR / 'media'
 SECRET_KEY = os.environ.get("SECRET_KEY", "dev-key")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", False)
+#DEBUG = os.environ.get("DEBUG", False)
+
+DEBUG = os.getenv("DEBUG", "False").lower() in ("1", "true", "yes")
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 
@@ -54,8 +57,7 @@ ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
+
 ######## adicionei para deploy####### Para evitar erros de CSRF em produção###
 CSRF_TRUSTED_ORIGINS = os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
 #############################################################################
@@ -86,12 +88,13 @@ INSTALLED_APPS = [
     'crispy_forms',
     'crispy_bootstrap5',
     "anymail",
+    "storages",
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    #### adicionado para deploy###
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    #### localmente###
+    #'whitenoise.middleware.WhiteNoiseMiddleware',
     #############################
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',                # Talvez faltasse este middleware. Permitia ao django usar o request.LANGUAGE_CODE e determinar automaticamente o idioma da interface
@@ -254,8 +257,8 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = 'static/'
+#localmente
+#STATIC_URL = 'static/'
 
 # STATICFILES_DIRS = [
 #     BASE_DIR / "plataforma/static/core",
@@ -267,8 +270,8 @@ STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
-# Otimizar ficheiros estáticos no deploy
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# Otimizar ficheiros estáticos no deploy ####tirei para usar google cloud S, é necessário para correr localmente!!!""""
+#STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 ######################################
 
 # Default primary key field type
@@ -278,7 +281,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'    # Define o tipo de campo
 
 
 
-CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"              # Define o diretório onde os arquivos enviados pelo CKEditor serão armazenados (texto e imagens)
+#CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"              # Define o diretório onde os arquivos enviados pelo CKEditor serão armazenados (texto e imagens)
 
 # Ativa o botão de imagem etc. com upload direto no CKEditor
 CKEDITOR_CONFIGS = {
@@ -372,3 +375,71 @@ ANYMAIL = {
 
 #import certifi
 #os.environ['SSL_CERT_FILE'] = certifi.where()
+
+
+# --- GOOGLE CLOUD STORAGE ---
+GS_BUCKET_NAME = os.getenv("GS_BUCKET_NAME")
+
+# Carregar credenciais a partir da env com o JSON completo
+_gcp_creds_json = os.getenv("GOOGLE_APPLICATION_CREDENTIALS_JSON")
+GS_CREDENTIALS = None
+if _gcp_creds_json:
+    GS_CREDENTIALS = service_account.Credentials.from_service_account_info(
+        json.loads(_gcp_creds_json)
+    )
+
+# Base pública (se o bucket/objetos tiverem leitura pública)
+_GCS_BASE = f"https://storage.googleapis.com/{GS_BUCKET_NAME}"
+
+STORAGES = {
+    # Uploads (default): CKEditor e afins gravam aqui → prefixo 'media/'
+    "default": {
+        "BACKEND": "storages.backends.gcloud.GoogleCloudStorage",
+        "OPTIONS": {
+            "bucket_name": GS_BUCKET_NAME,
+            "credentials": GS_CREDENTIALS,
+            "location": "media",          # separador lógico no bucket
+            "default_acl": None,          # usar IAM (Uniform access) → não definir ACL por objeto
+            "querystring_auth": False,    # True para media PRIVADO com URLs assinadas
+            "file_overwrite": False,      # não sobrescrever uploads com o mesmo nome
+        },
+    },
+    # Ficheiros estáticos (collectstatic) → prefixo 'static/'
+    "staticfiles": {
+        "BACKEND": "storages.backends.gcloud.GoogleCloudManifestStaticStorage",
+        "OPTIONS": {
+            "bucket_name": GS_BUCKET_NAME,
+            "credentials": GS_CREDENTIALS,
+            "location": "static",
+            "default_acl": None,          # Uniform access
+            "querystring_auth": False,    # para estáticos públicos
+        },
+    },
+}
+
+# URLs públicas (se o bucket tiver leitura pública)
+STATIC_URL = f"{_GCS_BASE}/static/"
+MEDIA_URL  = f"{_GCS_BASE}/media/"
+
+# CKEditor → guarda no "default" (media)
+CKEDITOR_UPLOAD_PATH = "uploads/ckeditor/"           # ou "uploads/"
+CKEDITOR_IMAGE_BACKEND = "pillow"
+
+
+# Limites de upload razoáveis
+DATA_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
+
+# Segurança extra em produção
+if not DEBUG:
+    SECURE_SSL_REDIRECT = True
+    SECURE_HSTS_SECONDS = 31536000
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+    SESSION_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    X_FRAME_OPTIONS = "DENY"
