@@ -45,7 +45,8 @@ a {
 }
 
 /* Fundo com padrão de circuitos  */
-body {
+body.site {
+/*body {*/
   /*  para baixar o contraste do padrão (ajustar o 0.88) */
   background-image:
     linear-gradient(rgba(248, 249, 250, 0.88), rgba(248, 249, 250, 0.5)),
